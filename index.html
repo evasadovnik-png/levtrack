@@ -477,24 +477,39 @@ let levFilter = 'all';
 let currentPage = 'all';
 let delistedCount = 0;
 
-// ══ PROXIES — מנסה כמה פרוקסיים עד שאחד עובד ══
-const PROXIES = [
-  url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
-  url => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
-  url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
-];
-
+// ══ FETCH WITH MULTIPLE PROXIES ══
 async function fetchWithProxy(url) {
-  for (const makeProxy of PROXIES) {
-    try {
-      const res = await fetch(makeProxy(url), {signal: AbortSignal.timeout(8000)});
-      if (!res.ok) continue;
-      const txt = await res.text();
-      // allorigins מחזיר JSON עם contents
-      try { const j = JSON.parse(txt); if(j.contents) return j.contents; } catch(e){}
-      return txt;
-    } catch(e) { continue; }
-  }
+  // ניסיון 1: corsproxy.io
+  try {
+    const r = await fetch('https://corsproxy.io/?' + encodeURIComponent(url));
+    if (r.ok) { const t = await r.text(); if(t&&t.length>10) return t; }
+  } catch(e) {}
+
+  // ניסיון 2: allorigins
+  try {
+    const r = await fetch('https://api.allorigins.win/get?url=' + encodeURIComponent(url));
+    if (r.ok) { const j = await r.json(); if(j.contents&&j.contents.length>10) return j.contents; }
+  } catch(e) {}
+
+  // ניסיון 3: codetabs
+  try {
+    const r = await fetch('https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(url));
+    if (r.ok) { const t = await r.text(); if(t&&t.length>10) return t; }
+  } catch(e) {}
+
+  // ניסיון 4: thingproxy
+  try {
+    const r = await fetch('https://thingproxy.freeboard.io/fetch/' + url);
+    if (r.ok) { const t = await r.text(); if(t&&t.length>10) return t; }
+  } catch(e) {}
+
+  // ניסיון 5: jsonp endpoint אחר של Yahoo
+  try {
+    const alt = url.replace('query1.finance.yahoo.com','query2.finance.yahoo.com');
+    const r = await fetch('https://corsproxy.io/?' + encodeURIComponent(alt));
+    if (r.ok) { const t = await r.text(); if(t&&t.length>10) return t; }
+  } catch(e) {}
+
   return null;
 }
 
@@ -551,22 +566,24 @@ async function loadPrices(){
         f.marketState = q.marketState;
         loaded++;
       } else {
-        f.active = false;
+        // לא מסיר — רק מסמן שאין מחיר
+        f.active = true;
+        f.price  = f.price || null;
       }
     });
     done += chunk.length;
     const pct = Math.round(done/allFunds.length*100);
     document.getElementById('loadFill').style.width = pct+'%';
     document.getElementById('loadCount').textContent = done+' / '+allFunds.length;
-    document.getElementById('loadTitle').textContent = `📡 טוען מחירים חיים... ${done}/${allFunds.length} קרנות`;
-    await new Promise(r=>setTimeout(r,200));
+    document.getElementById('loadTitle').textContent = `📡 טוען מחירים... ${loaded} הצליחו מתוך ${done}`;
+    await new Promise(r=>setTimeout(r,300));
   }
 
   setStep(1,'done'); setStep(2,'active');
   await new Promise(r=>setTimeout(r,200));
   setStep(2,'done'); setStep(3,'active');
 
-  delistedCount = funds.filter(f=>!f.active).length;
+  delistedCount = 0; // לא מסמנים כנמחקות — רק חסר מחיר
 
   const now = new Date().toLocaleTimeString('he-IL');
   document.getElementById('updTime').textContent = now;
@@ -584,10 +601,17 @@ async function loadPrices(){
   document.getElementById('mainBar').style.display = 'flex';
   document.getElementById('sumGrid').style.display = 'grid';
 
-  setLiveBar('ok','✅',
-    `${loaded} קרנות נטענו בהצלחה${delistedCount?` · ${delistedCount} נמחקו מהשוק`:''}`,
-    `עדכון: ${now} · לחץ "רענן" לעדכון מחדש`
-  );
+  if(loaded===0){
+    setLiveBar('err','⚠️',
+      'לא הצלחנו לטעון מחירים — כל הקרנות מוצגות ללא מחיר חי',
+      'ייתכן שה-proxy חסום. נסי לחצי "רענן" שוב או פתחי מ-VPN'
+    );
+  } else {
+    setLiveBar('ok','✅',
+      `${loaded} קרנות עם מחיר חי מ-Yahoo Finance!`,
+      `עדכון: ${now} · לחץ "רענן" לעדכון מחדש`
+    );
+  }
 
   btn.disabled = false; btn.textContent = '🔄 רענן מחירים';
   render();
