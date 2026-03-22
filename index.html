@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LevTrack — כל הקרנות הממונפות</title>
+<title>LevTrack — קרנות ממונפות</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -16,7 +16,7 @@
   --gold:#d97706;--gold-bg:#fef3c7;
   --purple:#7c3aed;--purple-bg:#f3e8ff;
   --teal:#0891b2;--teal-bg:#ecfeff;
-  --orange:#ea580c;--orange-bg:#fff7ed;
+  --orange:#ea580c;
   --accent:#2563eb;
   --shadow:0 1px 3px rgba(15,25,35,.08),0 4px 16px rgba(15,25,35,.04);
   --shadow2:0 2px 8px rgba(15,25,35,.10),0 8px 32px rgba(15,25,35,.06);
@@ -26,7 +26,7 @@ body{background:var(--bg);color:var(--text);font-family:'Plus Jakarta Sans',sans
 
 header{background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;height:62px;display:flex;align-items:center;padding:0 28px;gap:16px;}
 .logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
-.logo-mark{width:34px;height:34px;background:var(--accent);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff;font-weight:800;flex-shrink:0;}
+.logo-mark{width:34px;height:34px;background:var(--accent);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff;font-weight:800;}
 .logo-name{font-size:17px;font-weight:800;color:var(--text);letter-spacing:-.5px;}
 .logo-name span{color:var(--accent);}
 .nav-tabs{display:flex;gap:4px;}
@@ -35,7 +35,7 @@ header{background:var(--bg2);border-bottom:1px solid var(--border);position:stic
 .nav-tab.active{background:var(--blue-bg);border-color:var(--accent);color:var(--accent);}
 .nav-tab.red-tab.active{background:var(--red-bg);border-color:var(--red);color:var(--red);}
 .header-mid{flex:1;display:flex;align-items:center;gap:10px;}
-.search-wrap{position:relative;width:250px;}
+.search-wrap{position:relative;width:240px;}
 .search-icon{position:absolute;right:11px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:14px;pointer-events:none;}
 .search-input{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:9px;padding:8px 36px 8px 14px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;color:var(--text);transition:all .18s;}
 .search-input:focus{outline:none;border-color:var(--accent);background:#fff;box-shadow:0 0 0 3px rgba(37,99,235,.10);}
@@ -56,39 +56,37 @@ header{background:var(--bg2);border-bottom:1px solid var(--border);position:stic
 .btn:disabled{background:#94a3b8;cursor:not-allowed;}
 
 main{max-width:1440px;margin:0 auto;padding:24px;}
-.page{display:none;}
-.page.active{display:block;}
+.page{display:none;}.page.active{display:block;}
 
-/* PROGRESS BAR */
-.progress-wrap{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:20px 24px;margin-bottom:20px;box-shadow:var(--shadow);}
-.progress-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
-.progress-title{font-size:15px;font-weight:800;color:var(--text);}
-.progress-count{font-size:13px;font-weight:700;font-family:'DM Mono',monospace;color:var(--teal);}
-.progress-bar-track{background:var(--bg3);border-radius:6px;height:10px;overflow:hidden;margin-bottom:10px;}
-.progress-bar-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--blue));border-radius:6px;transition:width .4s ease;}
-.progress-steps{display:flex;gap:16px;flex-wrap:wrap;}
-.step{display:flex;align-items:center;gap:6px;font-size:12px;}
-.step-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-.step-dot.done{background:var(--green);}
-.step-dot.active{background:var(--teal);animation:blink .8s infinite;}
-.step-dot.pending{background:var(--bg4);}
-.step-text{color:var(--text2);}
-.step-text.done{color:var(--green);}
-.step-text.active{color:var(--teal);font-weight:600;}
+/* LOADING */
+.load-wrap{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:22px 26px;margin-bottom:22px;box-shadow:var(--shadow);}
+.load-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.load-title{font-size:15px;font-weight:800;}
+.load-count{font-size:13px;font-weight:700;font-family:'DM Mono',monospace;color:var(--teal);}
+.load-bar-track{background:var(--bg3);border-radius:6px;height:10px;overflow:hidden;margin-bottom:12px;}
+.load-bar-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--blue));border-radius:6px;transition:width .4s ease;}
+.load-steps{display:flex;gap:20px;flex-wrap:wrap;}
+.lstep{display:flex;align-items:center;gap:6px;font-size:12px;}
+.lstep-dot{width:8px;height:8px;border-radius:50%;}
+.lstep-dot.done{background:var(--green);}
+.lstep-dot.active{background:var(--teal);animation:blink .8s infinite;}
+.lstep-dot.wait{background:var(--bg4);}
+.lstep-txt{color:var(--text2);}
+.lstep-txt.done{color:var(--green);}
+.lstep-txt.active{color:var(--teal);font-weight:700;}
 
-/* LIVE BAR */
-.live-bar{border-radius:13px;padding:14px 20px;margin-bottom:20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
-.live-bar.success{background:var(--green-bg);border:1.5px solid #86efac;}
-.live-bar.loading{background:#fffbeb;border:1.5px solid #fde047;}
-.live-bar.error{background:var(--red-bg);border:1.5px solid #fca5a5;}
-.live-icon{font-size:22px;flex-shrink:0;}
+.live-bar{border-radius:13px;padding:13px 20px;margin-bottom:20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.live-bar.ok{background:var(--green-bg);border:1.5px solid #86efac;}
+.live-bar.load{background:#fffbeb;border:1.5px solid #fde047;}
+.live-bar.err{background:var(--red-bg);border:1.5px solid #fca5a5;}
+.live-icon{font-size:20px;flex-shrink:0;}
 .live-content{flex:1;}
-.live-title{font-size:14px;font-weight:800;color:var(--text);margin-bottom:2px;}
+.live-title{font-size:14px;font-weight:800;margin-bottom:2px;}
 .live-sub{font-size:12px;color:var(--text2);}
-.spinner{display:inline-block;width:12px;height:12px;border:2px solid #e2e8f0;border-top-color:var(--teal);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-left:5px;}
+.spinner{display:inline-block;width:11px;height:11px;border:2px solid #e2e8f0;border-top-color:var(--teal);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-left:4px;}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-.top-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px;}
+.top-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:12px;}
 .page-title{font-size:22px;font-weight:800;letter-spacing:-.5px;}
 .page-title span{color:var(--accent);}
 .page-title.red span{color:var(--red);}
@@ -97,23 +95,23 @@ main{max-width:1440px;margin:0 auto;padding:24px;}
 .filter-btn:hover{border-color:var(--accent);color:var(--accent);}
 .filter-btn.active{background:var(--blue-bg);border-color:var(--accent);color:var(--accent);}
 
-.alert-banner{background:var(--red-bg);border:1.5px solid #f9b8c8;border-radius:12px;padding:12px 18px;margin-bottom:18px;display:flex;align-items:center;gap:12px;font-size:13px;color:var(--red);}
+.alert-banner{background:var(--red-bg);border:1.5px solid #f9b8c8;border-radius:12px;padding:11px 18px;margin-bottom:16px;display:flex;align-items:center;gap:12px;font-size:13px;color:var(--red);}
 .alert-badge{background:var(--red);color:#fff;border-radius:6px;padding:2px 9px;font-size:11px;font-weight:700;white-space:nowrap;}
 
-.summary-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:24px;}
-.sum-card{background:var(--bg2);border:1px solid var(--border);border-radius:13px;padding:14px 16px;box-shadow:var(--shadow);}
+.summary-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:11px;margin-bottom:22px;}
+.sum-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:13px 16px;box-shadow:var(--shadow);}
 .sum-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);margin-bottom:4px;}
-.sum-val{font-size:26px;font-weight:800;letter-spacing:-1px;}
+.sum-val{font-size:25px;font-weight:800;letter-spacing:-1px;}
 .sum-val.green{color:var(--green);}
 .sum-val.red{color:var(--red);}
 .sum-val.gold{color:var(--gold);}
 .sum-val.teal{color:var(--teal);}
 .sum-val.blue{color:var(--blue);}
-.sum-sub{font-size:10px;color:var(--text3);margin-top:3px;}
+.sum-sub{font-size:10px;color:var(--text3);margin-top:2px;}
 
-.sector-section{margin-bottom:30px;}
-.sector-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:10px;border-bottom:1.5px solid var(--border);}
-.sector-emoji{font-size:17px;}
+.sector-section{margin-bottom:28px;}
+.sector-header{display:flex;align-items:center;gap:10px;margin-bottom:11px;padding-bottom:9px;border-bottom:1.5px solid var(--border);}
+.sector-emoji{font-size:16px;}
 .sector-title{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:1px;}
 .sector-count{font-size:11px;color:var(--text3);background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:2px 8px;font-weight:600;}
 .sector-avg{margin-right:auto;font-size:12px;font-weight:700;font-family:'DM Mono',monospace;}
@@ -126,14 +124,14 @@ main{max-width:1440px;margin:0 auto;padding:24px;}
 .card-tag{position:absolute;top:9px;left:9px;color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:5px;}
 
 .card-row1{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;}
-.ticker{font-size:18px;font-weight:800;color:var(--text);letter-spacing:-.5px;}
+.ticker{font-size:18px;font-weight:800;letter-spacing:-.5px;}
 .etf-name{font-size:8.5px;color:var(--text3);margin-top:2px;max-width:145px;line-height:1.3;}
 .lev-badge{padding:2px 8px;border-radius:6px;font-size:10px;font-weight:700;flex-shrink:0;}
 .lev-3x{background:var(--purple-bg);color:var(--purple);border:1.5px solid #e0c6ff;}
 .lev-2x{background:var(--blue-bg);color:var(--blue);border:1.5px solid #bfdbfe;}
 .lev-4x{background:#fdf2f8;color:#be185d;border:1.5px solid #fbcfe8;}
 
-.card-row2{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:8px;}
+.card-row2{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:7px;}
 .price{font-size:21px;font-weight:800;letter-spacing:-1px;font-family:'DM Mono',monospace;}
 .price.low{color:var(--red);}
 .change-box{display:flex;flex-direction:column;align-items:flex-end;gap:2px;}
@@ -150,29 +148,29 @@ main{max-width:1440px;margin:0 auto;padding:24px;}
 .chart-btn{padding:4px 9px;background:var(--blue-bg);border:1.5px solid #bfdbfe;border-radius:6px;color:var(--accent);font-size:10px;font-weight:700;cursor:pointer;}
 .live-dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--green);animation:blink 1.5s infinite;vertical-align:middle;margin-left:3px;}
 
-/* ALERTS PAGE */
-.bar-chart-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:20px;box-shadow:var(--shadow);}
-.bar-chart-title{font-size:14px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
-.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;cursor:pointer;border-radius:8px;padding:3px 6px;transition:background .15s;}
+/* ALERTS */
+.bar-chart-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:13px;padding:18px 20px;margin-bottom:18px;box-shadow:var(--shadow);}
+.bar-chart-title{font-size:14px;font-weight:800;margin-bottom:13px;}
+.bar-row{display:flex;align-items:center;gap:9px;margin-bottom:8px;cursor:pointer;border-radius:8px;padding:3px 5px;transition:background .15s;}
 .bar-row:hover{background:var(--bg3);}
-.bar-ticker{font-size:12px;font-weight:800;font-family:'DM Mono',monospace;min-width:60px;text-align:right;}
-.bar-track{flex:1;height:22px;background:var(--bg3);border-radius:6px;overflow:hidden;}
-.bar-fill{height:100%;border-radius:6px;display:flex;align-items:center;padding-right:8px;justify-content:flex-end;transition:width .6s ease;}
-.bar-label{font-size:10px;font-weight:700;color:#fff;font-family:'DM Mono',monospace;white-space:nowrap;}
-.bar-extra{font-size:11px;color:var(--text3);min-width:54px;text-align:left;font-family:'DM Mono',monospace;}
+.bar-ticker{font-size:12px;font-weight:800;font-family:'DM Mono',monospace;min-width:58px;text-align:right;}
+.bar-track{flex:1;height:22px;background:var(--bg3);border-radius:5px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:5px;display:flex;align-items:center;padding-right:7px;justify-content:flex-end;transition:width .7s ease;}
+.bar-label{font-size:10px;font-weight:700;color:#fff;white-space:nowrap;}
+.bar-extra{font-size:11px;color:var(--text3);min-width:52px;text-align:left;font-family:'DM Mono',monospace;}
 
-.th-box{display:flex;align-items:center;gap:10px;background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;padding:10px 18px;box-shadow:var(--shadow);}
+.th-box{display:flex;align-items:center;gap:10px;background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;padding:10px 16px;box-shadow:var(--shadow);}
 .th-input{width:80px;background:var(--bg3);border:1.5px solid var(--border2);border-radius:8px;padding:6px 10px;font-family:'DM Mono',monospace;font-size:14px;font-weight:700;text-align:center;}
 .th-input:focus{outline:none;border-color:var(--red);}
 .th-apply{padding:7px 14px;background:var(--red);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;}
-.losers-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:11px;}
+.losers-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;}
 
 /* MODAL */
 .overlay{position:fixed;inset:0;z-index:900;background:rgba(15,25,35,.45);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:20px;animation:fadein .2s ease;}
 @keyframes fadein{from{opacity:0}to{opacity:1}}
 .overlay.hidden{display:none;}
-.modal{background:var(--bg2);border:1px solid var(--border);border-radius:18px;width:100%;max-width:900px;max-height:92vh;overflow-y:auto;box-shadow:0 24px 80px rgba(15,25,35,.18);animation:popIn .25s ease;}
-@keyframes popIn{from{transform:scale(.96) translateY(16px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:18px;width:100%;max-width:920px;max-height:92vh;overflow-y:auto;box-shadow:0 24px 80px rgba(15,25,35,.18);animation:popIn .25s ease;}
+@keyframes popIn{from{transform:scale(.96) translateY(14px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
 .modal-head{padding:18px 24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:var(--bg2);z-index:5;border-radius:18px 18px 0 0;}
 .mh-left{display:flex;flex-direction:column;gap:2px;}
 .mh-ticker{font-size:24px;font-weight:800;letter-spacing:-1px;}
@@ -182,12 +180,12 @@ main{max-width:1440px;margin:0 auto;padding:24px;}
 .close-btn{width:32px;height:32px;border-radius:8px;border:1.5px solid var(--border2);background:var(--bg3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--text2);}
 .close-btn:hover{background:var(--bg4);}
 .modal-body{padding:20px 24px;}
-.chart-frame{width:100%;height:440px;border-radius:12px;overflow:hidden;border:1px solid var(--border);margin-bottom:18px;}
+.chart-frame{width:100%;height:450px;border-radius:12px;overflow:hidden;border:1px solid var(--border);margin-bottom:18px;}
 .modal-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin-bottom:14px;}
 .mstat{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:13px;}
 .mstat-lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;font-weight:600;margin-bottom:4px;}
 .mstat-val{font-size:16px;font-weight:800;letter-spacing:-.5px;}
-.warn-box{background:#fffbeb;border:1.5px solid #fde68a;border-radius:10px;padding:12px 14px;display:flex;gap:10px;}
+.warn-box{background:#fffbeb;border:1.5px solid #fde68a;border-radius:10px;padding:12px 15px;display:flex;gap:10px;}
 .warn-icon{font-size:15px;flex-shrink:0;margin-top:1px;}
 .warn-text{font-size:12px;color:#92400e;line-height:1.6;}
 
@@ -220,44 +218,43 @@ main{max-width:1440px;margin:0 auto;padding:24px;}
       <span class="search-icon">🔍</span>
       <input class="search-input" type="text" id="searchInput" placeholder="חיפוש קרן..." oninput="onSearch()">
     </div>
-    <div class="pill"><div class="dot grey" id="marketDot"></div><span id="marketText">טוען...</span></div>
+    <div class="pill"><div class="dot grey" id="mktDot"></div><span id="mktTxt">טוען...</span></div>
     <div class="pill">📊 <span id="hTotal">0</span> קרנות</div>
-    <div class="pill" id="lastUpdatePill" style="display:none;">🕐 <span id="lastUpdate"></span></div>
+    <div class="pill" id="updPill" style="display:none;">🕐 <span id="updTime"></span></div>
   </div>
   <div class="header-right">
-    <button class="btn btn-green" onclick="loadAllFromYahoo()" id="loadBtn">📡 טען מ-Yahoo Finance</button>
-    <button class="btn btn-blue" onclick="showAdd()">+ הוסף ידנית</button>
+    <button class="btn btn-green" id="refreshBtn" onclick="loadPrices()">🔄 רענן מחירים</button>
+    <button class="btn btn-blue" onclick="showAdd()">+ הוסף קרן</button>
   </div>
 </header>
 
 <main>
-  <!-- ══ ALL PAGE ══ -->
+  <!-- ALL PAGE -->
   <div class="page active" id="page-all">
 
-    <!-- PROGRESS -->
-    <div class="progress-wrap" id="progressWrap">
-      <div class="progress-header">
-        <div class="progress-title">📡 שולף את כל הקרנות הממונפות מ-Yahoo Finance...</div>
-        <div class="progress-count" id="progressCount">0 / 0</div>
+    <div class="load-wrap" id="loadWrap">
+      <div class="load-header">
+        <div class="load-title" id="loadTitle">📡 טוען מחירים חיים מ-Yahoo Finance...</div>
+        <div class="load-count" id="loadCount">0 / 0</div>
       </div>
-      <div class="progress-bar-track"><div class="progress-bar-fill" id="progressFill" style="width:0%"></div></div>
-      <div class="progress-steps">
-        <div class="step"><div class="step-dot active" id="step1dot"></div><div class="step-text active" id="step1txt">שלב 1: שולף רשימת קרנות מ-Yahoo Screener</div></div>
-        <div class="step"><div class="step-dot pending" id="step2dot"></div><div class="step-text" id="step2txt">שלב 2: מביא מחירים חיים</div></div>
-        <div class="step"><div class="step-dot pending" id="step3dot"></div><div class="step-text" id="step3txt">שלב 3: מסיים ומציג</div></div>
+      <div class="load-bar-track"><div class="load-bar-fill" id="loadFill" style="width:0%"></div></div>
+      <div class="load-steps">
+        <div class="lstep"><div class="lstep-dot active" id="d1"></div><div class="lstep-txt active" id="t1">שולף מחירים</div></div>
+        <div class="lstep"><div class="lstep-dot wait" id="d2"></div><div class="lstep-txt" id="t2">מעבד נתונים</div></div>
+        <div class="lstep"><div class="lstep-dot wait" id="d3"></div><div class="lstep-txt" id="t3">מציג קרנות</div></div>
       </div>
     </div>
 
-    <div class="live-bar loading" id="liveBar" style="display:none;">
-      <div class="live-icon" id="liveIcon">⏳</div>
+    <div class="live-bar load" id="liveBar" style="display:none;">
+      <div class="live-icon" id="liveIcon">✅</div>
       <div class="live-content">
-        <div class="live-title" id="liveTitle">טוען...</div>
-        <div class="live-sub" id="liveSub"></div>
+        <div class="live-title" id="liveTitle">—</div>
+        <div class="live-sub" id="liveSub">—</div>
       </div>
-      <button class="btn btn-green" onclick="loadAllFromYahoo()">🔄 רענן</button>
+      <button class="btn btn-green" onclick="loadPrices()">🔄 רענן</button>
     </div>
 
-    <div class="top-bar" id="mainTopBar" style="display:none;">
+    <div class="top-bar" id="mainBar" style="display:none;">
       <div class="page-title">קרנות <span>ממונפות</span></div>
       <div class="filters">
         <button class="filter-btn active" onclick="setFilter('all',this)">הכל</button>
@@ -274,31 +271,31 @@ main{max-width:1440px;margin:0 auto;padding:24px;}
       <div id="alertText"></div>
     </div>
 
-    <div class="summary-grid" id="summaryGrid" style="display:none;">
-      <div class="sum-card"><div class="sum-label">סה״כ קרנות</div><div class="sum-val teal" id="sTotal">0</div><div class="sum-sub">מ-Yahoo Finance</div></div>
-      <div class="sum-card"><div class="sum-label">עולות היום</div><div class="sum-val green" id="sUp">0</div><div class="sum-sub">📈</div></div>
-      <div class="sum-card"><div class="sum-label">יורדות היום</div><div class="sum-val red" id="sDown">0</div><div class="sum-sub">📉</div></div>
+    <div class="summary-grid" id="sumGrid" style="display:none;">
+      <div class="sum-card"><div class="sum-label">סה״כ קרנות</div><div class="sum-val teal" id="sTotal">0</div><div class="sum-sub">ממונפות</div></div>
+      <div class="sum-card"><div class="sum-label">עולות</div><div class="sum-val green" id="sUp">0</div><div class="sum-sub">היום 📈</div></div>
+      <div class="sum-card"><div class="sum-label">יורדות</div><div class="sum-val red" id="sDown">0</div><div class="sum-sub">היום 📉</div></div>
       <div class="sum-card"><div class="sum-label">מתחת לסף</div><div class="sum-val gold" id="sAlert">0</div><div class="sum-sub">🔔</div></div>
       <div class="sum-card"><div class="sum-label">ממוצע שינוי</div><div class="sum-val" id="sAvg" style="font-size:20px;">—</div><div class="sum-sub">היום</div></div>
-      <div class="sum-card"><div class="sum-label">נמחקו</div><div class="sum-val red" id="sDelisted">0</div><div class="sum-sub">נסגרו מהשוק</div></div>
+      <div class="sum-card"><div class="sum-label">נמחקו</div><div class="sum-val red" id="sDelist">0</div><div class="sum-sub">מהשוק</div></div>
     </div>
 
     <div id="container"></div>
   </div>
 
-  <!-- ══ ALERTS PAGE ══ -->
+  <!-- ALERTS PAGE -->
   <div class="page" id="page-alerts">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:12px;">
       <div class="page-title red">התראות <span>מחיר נמוך</span> 🔔</div>
       <div class="th-box">
         <span style="font-size:13px;font-weight:700;">🔔 סף: $</span>
-        <input class="th-input" type="number" id="thresholdInput" value="10" step="0.5" min="0">
-        <button class="th-apply" onclick="applyThreshold()">עדכן</button>
-        <span id="thresholdCount" style="font-size:12px;color:var(--text2);"></span>
+        <input class="th-input" type="number" id="thIn" value="10" step="0.5" min="0">
+        <button class="th-apply" onclick="applyTh()">עדכן</button>
+        <span id="thCount" style="font-size:12px;color:var(--text2);"></span>
       </div>
     </div>
-    <div id="alertSummary" style="margin-bottom:20px;"></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:22px;">
+    <div id="alertSum" style="margin-bottom:18px;"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:20px;">
       <div class="bar-chart-wrap" style="margin-bottom:0;">
         <div class="bar-chart-title">🔔 מחיר נוכחי — מתחת לסף</div>
         <div id="priceBar"></div>
@@ -327,8 +324,8 @@ main{max-width:1440px;margin:0 auto;padding:24px;}
     <div class="modal-body">
       <div class="chart-frame" id="chartFrame"></div>
       <div class="modal-stats">
-        <div class="mstat"><div class="mstat-lbl">מחיר</div><div class="mstat-val" id="m2Price">—</div></div>
-        <div class="mstat"><div class="mstat-lbl">שינוי %</div><div class="mstat-val" id="m2Change">—</div></div>
+        <div class="mstat"><div class="mstat-lbl">מחיר</div><div class="mstat-val" id="mP2">—</div></div>
+        <div class="mstat"><div class="mstat-lbl">שינוי %</div><div class="mstat-val" id="mC2">—</div></div>
         <div class="mstat"><div class="mstat-lbl">טווח שנתי</div><div class="mstat-val" id="mRange" style="font-size:12px;">—</div></div>
         <div class="mstat"><div class="mstat-lbl">נפח</div><div class="mstat-val" id="mVol">—</div></div>
       </div>
@@ -340,7 +337,7 @@ main{max-width:1440px;margin:0 auto;padding:24px;}
 <!-- ADD MODAL -->
 <div class="overlay hidden" id="addOverlay">
   <div class="modal add-modal">
-    <div class="modal-head"><div class="mh-ticker" style="font-size:19px;">הוסף קרן ידנית</div><button class="close-btn" onclick="closeAdd()">✕</button></div>
+    <div class="modal-head"><div class="mh-ticker" style="font-size:19px;">הוסף קרן</div><button class="close-btn" onclick="closeAdd()">✕</button></div>
     <div class="modal-body">
       <div class="form-row">
         <div class="form-group"><label class="form-label">טיקר</label><input class="form-input" id="nTicker" placeholder="TQQQ" style="text-transform:uppercase"></div>
@@ -349,7 +346,7 @@ main{max-width:1440px;margin:0 auto;padding:24px;}
       </div>
       <div class="form-group"><label class="form-label">שם (אופציונלי)</label><input class="form-input" id="nName" placeholder="ישולף אוטומטית"></div>
       <div style="display:flex;gap:10px;margin-top:14px;">
-        <button class="btn btn-blue" style="flex:1;padding:10px;" onclick="addFundManual()">הוסף + שלוף מחיר</button>
+        <button class="btn btn-blue" style="flex:1;padding:10px;" onclick="addManual()">הוסף ✓</button>
         <button class="btn btn-outline" style="flex:1;padding:10px;" onclick="closeAdd()">ביטול</button>
       </div>
     </div>
@@ -357,270 +354,259 @@ main{max-width:1440px;margin:0 auto;padding:24px;}
 </div>
 
 <script>
-// ══════════════════════════════════════
-// CONFIG
-// ══════════════════════════════════════
-const PROXY = 'https://api.allorigins.win/get?url=';
-const YF_QUOTE = 'https://query1.finance.yahoo.com/v7/finance/quote?symbols=';
-const YF_SCREENER = 'https://query1.finance.yahoo.com/v1/finance/screener/predefined/saved?scrIds=LEVERED_ETF&count=250&start=';
-const BATCH_SIZE = 40;
+// ══ רשימת כל הקרנות הממונפות הידועות ══
+const ALL_ETFs = [
+  // מדדים רחבים
+  ['TQQQ','ProShares UltraPro QQQ 3X','3x','indices'],
+  ['UPRO','ProShares UltraPro S&P500 3X','3x','indices'],
+  ['SPXL','Direxion Daily S&P 500 Bull 3X','3x','indices'],
+  ['SSO','ProShares Ultra S&P500 2X','2x','indices'],
+  ['QLD','ProShares Ultra QQQ 2X','2x','indices'],
+  ['DDM','ProShares Ultra Dow30 2X','2x','indices'],
+  ['UDOW','ProShares UltraPro Dow30 3X','3x','indices'],
+  ['TNA','Direxion Daily Small Cap Bull 3X','3x','indices'],
+  ['URTY','ProShares UltraPro Russell2000 3X','3x','indices'],
+  ['UWM','ProShares Ultra Russell2000 2X','2x','indices'],
+  ['UMDD','ProShares UltraPro MidCap400 3X','3x','indices'],
+  ['MVV','ProShares Ultra MidCap400 2X','2x','indices'],
+  ['ROM','ProShares Ultra Technology 2X','2x','indices'],
+  ['SPYU','MAX S&P 500 4X Leveraged ETN','4x','indices'],
+  // שבבים
+  ['SOXL','Direxion Daily Semiconductors 3X','3x','semis'],
+  ['NVDL','GraniteShares 2X Long NVDA','2x','semis'],
+  ['NVDU','T-Rex 2X Long NVDA Daily ETF','2x','semis'],
+  ['AMDL','GraniteShares 2X Long AMD','2x','semis'],
+  ['AVGO2','Direxion Daily AVGO Bull 2X','2x','semis'],
+  ['INTL','GraniteShares 2X Long INTC','2x','semis'],
+  ['SMCI2','Direxion Daily SMCI Bull 2X','2x','semis'],
+  // טכנולוגיה
+  ['TECL','Direxion Daily Tech Bull 3X','3x','tech'],
+  ['FNGU','MicroSectors FANG+ Index 3X','3x','tech'],
+  ['FNGG','Direxion Daily NYSE FANG+ Bull 2X','2x','tech'],
+  ['WEBL','Direxion Daily Internet Bull 3X','3x','tech'],
+  ['TARK','AXS 2X Innovation ETF','2x','tech'],
+  ['WANT','Direxion Daily Cons. Discret 3X','3x','tech'],
+  ['LOUP','GraniteShares 2X Long Tech ETF','2x','tech'],
+  // פיננסים
+  ['FAS','Direxion Daily Financial Bull 3X','3x','finance'],
+  ['DPST','Direxion Daily Regional Banks 3X','3x','finance'],
+  ['DFEN','Direxion Daily Aerospace Bull 3X','3x','finance'],
+  ['RETL','Direxion Daily Retail Bull 3X','3x','finance'],
+  ['DUSL','Direxion Daily Industrials Bull 3X','3x','finance'],
+  ['HIBL','Direxion Daily S&P 500 High Beta 3X','3x','finance'],
+  // אנרגיה
+  ['ERX','Direxion Daily Energy Bull 2X','2x','energy'],
+  ['GUSH','Direxion Daily Oil&Gas E&P Bull 2X','2x','energy'],
+  ['BOIL','ProShares Ultra Bloomberg Natural Gas','2x','energy'],
+  ['NRGU','MicroSectors US Big Oil 3X','3x','energy'],
+  ['OILU','MicroSectors Oil&Gas Exp Bull 3X','3x','energy'],
+  ['DRIP','Direxion Daily Oil&Gas Bear 2X','2x','energy'],
+  // ביוטק
+  ['LABU','Direxion Daily Biotech Bull 3X','3x','biotech'],
+  ['BIB','ProShares Ultra NASDAQ Biotech 2X','2x','biotech'],
+  ['CURE','Direxion Daily Healthcare Bull 3X','3x','biotech'],
+  // קריפטו
+  ['MSTU','T-Rex 2X Long MSTR Daily ETF','2x','crypto'],
+  ['MSTX','Defiance 2X Long MSTR Daily ETF','2x','crypto'],
+  ['BITU','ProShares Ultra Bitcoin ETF 2X','2x','crypto'],
+  ['BITX','2x Bitcoin Strategy ETF','2x','crypto'],
+  ['ETHU','ProShares Ultra Ether ETF 2X','2x','crypto'],
+  ['CONL','GraniteShares 2X Long COIN','2x','crypto'],
+  ['SOLZ','Volatility Shares 2X Solana ETF','2x','crypto'],
+  ['XRPU','ProShares Ultra XRP ETF 2X','2x','crypto'],
+  // קנאביס
+  ['MSOX','AdvisorShares MSOS Daily Leveraged ETF','2x','cannabis'],
+  // מניות בודדות
+  ['TSLL','Direxion Daily TSLA Bull 2X','2x','single'],
+  ['TSLT','T-Rex 2X Long TSLA Daily ETF','2x','single'],
+  ['RKLX','Defiance 2X Long RKLB Daily ETF','2x','single'],
+  ['AAPU','Direxion Daily AAPL Bull 2X','2x','single'],
+  ['MSFU','Direxion Daily MSFT Bull 2X','2x','single'],
+  ['AMZU','Direxion Daily AMZN Bull 2X','2x','single'],
+  ['METAU','Direxion Daily META Bull 2X','2x','single'],
+  ['PLTU','Direxion Daily PLTR Bull 2X','2x','single'],
+  ['CVNX','Defiance 2X Long CVNA Daily ETF','2x','single'],
+  ['MARU','Direxion Daily MARA Bull 2X','2x','single'],
+  ['CRWL','Direxion Daily CRWD Bull 2X','2x','single'],
+  ['ULTY','YieldMax Ultra Option Income ETF','2x','single'],
+  // אגרות חוב
+  ['TMF','Direxion Daily 20Y Treasury Bull 3X','3x','bonds'],
+  ['TYD','Direxion Daily 10Y Treasury Bull 3X','3x','bonds'],
+  ['UST','ProShares Ultra 7-10Y Treasury 2X','2x','bonds'],
+  ['UBT','ProShares Ultra 20Y Treasury 2X','2x','bonds'],
+  // זהב וסחורות
+  ['UGL','ProShares Ultra Gold 2X','2x','gold'],
+  ['AGQ','ProShares Ultra Silver 2X','2x','gold'],
+  ['UCO','ProShares Ultra Bloomberg Crude Oil 2X','2x','gold'],
+  ['NUGT','Direxion Daily Gold Miners Bull 2X','2x','gold'],
+  ['JNUG','Direxion Daily Jr Gold Miners 2X','2x','gold'],
+  ['GDXU','MicroSectors Gold Miners 3X','3x','gold'],
+  ['SHNY','GraniteShares 3X Long Gold','3x','gold'],
+  // בינלאומי
+  ['YINN','Direxion Daily FTSE China Bull 3X','3x','international'],
+  ['INDL','Direxion Daily India Bull 2X','2x','international'],
+  ['BRZU','Direxion Daily Brazil Bull 2X','2x','international'],
+  ['UBR','ProShares Ultra MSCI Brazil 2X','2x','international'],
+  ['EET','ProShares Ultra MSCI Emerging Markets 2X','2x','international'],
+  ['EDC','Direxion Daily EM Bull 3X','3x','international'],
+  ['KORU','Direxion Daily South Korea Bull 3X','3x','international'],
+  ['EFO','ProShares Ultra MSCI EAFE 2X','2x','international'],
+];
+
+const SECTORS = {
+  indices:{n:'מדדים רחבים',i:'📊'},
+  semis:{n:'שבבים',i:'🔬'},
+  tech:{n:'טכנולוגיה',i:'💻'},
+  finance:{n:'פיננסים',i:'💰'},
+  energy:{n:'אנרגיה',i:'⚡'},
+  biotech:{n:'ביוטק',i:'💊'},
+  crypto:{n:'קריפטו',i:'🪙'},
+  cannabis:{n:'קנאביס',i:'🌿'},
+  single:{n:'מניות בודדות',i:'📱'},
+  bonds:{n:'אגרות חוב',i:'📄'},
+  gold:{n:'זהב וסחורות',i:'🥇'},
+  international:{n:'בינלאומי',i:'🌍'},
+};
+
+// State
+let funds = ALL_ETFs.map(([ticker,name,lev,sector])=>({
+  ticker,name,lev,sector,price:null,change:null,vol:'—',range52:'—',active:true
+}));
 let threshold = 10;
 let levFilter = 'all';
 let currentPage = 'all';
-let funds = []; // כל הקרנות שנשלפו
 let delistedCount = 0;
 
-// ══════════════════════════════════════
-// SECTOR DETECTION מהשם
-// ══════════════════════════════════════
-function detectSector(name, ticker){
-  const n=(name||'').toLowerCase(), t=(ticker||'').toLowerCase();
-  if(/bitcoin|btc|crypto|mstr|mara|coin|solana|ethereum|xrp/.test(n+t)) return {s:'crypto',n:'קריפטו',i:'🪙'};
-  if(/gold|silver|miner|gdx|nugt|jnug|shny|precious/.test(n+t)) return {s:'gold',n:'זהב וסחורות',i:'🥇'};
-  if(/oil|gas|energy|gush|drip|boil|nrgu|oilu|crude/.test(n+t)) return {s:'energy',n:'אנרגיה',i:'⚡'};
-  if(/biotech|health|pharma|labu|bib|cure/.test(n+t)) return {s:'biotech',n:'ביוטק',i:'💊'};
-  if(/semicon|soxl|nvda|nvdl|amd|amdl|intel|avgo|smci/.test(n+t)) return {s:'semis',n:'שבבים',i:'🔬'};
-  if(/cannabis|marijuana|msox/.test(n+t)) return {s:'cannabis',n:'קנאביס',i:'🌿'};
-  if(/financial|bank|fas|dpst|regional|broker|insur/.test(n+t)) return {s:'finance',n:'פיננסים',i:'💰'};
-  if(/treasury|bond|tmt|tmf|tyd|ust|ubt|ulbr/.test(n+t)) return {s:'bonds',n:'אגרות חוב',i:'📄'};
-  if(/china|india|brazil|korea|japan|emerging|msci|international|eef|yinn|indl|brzu/.test(n+t)) return {s:'international',n:'בינלאומי',i:'🌍'};
-  if(/tech|technology|internet|fang|fngu|webl|tecl|tark|innovation/.test(n+t)) return {s:'tech',n:'טכנולוגיה',i:'💻'};
-  if(/tsla|tesla|apple|aapl|amazon|amzn|meta|googl|msft|microsoft|nvidia|palantir|pltr|crwd|cvna|maru|rklb/.test(n+t)) return {s:'single',n:'מניות בודדות',i:'📱'};
-  if(/s.p|nasdaq|russell|dow|mid.cap|small.cap|upro|tqqq|spxl|sso|qld|tna|urty|ddm|udow/.test(n+t)) return {s:'indices',n:'מדדים רחבים',i:'📊'};
-  return {s:'other',n:'אחר',i:'📦'};
+// ══ PROXIES — מנסה כמה פרוקסיים עד שאחד עובד ══
+const PROXIES = [
+  url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+  url => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
+  url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
+];
+
+async function fetchWithProxy(url) {
+  for (const makeProxy of PROXIES) {
+    try {
+      const res = await fetch(makeProxy(url), {signal: AbortSignal.timeout(8000)});
+      if (!res.ok) continue;
+      const txt = await res.text();
+      // allorigins מחזיר JSON עם contents
+      try { const j = JSON.parse(txt); if(j.contents) return j.contents; } catch(e){}
+      return txt;
+    } catch(e) { continue; }
+  }
+  return null;
 }
 
-function detectLev(name){
-  const n=(name||'').toLowerCase();
-  if(/4x|4 times|quad/.test(n)) return '4x';
-  if(/3x|3 times|triple|ultrapro/.test(n)) return '3x';
-  return '2x';
-}
-
+const BATCH = 40;
 function formatVol(v){
-  if(!v||v===0) return '—';
+  if(!v) return '—';
   if(v>=1e9) return (v/1e9).toFixed(1)+'B';
   if(v>=1e6) return (v/1e6).toFixed(1)+'M';
   if(v>=1e3) return (v/1e3).toFixed(0)+'K';
   return String(v);
 }
 
-// ══════════════════════════════════════
-// STEP 1: שולף מ-Yahoo Screener
-// ══════════════════════════════════════
-async function fetchScreenerPage(start){
-  const url = YF_SCREENER + start;
-  const res = await fetch(PROXY + encodeURIComponent(url));
-  const json = await res.json();
-  const data = JSON.parse(json.contents);
-  return data?.finance?.result?.[0] || null;
+async function fetchPriceBatch(tickers){
+  const url = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${tickers.join(',')}&fields=regularMarketPrice,regularMarketChangePercent,regularMarketVolume,fiftyTwoWeekLow,fiftyTwoWeekHigh,shortName,marketState`;
+  const txt = await fetchWithProxy(url);
+  if (!txt) return [];
+  try {
+    const data = JSON.parse(txt);
+    return data?.quoteResponse?.result || [];
+  } catch(e) { return []; }
 }
 
-async function getAllTickersFromScreener(){
-  setStep(1, 'active');
-  let allTickers = [];
-  let start = 0;
-  let total = 999;
-
-  while(start < total){
-    try{
-      const result = await fetchScreenerPage(start);
-      if(!result) break;
-      total = result.total || 999;
-      const quotes = result.quotes || [];
-      quotes.forEach(q=>{
-        if(q.symbol) allTickers.push({
-          ticker: q.symbol,
-          name: q.shortName || q.longName || q.symbol,
-          lev: detectLev(q.shortName||''),
-          price: q.regularMarketPrice,
-          change: q.regularMarketChangePercent,
-          vol: formatVol(q.regularMarketVolume),
-          range52: q.fiftyTwoWeekLow && q.fiftyTwoWeekHigh ? `$${q.fiftyTwoWeekLow.toFixed(2)}–$${q.fiftyTwoWeekHigh.toFixed(2)}` : '—',
-          marketState: q.marketState,
-          active: true
-        });
-      });
-      start += quotes.length;
-      if(!quotes.length) break;
-      updateProgress(start, total, `שלב 1: נשלפו ${allTickers.length} קרנות מ-Yahoo...`);
-      await new Promise(r=>setTimeout(r,200));
-    } catch(e){
-      console.warn('screener page failed at', start, e);
-      break;
-    }
-  }
-  return allTickers;
-}
-
-// ══════════════════════════════════════
-// STEP 2: עדכון מחירים בBatch
-// ══════════════════════════════════════
-async function enrichWithPrices(fundsArr){
-  setStep(2, 'active');
-  const chunks = [];
-  for(let i=0; i<fundsArr.length; i+=BATCH_SIZE){
-    chunks.push(fundsArr.slice(i,i+BATCH_SIZE));
-  }
-  let done=0;
-  for(const chunk of chunks){
-    const tickers = chunk.map(f=>f.ticker);
-    try{
-      const url = YF_QUOTE + tickers.join(',') + '&fields=regularMarketPrice,regularMarketChangePercent,regularMarketVolume,fiftyTwoWeekLow,fiftyTwoWeekHigh,shortName,marketState';
-      const res = await fetch(PROXY + encodeURIComponent(url));
-      const json = await res.json();
-      const data = JSON.parse(json.contents);
-      const results = data?.quoteResponse?.result || [];
-      results.forEach(q=>{
-        const f = fundsArr.find(x=>x.ticker===q.symbol);
-        if(f){
-          f.price = q.regularMarketPrice || f.price;
-          f.change = q.regularMarketChangePercent || f.change;
-          f.vol = formatVol(q.regularMarketVolume) || f.vol;
-          f.range52 = q.fiftyTwoWeekLow && q.fiftyTwoWeekHigh ? `$${q.fiftyTwoWeekLow.toFixed(2)}–$${q.fiftyTwoWeekHigh.toFixed(2)}` : f.range52;
-          f.name = q.shortName || f.name;
-          f.marketState = q.marketState;
-          f.active = !!q.regularMarketPrice;
-        }
-      });
-    } catch(e){ console.warn('batch failed', e); }
-    done += chunk.length;
-    updateProgress(done, fundsArr.length, `שלב 2: מביא מחירים... ${done}/${fundsArr.length}`);
-    await new Promise(r=>setTimeout(r,250));
-  }
-}
-
-// ══════════════════════════════════════
-// MAIN LOAD FUNCTION
-// ══════════════════════════════════════
-async function loadAllFromYahoo(){
-  const btn = document.getElementById('loadBtn');
+// ══ LOAD ALL PRICES ══
+async function loadPrices(){
+  const btn = document.getElementById('refreshBtn');
   btn.disabled = true; btn.textContent = '⏳ טוען...';
-  document.getElementById('progressWrap').style.display = 'block';
-  document.getElementById('mainTopBar').style.display = 'none';
-  document.getElementById('summaryGrid').style.display = 'none';
+  document.getElementById('loadWrap').style.display = 'block';
   document.getElementById('liveBar').style.display = 'none';
-  document.getElementById('container').innerHTML = '';
+  document.getElementById('mainBar').style.display = 'none';
+  document.getElementById('sumGrid').style.display = 'none';
 
-  try{
-    // שלב 1 — Screener
-    updateProgress(0,1,'מתחבר ל-Yahoo Finance Screener...');
-    let fetched = await getAllTickersFromScreener();
+  setStep(1,'active'); setStep(2,'wait'); setStep(3,'wait');
 
-    // אם ה-Screener נכשל — fallback לרשימה ידועה
-    if(!fetched.length){
-      console.warn('Screener failed, using fallback list');
-      fetched = FALLBACK_TICKERS.map(([ticker,name,lev])=>({
-        ticker,name,lev,price:null,change:null,vol:'—',range52:'—',active:true
-      }));
-    }
+  const allFunds = funds;
+  const chunks = [];
+  for(let i=0; i<allFunds.length; i+=BATCH) chunks.push(allFunds.slice(i,i+BATCH));
 
-    funds = fetched;
-    delistedCount = 0;
-    updateProgress(funds.length, funds.length, `נמצאו ${funds.length} קרנות ממונפות!`);
-    setStep(1, 'done');
-
-    // שלב 2 — מחירים
-    if(!funds[0]?.price){
-      await enrichWithPrices(funds);
-    }
-    setStep(2, 'done');
-
-    // שלב 3 — הצגה
-    setStep(3, 'active');
-    delistedCount = funds.filter(f=>!f.active).length;
-    funds = funds.filter(f=>f.active); // מסיר שנסגרו
-    // מוסיף sector לכל קרן
-    funds.forEach(f=>{ const sc=detectSector(f.name,f.ticker); f.sector=sc.s; f.sectorName=sc.n; f.sectorIcon=sc.i; });
-
-    await new Promise(r=>setTimeout(r,300));
-    setStep(3, 'done');
-    document.getElementById('progressWrap').style.display = 'none';
-    document.getElementById('liveBar').style.display = 'flex';
-    document.getElementById('mainTopBar').style.display = 'flex';
-    document.getElementById('summaryGrid').style.display = 'grid';
-
-    const now = new Date().toLocaleTimeString('he-IL');
-    document.getElementById('lastUpdate').textContent = now;
-    document.getElementById('lastUpdatePill').style.display = 'flex';
-    setLiveBar('success','✅',`${funds.length} קרנות ממונפות נטענו בהצלחה!`,
-      `עדכון: ${now} · ${delistedCount ? delistedCount+' קרנות נמחקו מהשוק' : 'כל הקרנות פעילות'}`);
-
-    const isOpen = funds.find(f=>f.marketState==='REGULAR');
-    const dot = document.getElementById('marketDot');
-    dot.className = 'dot '+(isOpen?'':'orange');
-    document.getElementById('marketText').textContent = isOpen?'שוק פתוח':'שוק סגור';
-
-    render();
-    if(currentPage==='alerts') renderAlerts();
-
-  } catch(e){
-    console.error(e);
-    document.getElementById('progressWrap').style.display = 'none';
-    document.getElementById('liveBar').style.display = 'flex';
-    setLiveBar('error','❌','שגיאה בחיבור ל-Yahoo Finance','בדקי חיבור אינטרנט ולחצי "טען מ-Yahoo Finance" שוב');
+  let done=0, loaded=0;
+  for(const chunk of chunks){
+    const results = await fetchPriceBatch(chunk.map(f=>f.ticker));
+    const map = {};
+    results.forEach(q=>{ map[q.symbol]=q; });
+    chunk.forEach(f=>{
+      const q = map[f.ticker];
+      if(q && q.regularMarketPrice){
+        f.price   = q.regularMarketPrice;
+        f.change  = q.regularMarketChangePercent;
+        f.vol     = formatVol(q.regularMarketVolume);
+        f.range52 = q.fiftyTwoWeekLow && q.fiftyTwoWeekHigh
+          ? `$${q.fiftyTwoWeekLow.toFixed(2)}–$${q.fiftyTwoWeekHigh.toFixed(2)}`
+          : '—';
+        f.name    = q.shortName || f.name;
+        f.active  = true;
+        f.marketState = q.marketState;
+        loaded++;
+      } else {
+        f.active = false;
+      }
+    });
+    done += chunk.length;
+    const pct = Math.round(done/allFunds.length*100);
+    document.getElementById('loadFill').style.width = pct+'%';
+    document.getElementById('loadCount').textContent = done+' / '+allFunds.length;
+    document.getElementById('loadTitle').textContent = `📡 טוען מחירים חיים... ${done}/${allFunds.length} קרנות`;
+    await new Promise(r=>setTimeout(r,200));
   }
 
-  btn.disabled = false; btn.textContent = '🔄 רענן';
-  // Auto refresh every 5 min in market hours
-  setTimeout(()=>{
-    const h=new Date().getUTCHours();
-    if(h>=13&&h<20) loadAllFromYahoo();
-  }, 5*60*1000);
+  setStep(1,'done'); setStep(2,'active');
+  await new Promise(r=>setTimeout(r,200));
+  setStep(2,'done'); setStep(3,'active');
+
+  delistedCount = funds.filter(f=>!f.active).length;
+
+  const now = new Date().toLocaleTimeString('he-IL');
+  document.getElementById('updTime').textContent = now;
+  document.getElementById('updPill').style.display = 'flex';
+
+  const isOpen = funds.find(f=>f.marketState==='REGULAR');
+  const dot = document.getElementById('mktDot');
+  dot.className = 'dot '+(isOpen?'':'orange');
+  document.getElementById('mktTxt').textContent = isOpen?'שוק פתוח':'שוק סגור';
+
+  await new Promise(r=>setTimeout(r,300));
+  setStep(3,'done');
+  document.getElementById('loadWrap').style.display = 'none';
+  document.getElementById('liveBar').style.display = 'flex';
+  document.getElementById('mainBar').style.display = 'flex';
+  document.getElementById('sumGrid').style.display = 'grid';
+
+  setLiveBar('ok','✅',
+    `${loaded} קרנות נטענו בהצלחה${delistedCount?` · ${delistedCount} נמחקו מהשוק`:''}`,
+    `עדכון: ${now} · לחץ "רענן" לעדכון מחדש`
+  );
+
+  btn.disabled = false; btn.textContent = '🔄 רענן מחירים';
+  render();
+  if(currentPage==='alerts') renderAlerts();
 }
 
-function updateProgress(done, total, label){
-  const pct = total>0 ? Math.round(done/total*100) : 0;
-  document.getElementById('progressFill').style.width = pct+'%';
-  document.getElementById('progressCount').textContent = done+' / '+total;
-  document.getElementById('progressWrap').querySelector('.progress-title').textContent = label;
+function setStep(n,s){
+  document.getElementById('d'+n).className='lstep-dot '+s;
+  document.getElementById('t'+n).className='lstep-txt '+s;
 }
-
-function setStep(n, state){
-  const dot = document.getElementById('step'+n+'dot');
-  const txt = document.getElementById('step'+n+'txt');
-  dot.className = 'step-dot '+state;
-  txt.className = 'step-text '+state;
-}
-
-function setLiveBar(type, icon, title, sub){
-  const bar=document.getElementById('liveBar');
-  bar.className='live-bar '+type;
+function setLiveBar(type,icon,title,sub){
+  document.getElementById('liveBar').className='live-bar '+type;
   document.getElementById('liveIcon').textContent=icon;
   document.getElementById('liveTitle').textContent=title;
   document.getElementById('liveSub').textContent=sub;
 }
 
-// ══════════════════════════════════════
-// FALLBACK — אם ה-Screener נכשל
-// ══════════════════════════════════════
-const FALLBACK_TICKERS = [
-  ['TQQQ','ProShares UltraPro QQQ 3X','3x'],['UPRO','ProShares UltraPro S&P500 3X','3x'],
-  ['SPXL','Direxion Daily S&P 500 Bull 3X','3x'],['SSO','ProShares Ultra S&P500 2X','2x'],
-  ['QLD','ProShares Ultra QQQ 2X','2x'],['SOXL','Direxion Daily Semiconductors 3X','3x'],
-  ['NVDL','GraniteShares 2X Long NVDA','2x'],['TECL','Direxion Daily Tech Bull 3X','3x'],
-  ['FAS','Direxion Daily Financial Bull 3X','3x'],['TNA','Direxion Daily Small Cap Bull 3X','3x'],
-  ['LABU','Direxion Daily Biotech Bull 3X','3x'],['FNGU','MicroSectors FANG+ 3X','3x'],
-  ['TMF','Direxion Daily 20Y Treasury Bull 3X','3x'],['BOIL','ProShares Ultra Bloomberg Gas','2x'],
-  ['GUSH','Direxion Daily Oil&Gas Bull 2X','2x'],['ERX','Direxion Daily Energy Bull 2X','2x'],
-  ['MSTU','T-Rex 2X Long MSTR','2x'],['MSTX','Defiance 2X Long MSTR','2x'],
-  ['BITU','ProShares Ultra Bitcoin 2X','2x'],['BITX','2x Bitcoin Strategy ETF','2x'],
-  ['MSOX','AdvisorShares MSOS Leveraged','2x'],['TSLL','Direxion Daily TSLA Bull 2X','2x'],
-  ['NUGT','Direxion Daily Gold Miners 2X','2x'],['UGL','ProShares Ultra Gold 2X','2x'],
-  ['AGQ','ProShares Ultra Silver 2X','2x'],['GDXU','MicroSectors Gold Miners 3X','3x'],
-  ['YINN','Direxion Daily FTSE China Bull 3X','3x'],['BRZU','Direxion Daily Brazil Bull 2X','2x'],
-  ['SOLZ','Volatility Shares 2X Solana ETF','2x'],['RKLX','Defiance 2X Long RKLB','2x'],
-  ['PLTU','Direxion Daily PLTR Bull 2X','2x'],['AMDL','GraniteShares 2X Long AMD','2x'],
-  ['DPST','Direxion Daily Regional Banks 3X','3x'],['URTY','ProShares UltraPro Russell2000 3X','3x'],
-  ['BIB','ProShares Ultra NASDAQ Biotech 2X','2x'],['UDOW','ProShares UltraPro Dow30 3X','3x'],
-  ['JNUG','Direxion Daily Jr Gold Miners 2X','2x'],['INDL','Direxion Daily India Bull 2X','2x'],
-  ['CONL','GraniteShares 2X Long COIN','2x'],['ETHU','ProShares Ultra Ether 2X','2x'],
-];
-
-// ══════════════════════════════════════
-// SPARK
-// ══════════════════════════════════════
-function spark(isUp, seed){
+// ══ SPARK ══
+function spark(isUp,seed){
   let pts=[],y=22;
   for(let i=0;i<16;i++){
     const r=Math.abs(Math.sin(seed*9301+i*49297)*.5)+.5;
@@ -634,121 +620,106 @@ function spark(isUp, seed){
   </svg>`;
 }
 
-// ══════════════════════════════════════
-// CARD
-// ══════════════════════════════════════
+// ══ CARD ══
 function makeCard(f,i){
-  const hasP = f.price!=null;
-  const up = (f.change||0)>=0;
-  const low = hasP && f.price<threshold;
-  const delay = Math.min(i*.012,.5);
-  const priceStr = hasP ? `$${f.price.toFixed(2)}` : '—';
-  const chgStr = hasP ? `${up?'+':''}${f.change.toFixed(2)}%` : '—';
-  const levDisp = f.lev||'2x';
-  const levClass = levDisp==='3x'?'lev-3x':levDisp==='4x'?'lev-4x':'lev-2x';
+  const hasP=f.price!=null, up=(f.change||0)>=0, low=hasP&&f.price<threshold;
+  const levCls=f.lev==='3x'?'lev-3x':f.lev==='4x'?'lev-4x':'lev-2x';
+  const delay=Math.min(i*.012,.5);
   return `<div class="etf-card${low?' alerted':''}" onclick="openChart('${f.ticker}')" style="animation-delay:${delay}s">
     ${low?`<div class="card-tag" style="background:var(--red)">🔔 <$${threshold}</div>`:''}
     <div class="card-row1">
-      <div><div class="ticker">${f.ticker}</div><div class="etf-name">${f.name||f.ticker}</div></div>
-      <div class="lev-badge ${levClass}">${levDisp.toUpperCase()}</div>
+      <div><div class="ticker">${f.ticker}</div><div class="etf-name">${f.name}</div></div>
+      <div class="lev-badge ${levCls}">${f.lev.toUpperCase()}</div>
     </div>
     <div class="card-row2">
-      <div class="price ${low?'low':''}">${priceStr}${hasP?`<span class="live-dot"></span>`:''}</div>
+      <div class="price ${low?'low':''}">${hasP?`$${f.price.toFixed(2)}<span class="live-dot"></span>`:'—'}</div>
       <div class="change-box">
-        <div class="change-pct ${hasP?(up?'up':'down'):'flat'}">${chgStr}</div>
-        <div class="change-lbl">${hasP?'היום':'—'}</div>
+        <div class="change-pct ${hasP?(up?'up':'down'):'flat'}">${hasP?(up?'+':'')+f.change.toFixed(2)+'%':'—'}</div>
+        <div class="change-lbl">${hasP?'היום':'ממתין'}</div>
       </div>
     </div>
     ${spark(up, f.ticker.charCodeAt(0)*137+(f.ticker.charCodeAt(1)||0)*31)}
     <div class="card-footer">
-      <div class="meta"><div class="meta-lbl">52W</div><div class="meta-val" style="font-size:8.5px;">${f.range52||'—'}</div></div>
-      <div class="meta"><div class="meta-lbl">נפח</div><div class="meta-val">${f.vol||'—'}</div></div>
+      <div class="meta"><div class="meta-lbl">52W</div><div class="meta-val" style="font-size:8.5px;">${f.range52}</div></div>
+      <div class="meta"><div class="meta-lbl">נפח</div><div class="meta-val">${f.vol}</div></div>
       <button class="chart-btn" onclick="event.stopPropagation();openChart('${f.ticker}')">📊</button>
     </div>
   </div>`;
 }
 
-// ══════════════════════════════════════
-// RENDER ALL
-// ══════════════════════════════════════
+// ══ RENDER ══
 function render(){
   const q=(document.getElementById('searchInput').value||'').toUpperCase();
-  const visible = funds.filter(f=>{
-    if(q&&!f.ticker.includes(q)&&!(f.name||'').toUpperCase().includes(q)) return false;
-    if(levFilter==='3x'&&f.lev!=='3x') return false;
-    if(levFilter==='2x'&&f.lev!=='2x') return false;
-    if(levFilter==='up'&&(f.change==null||f.change<0)) return false;
-    if(levFilter==='down'&&(f.change==null||f.change>=0)) return false;
-    if(levFilter==='alert'&&(f.price==null||f.price>=threshold)) return false;
+  const active=funds.filter(f=>f.active);
+  const visible=active.filter(f=>{
+    if(q&&!f.ticker.includes(q)&&!f.name.toUpperCase().includes(q))return false;
+    if(levFilter==='3x'&&f.lev!=='3x')return false;
+    if(levFilter==='2x'&&f.lev!=='2x')return false;
+    if(levFilter==='up'&&(f.change==null||f.change<0))return false;
+    if(levFilter==='down'&&(f.change==null||f.change>=0))return false;
+    if(levFilter==='alert'&&(f.price==null||f.price>=threshold))return false;
     return true;
   });
 
-  // Group by sector
-  const sectorOrder = ['indices','semis','tech','finance','energy','biotech','crypto','cannabis','single','bonds','gold','international','other'];
-  const map = {};
-  visible.forEach(f=>{ (map[f.sector]||(map[f.sector]=[])).push(f); });
-  const sorted = Object.entries(map).sort((a,b)=>{
-    const ai=sectorOrder.indexOf(a[0]), bi=sectorOrder.indexOf(b[0]);
-    return (ai<0?99:ai)-(bi<0?99:bi);
-  });
+  const order=['indices','semis','tech','finance','energy','biotech','crypto','cannabis','single','bonds','gold','international'];
+  const map={};
+  visible.forEach(f=>{(map[f.sector]||(map[f.sector]=[])).push(f);});
+  const sorted=Object.entries(map).sort((a,b)=>(order.indexOf(a[0])<0?99:order.indexOf(a[0]))-(order.indexOf(b[0])<0?99:order.indexOf(b[0])));
 
-  let html='', ci=0;
+  let html='',ci=0;
   for(const[sk,sf] of sorted){
-    if(!sf.length) continue;
-    const first = sf[0];
-    const icon = first.sectorIcon||'📦';
-    const sname = first.sectorName||sk;
-    const withP = sf.filter(f=>f.price!=null);
-    const avg = withP.length ? (withP.reduce((a,f)=>a+(f.change||0),0)/withP.length).toFixed(2) : null;
-    const avgUp = avg===null||Number(avg)>=0;
-    html += `<div class="sector-section">
+    if(!sf.length)continue;
+    const s=SECTORS[sk]||{n:sk,i:'📦'};
+    const withP=sf.filter(f=>f.price!=null);
+    const avg=withP.length?(withP.reduce((a,f)=>a+(f.change||0),0)/withP.length).toFixed(2):null;
+    const avgUp=avg===null||Number(avg)>=0;
+    html+=`<div class="sector-section">
       <div class="sector-header">
-        <span class="sector-emoji">${icon}</span>
-        <span class="sector-title">${sname}</span>
+        <span class="sector-emoji">${s.i}</span>
+        <span class="sector-title">${s.n}</span>
         <span class="sector-count">${sf.length}</span>
         <span class="sector-avg" style="color:${avg===null?'var(--text3)':avgUp?'var(--green)':'var(--red)'}">
-          ${avg===null?'—':`ממוצע: ${avgUp?'+':''}${avg}%`}
+          ${avg===null?'טוען...':`ממוצע: ${avgUp?'+':''}${avg}%`}
         </span>
       </div>
       <div class="etf-grid">${sf.map(f=>makeCard(f,ci++)).join('')}</div>
     </div>`;
   }
-  document.getElementById('container').innerHTML = html||'<div style="text-align:center;padding:60px;color:var(--text3);">לא נמצאו קרנות</div>';
+  document.getElementById('container').innerHTML=html||'<div style="text-align:center;padding:60px;color:var(--text3);">לא נמצאו קרנות</div>';
 
-  // Stats
-  const withP = funds.filter(f=>f.price!=null);
-  const alerts = withP.filter(f=>f.price<threshold);
-  const avgAll = withP.length ? (withP.reduce((a,f)=>a+(f.change||0),0)/withP.length).toFixed(2) : null;
-  document.getElementById('hTotal').textContent = funds.length;
-  document.getElementById('sTotal').textContent = funds.length;
-  document.getElementById('sUp').textContent = withP.filter(f=>(f.change||0)>=0).length;
-  document.getElementById('sDown').textContent = withP.filter(f=>(f.change||0)<0).length;
-  document.getElementById('sAlert').textContent = alerts.length;
-  document.getElementById('sDelisted').textContent = delistedCount;
-  const avgEl = document.getElementById('sAvg');
-  if(avgAll!=null){ avgEl.textContent=(Number(avgAll)>=0?'+':'')+avgAll+'%'; avgEl.style.color=Number(avgAll)>=0?'var(--green)':'var(--red)'; }
+  const withP=active.filter(f=>f.price!=null);
+  const alerts=withP.filter(f=>f.price<threshold);
+  const avgAll=withP.length?(withP.reduce((a,f)=>a+(f.change||0),0)/withP.length).toFixed(2):null;
+  document.getElementById('hTotal').textContent=active.length;
+  document.getElementById('sTotal').textContent=active.length;
+  document.getElementById('sUp').textContent=withP.filter(f=>(f.change||0)>=0).length;
+  document.getElementById('sDown').textContent=withP.filter(f=>(f.change||0)<0).length;
+  document.getElementById('sAlert').textContent=alerts.length;
+  document.getElementById('sDelist').textContent=delistedCount;
+  const el=document.getElementById('sAvg');
+  if(avgAll!=null){el.textContent=(Number(avgAll)>=0?'+':'')+avgAll+'%';el.style.color=Number(avgAll)>=0?'var(--green)':'var(--red)';}
 
-  const banner = document.getElementById('alertBanner');
+  const banner=document.getElementById('alertBanner');
   if(alerts.length){
     banner.style.display='flex';
-    document.getElementById('alertText').innerHTML=`<strong>${alerts.length} קרנות מתחת ל-$${threshold}:</strong> `+alerts.slice(0,8).map(f=>`<strong>${f.ticker}</strong>`).join(' • ')+(alerts.length>8?` ועוד ${alerts.length-8}...`:'');
+    document.getElementById('alertText').innerHTML=`<strong>${alerts.length} קרנות מתחת ל-$${threshold}:</strong> `
+      +alerts.slice(0,8).map(f=>`<strong>${f.ticker}</strong>`).join(' • ')
+      +(alerts.length>8?` ועוד ${alerts.length-8}...`:'');
   } else banner.style.display='none';
 }
 
-// ══════════════════════════════════════
-// ALERTS PAGE
-// ══════════════════════════════════════
+// ══ ALERTS ══
 function renderAlerts(){
-  const withP = funds.filter(f=>f.price!=null);
-  const below = withP.filter(f=>f.price<threshold).sort((a,b)=>a.price-b.price);
-  const losers = withP.filter(f=>(f.change||0)<0).sort((a,b)=>a.change-b.change);
+  const withP=funds.filter(f=>f.active&&f.price!=null);
+  const below=withP.filter(f=>f.price<threshold).sort((a,b)=>a.price-b.price);
+  const losers=withP.filter(f=>(f.change||0)<0).sort((a,b)=>a.change-b.change);
 
-  document.getElementById('thresholdCount').innerHTML = below.length
-    ? `<strong style="color:var(--red)">${below.length}</strong> קרנות מתחת ל-$${threshold}`
-    : `<span style="color:var(--green)">✅ אין קרנות מתחת ל-$${threshold}</span>`;
+  document.getElementById('thCount').innerHTML=below.length
+    ?`<strong style="color:var(--red)">${below.length}</strong> קרנות מתחת ל-$${threshold}`
+    :`<span style="color:var(--green)">✅ אין קרנות מתחת ל-$${threshold}</span>`;
 
-  document.getElementById('alertSummary').innerHTML=`
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+  document.getElementById('alertSum').innerHTML=`
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:11px;">
       <div class="sum-card" style="border-color:#fca5a5;background:#fff8fa;">
         <div class="sum-label">מתחת ל-$${threshold}</div><div class="sum-val red">${below.length}</div><div class="sum-sub">דורשות תשומת לב</div>
       </div>
@@ -765,9 +736,8 @@ function renderAlerts(){
       </div>
     </div>`;
 
-  // Price bar
-  const pe=document.getElementById('priceBar'), ee=document.getElementById('priceBarEmpty');
-  if(!below.length){ pe.innerHTML=''; ee.style.display='block'; }
+  const pe=document.getElementById('priceBar'),ee=document.getElementById('priceBarEmpty');
+  if(!below.length){pe.innerHTML='';ee.style.display='block';}
   else{
     ee.style.display='none';
     pe.innerHTML=below.slice(0,20).map(f=>{
@@ -784,12 +754,10 @@ function renderAlerts(){
       <span style="font-size:10px;color:var(--red);font-weight:700;">── סף: $${threshold} ──</span></div>`;
   }
 
-  // Drop bar
-  const top15=losers.slice(0,15), maxD=Math.abs(top15[0]?.change||1);
+  const top15=losers.slice(0,15),maxD=Math.abs(top15[0]?.change||1);
   document.getElementById('dropBar').innerHTML=top15.length
     ?top15.map(f=>{
-      const pct=Math.abs(f.change||0),w=(pct/maxD*100).toFixed(1);
-      const isBelowTh=f.price<threshold;
+      const pct=Math.abs(f.change||0),w=(pct/maxD*100).toFixed(1),isBelowTh=f.price<threshold;
       return `<div class="bar-row" onclick="openChart('${f.ticker}')">
         <div class="bar-ticker" style="${isBelowTh?'color:var(--red)':''}">${isBelowTh?'🔔 ':''}<span style="font-family:'DM Mono',monospace;">${f.ticker}</span></div>
         <div class="bar-track"><div class="bar-fill" style="width:${w}%;background:${isBelowTh?'#c81e3d':'#e8335a'};">
@@ -798,85 +766,74 @@ function renderAlerts(){
         <div class="bar-extra">$${f.price?.toFixed(2)||'—'}</div>
       </div>`;
     }).join('')
-    :'<div style="text-align:center;padding:24px;color:var(--green);font-weight:700;">✅ אין ירידות היום</div>';
+    :'<div style="text-align:center;padding:22px;color:var(--green);font-weight:700;">✅ אין ירידות היום</div>';
 
-  // Cards
-  document.getElementById('losersGrid').innerHTML = below.length
+  document.getElementById('losersGrid').innerHTML=below.length
     ?below.slice(0,40).map((f,i)=>makeCard(f,i)).join('')
-    :'<div style="text-align:center;padding:36px;color:var(--green);font-size:14px;font-weight:700;grid-column:1/-1;">✅ אין קרנות מתחת ל-$'+threshold+' כרגע</div>';
+    :'<div style="text-align:center;padding:36px;color:var(--green);font-size:14px;font-weight:700;grid-column:1/-1;">✅ אין קרנות מתחת ל-$'+threshold+'</div>';
 }
 
-function applyThreshold(){
-  threshold=parseFloat(document.getElementById('thresholdInput').value)||10;
-  render(); renderAlerts();
-}
+function applyTh(){threshold=parseFloat(document.getElementById('thIn').value)||10;render();renderAlerts();}
 
-// ══════════════════════════════════════
-// CHART MODAL
-// ══════════════════════════════════════
+// ══ CHART MODAL ══
 function openChart(ticker){
   const f=funds.find(x=>x.ticker===ticker);if(!f)return;
   const up=(f.change||0)>=0;
   document.getElementById('mTicker').textContent=f.ticker;
-  document.getElementById('mName').textContent=f.name||ticker;
+  document.getElementById('mName').textContent=f.name;
   document.getElementById('mPrice').textContent=f.price?`$${f.price.toFixed(2)}`:'—';
   document.getElementById('mChange').innerHTML=f.change!=null?`<span style="color:${up?'var(--green)':'var(--red)'}">${up?'+':''}${f.change.toFixed(2)}%</span>`:'';
-  document.getElementById('m2Price').textContent=f.price?`$${f.price.toFixed(2)}`:'—';
-  document.getElementById('m2Change').innerHTML=f.change!=null?`<span style="color:${up?'var(--green)':'var(--red)'}">${up?'+':''}${f.change.toFixed(2)}%</span>`:'—';
-  document.getElementById('mRange').textContent=f.range52||'—';
-  document.getElementById('mVol').textContent=f.vol||'—';
+  document.getElementById('mP2').textContent=f.price?`$${f.price.toFixed(2)}`:'—';
+  document.getElementById('mC2').innerHTML=f.change!=null?`<span style="color:${up?'var(--green)':'var(--red)'}">${up?'+':''}${f.change.toFixed(2)}%</span>`:'—';
+  document.getElementById('mRange').textContent=f.range52;
+  document.getElementById('mVol').textContent=f.vol;
+
   const frame=document.getElementById('chartFrame');frame.innerHTML='';
-  const s=document.createElement('script');s.src='https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js';s.async=true;
-  s.innerHTML=JSON.stringify({autosize:true,symbol:ticker,interval:'D',timezone:'America/New_York',theme:'light',style:'1',locale:'he',backgroundColor:'#ffffff',gridColor:'#f0f2f5',allow_symbol_change:false,calendar:false,support_host:'https://www.tradingview.com'});
+  const s=document.createElement('script');
+  s.src='https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js';
+  s.async=true;
+  s.innerHTML=JSON.stringify({
+    autosize:true, symbol:ticker, interval:'D',
+    timezone:'America/New_York', theme:'light', style:'1',
+    locale:'he', backgroundColor:'#ffffff', gridColor:'#f0f2f5',
+    allow_symbol_change:false, calendar:false,
+    support_host:'https://www.tradingview.com'
+  });
   const w=document.createElement('div');w.className='tradingview-widget-container';w.style.height='100%';
   const inn=document.createElement('div');inn.className='tradingview-widget-container__widget';inn.style.height='100%';
   w.appendChild(inn);w.appendChild(s);frame.appendChild(w);
-  document.getElementById('chartOverlay').classList.remove('hidden');document.body.style.overflow='hidden';
+  document.getElementById('chartOverlay').classList.remove('hidden');
+  document.body.style.overflow='hidden';
 }
 function closeChart(){document.getElementById('chartOverlay').classList.add('hidden');document.getElementById('chartFrame').innerHTML='';document.body.style.overflow='';}
-
-// ══════════════════════════════════════
-// ADD MANUAL
-// ══════════════════════════════════════
 function showAdd(){document.getElementById('addOverlay').classList.remove('hidden');document.body.style.overflow='hidden';}
 function closeAdd(){document.getElementById('addOverlay').classList.add('hidden');document.body.style.overflow='';}
-async function addFundManual(){
+
+async function addManual(){
   const ticker=(document.getElementById('nTicker').value||'').toUpperCase().trim();
   if(!ticker){alert('נא למלא טיקר');return;}
-  if(funds.find(f=>f.ticker===ticker)){alert('קרן זו כבר ברשימה!');return;}
+  if(funds.find(f=>f.ticker===ticker)){alert('קרן זו כבר קיימת!');return;}
   closeAdd();
-  // שולף מחיר חי
-  try{
-    const url=YF_QUOTE+ticker+'&fields=regularMarketPrice,regularMarketChangePercent,regularMarketVolume,fiftyTwoWeekLow,fiftyTwoWeekHigh,shortName';
-    const res=await fetch(PROXY+encodeURIComponent(url));
-    const json=await res.json();
-    const data=JSON.parse(json.contents);
-    const q=data?.quoteResponse?.result?.[0];
-    const sc=detectSector(q?.shortName||ticker,ticker);
-    funds.unshift({
-      ticker, name:q?.shortName||ticker,
-      lev:document.getElementById('nLev').value,
-      price:q?.regularMarketPrice||null,
-      change:q?.regularMarketChangePercent||null,
-      vol:formatVol(q?.regularMarketVolume),
-      range52:q?.fiftyTwoWeekLow?`$${q.fiftyTwoWeekLow.toFixed(2)}–$${q.fiftyTwoWeekHigh.toFixed(2)}`:'—',
-      sector:sc.s, sectorName:sc.n, sectorIcon:sc.i, active:true
-    });
-  } catch(e){ funds.unshift({ticker,name:ticker,lev:'2x',price:null,change:null,vol:'—',range52:'—',sector:'other',sectorName:'אחר',sectorIcon:'📦',active:true}); }
-  document.getElementById('nTicker').value='';
+  const newF={ticker,name:document.getElementById('nName').value||ticker,lev:document.getElementById('nLev').value,sector:'single',price:null,change:null,vol:'—',range52:'—',active:true};
+  funds.unshift(newF);
+  const results=await fetchPriceBatch([ticker]);
+  if(results[0]&&results[0].regularMarketPrice){
+    newF.price=results[0].regularMarketPrice;newF.change=results[0].regularMarketChangePercent;
+    newF.vol=formatVol(results[0].regularMarketVolume);
+    newF.range52=results[0].fiftyTwoWeekLow?`$${results[0].fiftyTwoWeekLow.toFixed(2)}–$${results[0].fiftyTwoWeekHigh.toFixed(2)}`:'—';
+    newF.name=results[0].shortName||newF.name;
+  }
+  document.getElementById('nTicker').value='';document.getElementById('nName').value='';
   render();
 }
 
-// ══════════════════════════════════════
-// NAV
-// ══════════════════════════════════════
 function showPage(p,btn){
   currentPage=p;
   document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
   document.getElementById('page-'+p).classList.add('active');
   document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  if(p==='alerts') renderAlerts();
+  if(p==='alerts')renderAlerts();
 }
 function setFilter(f,btn){levFilter=f;document.querySelectorAll('#page-all .filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');render();}
 function onSearch(){currentPage==='alerts'?renderAlerts():render();}
@@ -887,10 +844,14 @@ function onSearch(){currentPage==='alerts'?renderAlerts():render();}
   });
 });
 
-// ══════════════════════════════════════
+// Auto refresh כל 5 דקות בשעות מסחר
+setInterval(()=>{
+  const h=new Date().getUTCHours();
+  if(h>=13&&h<20)loadPrices();
+},5*60*1000);
+
 // INIT
-// ══════════════════════════════════════
-loadAllFromYahoo();
+loadPrices();
 </script>
 </body>
 </html>
