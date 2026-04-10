@@ -3,11 +3,12 @@ const http = require('http');
 const zlib = require('zlib');
 
 const PORT = process.env.PORT || 3000;
+let cachedCrumb = null;
+let cachedCookie = null;
 
-function makeRequest(hostname, path, headers) {
+function httpsGet(hostname, path, headers) {
   return new Promise((resolve, reject) => {
-    const options = { hostname, path, method: 'GET', headers };
-    const req = https.request(options, (res) => {
+    const req = https.request({ hostname, path, method: 'GET', headers }, (res) => {
       const chunks = [];
       let stream = res;
       const enc = res.headers['content-encoding'];
@@ -15,10 +16,11 @@ function makeRequest(hostname, path, headers) {
       else if (enc === 'br') stream = res.pipe(zlib.createBrotliDecompress());
       else if (enc === 'deflate') stream = res.pipe(zlib.createInflate());
       stream.on('data', c => chunks.push(c));
-      stream.on('end', () => {
-        try { resolve(JSON.parse(Buffer.concat(chunks).toString('utf8'))); }
-        catch(e) { reject(new Error('Parse error')); }
-      });
+      stream.on('end', () => resolve({ 
+        body: Buffer.concat(chunks).toString('utf8'),
+        headers: res.headers,
+        status: res.statusCode
+      }));
       stream.on('error', reject);
     });
     req.on('error', reject);
@@ -27,35 +29,53 @@ function makeRequest(hostname, path, headers) {
   });
 }
 
+async function getCrumb() {
+  if (cachedCrumb && cachedCookie) return { crumb: cachedCrumb, cookie: cachedCookie };
+  
+  // שלב 1: קבל cookie
+  const r1 = await httpsGet('finance.yahoo.com', '/', {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+    'Accept-Language': 'en-US,en;q=0.5',
+    'Accept-Encoding': 'gzip, deflate, br',
+  });
+  
+  const cookies = r1.headers['set-cookie'] || [];
+  const cookieStr = cookies.map(c => c.split(';')[0]).join('; ');
+  
+  // שלב 2: קבל crumb
+  const r2 = await httpsGet('query1.finance.yahoo.com', '/v1/test/getcrumb', {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+    'Accept': '*/*',
+    'Accept-Language': 'en-US,en;q=0.9',
+    'Accept-Encoding': 'gzip, deflate, br',
+    'Referer': 'https://finance.yahoo.com/',
+    'Cookie': cookieStr,
+  });
+  
+  cachedCrumb = r2.body.trim();
+  cachedCookie = cookieStr;
+  console.log('Got crumb:', cachedCrumb, 'cookie length:', cookieStr.length);
+  return { crumb: cachedCrumb, cookie: cachedCookie };
+}
+
 async function fetchPrices(tickers) {
+  const { crumb, cookie } = await getCrumb();
   const symbols = tickers.join(',');
   const fields = 'regularMarketPrice,regularMarketChangePercent,regularMarketVolume,fiftyTwoWeekLow,fiftyTwoWeekHigh,shortName,marketState';
-  const path = `/v7/finance/quote?symbols=${encodeURIComponent(symbols)}&fields=${fields}&formatted=false&lang=en-US&region=US&corsDomain=finance.yahoo.com`;
+  const path = `/v7/finance/quote?symbols=${encodeURIComponent(symbols)}&fields=${fields}&crumb=${encodeURIComponent(crumb)}&formatted=false&lang=en-US&region=US`;
   
-  const headers1 = {
+  const r = await httpsGet('query1.finance.yahoo.com', path, {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
     'Accept': 'application/json, text/plain, */*',
     'Accept-Language': 'en-US,en;q=0.9',
     'Accept-Encoding': 'gzip, deflate, br',
     'Referer': 'https://finance.yahoo.com/',
-    'Origin': 'https://finance.yahoo.com',
-  };
-
-  // Try query1
-  try {
-    const d = await makeRequest('query1.finance.yahoo.com', path, headers1);
-    const r = d?.quoteResponse?.result || [];
-    if (r.length > 0) return r;
-  } catch(e) { console.log('query1 failed:', e.message); }
-
-  // Try query2
-  try {
-    const d = await makeRequest('query2.finance.yahoo.com', path, headers1);
-    const r = d?.quoteResponse?.result || [];
-    if (r.length > 0) return r;
-  } catch(e) { console.log('query2 failed:', e.message); }
-
-  return [];
+    'Cookie': cookie,
+  });
+  
+  const data = JSON.parse(r.body);
+  return data?.quoteResponse?.result || [];
 }
 
 const server = http.createServer(async (req, res) => {
@@ -70,24 +90,32 @@ const server = http.createServer(async (req, res) => {
 
   if (url.pathname === '/health') {
     res.writeHead(200);
-    res.end(JSON.stringify({ status: 'ok', time: new Date().toISOString() }));
+    res.end(JSON.stringify({ status: 'ok', time: new Date().toISOString(), crumb: cachedCrumb ? 'cached' : 'none' }));
     return;
   }
 
   if (url.pathname === '/quote') {
     const symbols = url.searchParams.get('symbols');
-    if (!symbols) { res.writeHead(400); res.end(JSON.stringify({ error: 'symbols required', results: [] })); return; }
+    if (!symbols) { res.writeHead(400); res.end(JSON.stringify({ results: [], error: 'symbols required' })); return; }
     const tickers = symbols.split(',').filter(Boolean).slice(0, 50);
-    console.log('Fetching:', tickers.length, 'tickers');
+    console.log('Fetching:', tickers.length, 'tickers:', tickers.slice(0,3).join(','),'...');
     try {
       const results = await fetchPrices(tickers);
-      console.log('Got:', results.length, 'results');
+      console.log('Success:', results.length, 'results');
       res.writeHead(200);
       res.end(JSON.stringify({ results }));
     } catch(e) {
       console.error('Error:', e.message);
-      res.writeHead(200);
-      res.end(JSON.stringify({ results: [], error: e.message }));
+      // נסה לאפס את ה-crumb ולנסות שוב
+      cachedCrumb = null; cachedCookie = null;
+      try {
+        const results = await fetchPrices(tickers);
+        res.writeHead(200);
+        res.end(JSON.stringify({ results }));
+      } catch(e2) {
+        res.writeHead(200);
+        res.end(JSON.stringify({ results: [], error: e2.message }));
+      }
     }
     return;
   }
