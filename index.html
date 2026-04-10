@@ -478,36 +478,35 @@ let currentPage = 'all';
 let delistedCount = 0;
 
 // ══ FETCH WITH MULTIPLE PROXIES ══
+// ══ השרת שלנו ב-Railway ══
+const RAILWAY_SERVER = 'https://levtrack-production.up.railway.app';
+
 async function fetchWithProxy(url) {
-  // ניסיון 1: corsproxy.io
+  // ניסיון 1: השרת שלנו ב-Railway (הכי אמין!)
+  try {
+    const symbols = new URL(url).searchParams.get('symbols');
+    if (symbols) {
+      const r = await fetch(`${RAILWAY_SERVER}/quote?symbols=${encodeURIComponent(symbols)}`);
+      if (r.ok) {
+        const j = await r.json();
+        if (j.results && j.results.length > 0) {
+          // מחזיר פורמט שמתאים ל-Yahoo Finance
+          return JSON.stringify({ quoteResponse: { result: j.results } });
+        }
+      }
+    }
+  } catch(e) { console.warn('Railway server failed:', e); }
+
+  // ניסיון 2: corsproxy.io (גיבוי)
   try {
     const r = await fetch('https://corsproxy.io/?' + encodeURIComponent(url));
     if (r.ok) { const t = await r.text(); if(t&&t.length>10) return t; }
   } catch(e) {}
 
-  // ניסיון 2: allorigins
+  // ניסיון 3: allorigins (גיבוי)
   try {
     const r = await fetch('https://api.allorigins.win/get?url=' + encodeURIComponent(url));
     if (r.ok) { const j = await r.json(); if(j.contents&&j.contents.length>10) return j.contents; }
-  } catch(e) {}
-
-  // ניסיון 3: codetabs
-  try {
-    const r = await fetch('https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(url));
-    if (r.ok) { const t = await r.text(); if(t&&t.length>10) return t; }
-  } catch(e) {}
-
-  // ניסיון 4: thingproxy
-  try {
-    const r = await fetch('https://thingproxy.freeboard.io/fetch/' + url);
-    if (r.ok) { const t = await r.text(); if(t&&t.length>10) return t; }
-  } catch(e) {}
-
-  // ניסיון 5: jsonp endpoint אחר של Yahoo
-  try {
-    const alt = url.replace('query1.finance.yahoo.com','query2.finance.yahoo.com');
-    const r = await fetch('https://corsproxy.io/?' + encodeURIComponent(alt));
-    if (r.ok) { const t = await r.text(); if(t&&t.length>10) return t; }
   } catch(e) {}
 
   return null;
