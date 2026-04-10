@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LevTrack — קרנות ממונפות</title>
+<title>AZENO — Leveraged Funds</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -181,10 +181,13 @@ main{max-width:1440px;margin:0 auto;padding:24px;}
 .close-btn:hover{background:var(--bg4);}
 .modal-body{padding:20px 24px;}
 .chart-frame{width:100%;height:450px;border-radius:12px;overflow:hidden;border:1px solid var(--border);margin-bottom:18px;}
+.range-btn{padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:var(--bg3);color:var(--text2);font-family:'Plus Jakarta Sans',sans-serif;transition:all .15s;}
+.range-btn:hover{border-color:var(--accent);color:var(--accent);}
+.range-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);}
 .modal-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin-bottom:14px;}
 .mstat{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:13px;}
-.mstat-lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;font-weight:600;margin-bottom:4px;}
-.mstat-val{font-size:16px;font-weight:800;letter-spacing:-.5px;}
+.mstat-lbl{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;font-weight:600;margin-bottom:6px;font-family:'Plus Jakarta Sans',sans-serif;}
+.mstat-val{font-size:15px;font-weight:700;letter-spacing:-.3px;font-family:'Plus Jakarta Sans',sans-serif;color:var(--text);}
 .warn-box{background:#fffbeb;border:1.5px solid #fde68a;border-radius:10px;padding:12px 15px;display:flex;gap:10px;}
 .warn-icon{font-size:15px;flex-shrink:0;margin-top:1px;}
 .warn-text{font-size:12px;color:#92400e;line-height:1.6;}
@@ -208,7 +211,7 @@ main{max-width:1440px;margin:0 auto;padding:24px;}
 <body>
 
 <header>
-  <a class="logo" href="#"><div class="logo-mark">L</div><div class="logo-name">Lev<span>Track</span></div></a>
+  <a class="logo" href="#"><div class="logo-mark">A</div><div class="logo-name">AZENO <span style="font-size:13px;font-weight:600;color:var(--text3);">Leveraged Funds</span></div></a>
   <div class="nav-tabs">
     <button class="nav-tab active" onclick="showPage('all',this)">📊 כל הקרנות</button>
     <button class="nav-tab red-tab" onclick="showPage('alerts',this)">🔔 התראות</button>
@@ -218,7 +221,22 @@ main{max-width:1440px;margin:0 auto;padding:24px;}
       <span class="search-icon">🔍</span>
       <input class="search-input" type="text" id="searchInput" placeholder="חיפוש קרן..." oninput="onSearch()">
     </div>
-    <div class="pill"><div class="dot grey" id="mktDot"></div><span id="mktTxt">טוען...</span></div>
+    <div class="pill" style="cursor:pointer;position:relative;" onclick="toggleMarketInfo()">
+      <div class="dot grey" id="mktDot"></div>
+      <span id="mktTxt">טוען...</span>
+      <span style="font-size:10px;color:var(--text3);margin-right:2px;">ℹ️</span>
+    </div>
+    <!-- Market Info Tooltip -->
+    <div id="mktInfo" style="display:none;position:fixed;top:70px;right:20px;z-index:999;background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:18px 20px;max-width:320px;box-shadow:0 8px 32px rgba(15,25,35,.15);">
+      <div style="font-size:14px;font-weight:800;margin-bottom:10px;">🕐 שעות המסחר בישראל</div>
+      <div style="font-size:13px;color:var(--text2);line-height:1.7;">
+        <strong>שוק פתוח</strong> = הבורסה האמריקאית פועלת עכשיו.<br>
+        בישראל זה: <strong>16:30–23:00</strong> (שעון קיץ) או <strong>15:30–22:00</strong> (שעון חורף).<br><br>
+        <strong>שוק סגור</strong> = הבורסה סגורה. המחירים שאת רואה הם מהסגירה האחרונה.<br><br>
+        💡 <em>קרנות ממונפות נסחרות רק בשעות המסחר — מחוץ לשעות אין אפשרות לקנות/למכור.</em>
+      </div>
+      <button onclick="toggleMarketInfo()" style="margin-top:12px;padding:6px 16px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;">סגור</button>
+    </div>
     <div class="pill">📊 <span id="hTotal">0</span> קרנות</div>
     <div class="pill" id="updPill" style="display:none;">🕐 <span id="updTime"></span></div>
   </div>
@@ -322,7 +340,21 @@ main{max-width:1440px;margin:0 auto;padding:24px;}
       </div>
     </div>
     <div class="modal-body">
-      <div class="chart-frame" id="chartFrame"></div>
+      <div class="chart-frame" id="chartFrame">
+        <!-- כפתורי טווח זמן -->
+        <div id="chartRangeBar" style="display:flex;gap:6px;padding:12px 16px 0;background:#fff;border-bottom:1px solid var(--border);">
+          <button class="range-btn" onclick="loadChart(currentTicker,'1M',this)">1M</button>
+          <button class="range-btn" onclick="loadChart(currentTicker,'3M',this)">3M</button>
+          <button class="range-btn" onclick="loadChart(currentTicker,'6M',this)">6M</button>
+          <button class="range-btn active" onclick="loadChart(currentTicker,'1Y',this)">1Y</button>
+          <button class="range-btn" onclick="loadChart(currentTicker,'5Y',this)">5Y</button>
+          <button class="range-btn" onclick="loadChart(currentTicker,'MAX',this)">מקסימום</button>
+          <div id="chartLoading" style="margin-right:auto;font-size:12px;color:var(--text3);align-self:center;"></div>
+        </div>
+        <div style="padding:8px 12px 12px;background:#fff;height:calc(100% - 48px);">
+          <canvas id="priceChart"></canvas>
+        </div>
+      </div>
       <div class="modal-stats">
         <div class="mstat"><div class="mstat-lbl">מחיר</div><div class="mstat-val" id="mP2">—</div></div>
         <div class="mstat"><div class="mstat-lbl">שינוי %</div><div class="mstat-val" id="mC2">—</div></div>
@@ -798,6 +830,85 @@ function renderAlerts(){
 
 function applyTh(){threshold=parseFloat(document.getElementById('thIn').value)||10;render();renderAlerts();}
 
+function toggleMarketInfo(){
+  const el=document.getElementById('mktInfo');
+  el.style.display=el.style.display==='none'?'block':'none';
+}
+document.addEventListener('click',e=>{
+  const info=document.getElementById('mktInfo');
+  if(info&&info.style.display!=='none'&&!info.contains(e.target)&&!e.target.closest('[onclick="toggleMarketInfo()"]')) info.style.display='none';
+});
+
+// ══ CHART.JS GOOGLE-STYLE ══
+let chartInstance=null, currentTicker=null;
+
+async function loadChart(ticker, range, btn){
+  currentTicker=ticker;
+  document.querySelectorAll('.range-btn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  document.getElementById('chartLoading').innerHTML='טוען... <span class="spinner"></span>';
+
+  const now=Math.floor(Date.now()/1000);
+  let from;
+  if(range==='1M') from=now-30*86400;
+  else if(range==='3M') from=now-90*86400;
+  else if(range==='6M') from=now-180*86400;
+  else if(range==='1Y') from=now-365*86400;
+  else if(range==='5Y') from=now-5*365*86400;
+  else from=1;
+
+  const interval=(range==='1M'||range==='3M')?'1d':(range==='5Y'||range==='MAX')?'1wk':'1d';
+
+  try{
+    const url=`https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?period1=${from}&period2=${now}&interval=${interval}`;
+    const txt=await fetchWithProxy(url);
+    const data=JSON.parse(txt);
+    const result=data?.chart?.result?.[0];
+    if(!result) throw new Error('no data');
+    const timestamps=result.timestamp||[];
+    const closes=result.indicators?.quote?.[0]?.close||[];
+    const labels=timestamps.map(t=>{
+      const d=new Date(t*1000);
+      if(range==='1M'||range==='3M') return d.toLocaleDateString('he-IL',{day:'2-digit',month:'2-digit'});
+      if(range==='5Y'||range==='MAX') return d.toLocaleDateString('he-IL',{month:'2-digit',year:'2-digit'});
+      return d.toLocaleDateString('he-IL',{day:'2-digit',month:'2-digit',year:'2-digit'});
+    });
+    const prices=closes.map(p=>p?Math.round(p*100)/100:null);
+    const isUp=(prices.filter(p=>p)[prices.filter(p=>p).length-1]||0)>=(prices.find(p=>p)||0);
+    const color=isUp?'#00a878':'#e8335a';
+    const colorBg=isUp?'rgba(0,168,120,0.10)':'rgba(232,51,90,0.10)';
+    if(chartInstance) chartInstance.destroy();
+    const ctx=document.getElementById('priceChart').getContext('2d');
+    chartInstance=new Chart(ctx,{
+      type:'line',
+      data:{labels,datasets:[{data:prices,borderColor:color,backgroundColor:colorBg,fill:true,tension:0.3,borderWidth:2,pointRadius:0,pointHoverRadius:5,pointHoverBackgroundColor:color,spanGaps:true}]},
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        interaction:{mode:'index',intersect:false},
+        plugins:{
+          legend:{display:false},
+          tooltip:{
+            backgroundColor:'#fff',borderColor:color,borderWidth:1.5,
+            titleColor:'#0f1923',bodyColor:color,
+            titleFont:{family:'Plus Jakarta Sans',size:11},
+            bodyFont:{family:'Plus Jakarta Sans',size:13,weight:'700'},
+            padding:10,
+            callbacks:{label:ctx=>`$${ctx.parsed.y?.toFixed(2)||'—'}`}
+          }
+        },
+        scales:{
+          x:{grid:{display:false},ticks:{font:{family:'Plus Jakarta Sans',size:10},color:'#9aa5b4',maxTicksLimit:8,maxRotation:0},border:{display:false}},
+          y:{position:'right',grid:{color:'#f0f2f5'},ticks:{font:{family:'Plus Jakarta Sans',size:10},color:'#9aa5b4',callback:v=>`$${v}`},border:{display:false}}
+        }
+      }
+    });
+    document.getElementById('chartLoading').textContent='';
+  }catch(e){
+    document.getElementById('chartLoading').textContent='שגיאה בטעינת גרף';
+    console.error('Chart error:',e);
+  }
+}
+
 // ══ CHART MODAL ══
 function openChart(ticker){
   const f=funds.find(x=>x.ticker===ticker);if(!f)return;
@@ -810,26 +921,20 @@ function openChart(ticker){
   document.getElementById('mC2').innerHTML=f.change!=null?`<span style="color:${up?'var(--green)':'var(--red)'}">${up?'+':''}${f.change.toFixed(2)}%</span>`:'—';
   document.getElementById('mRange').textContent=f.range52;
   document.getElementById('mVol').textContent=f.vol;
-
-  const frame=document.getElementById('chartFrame');frame.innerHTML='';
-  const s=document.createElement('script');
-  s.src='https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js';
-  s.async=true;
-  s.innerHTML=JSON.stringify({
-    autosize:true, symbol:ticker, interval:'W',
-    range:'ALL',
-    timezone:'America/New_York', theme:'light', style:'1',
-    locale:'he', backgroundColor:'#ffffff', gridColor:'#f0f2f5',
-    allow_symbol_change:false, calendar:false,
-    support_host:'https://www.tradingview.com'
-  });
-  const w=document.createElement('div');w.className='tradingview-widget-container';w.style.height='100%';
-  const inn=document.createElement('div');inn.className='tradingview-widget-container__widget';inn.style.height='100%';
-  w.appendChild(inn);w.appendChild(s);frame.appendChild(w);
+  if(chartInstance){chartInstance.destroy();chartInstance=null;}
   document.getElementById('chartOverlay').classList.remove('hidden');
   document.body.style.overflow='hidden';
+  // טען גרף ברירת מחדל 1Y
+  setTimeout(()=>{
+    const defaultBtn=document.querySelector('.range-btn[onclick*="1Y"]');
+    loadChart(ticker,'1Y',defaultBtn);
+  },100);
 }
-function closeChart(){document.getElementById('chartOverlay').classList.add('hidden');document.getElementById('chartFrame').innerHTML='';document.body.style.overflow='';}
+function closeChart(){
+  document.getElementById('chartOverlay').classList.add('hidden');
+  if(chartInstance){chartInstance.destroy();chartInstance=null;}
+  document.body.style.overflow='';
+}
 function showAdd(){document.getElementById('addOverlay').classList.remove('hidden');document.body.style.overflow='hidden';}
 function closeAdd(){document.getElementById('addOverlay').classList.add('hidden');document.body.style.overflow='';}
 
@@ -877,5 +982,6 @@ setInterval(()=>{
 // INIT
 loadPrices();
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 </body>
 </html>
