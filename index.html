@@ -180,7 +180,7 @@ main{max-width:1440px;margin:0 auto;padding:24px;}
 .close-btn{width:32px;height:32px;border-radius:8px;border:1.5px solid var(--border2);background:var(--bg3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--text2);}
 .close-btn:hover{background:var(--bg4);}
 .modal-body{padding:20px 24px;}
-.chart-frame{width:100%;height:450px;border-radius:12px;overflow:hidden;border:1px solid var(--border);margin-bottom:18px;}
+.chart-frame{width:100%;height:450px;border-radius:12px;overflow:hidden;border:1px solid var(--border);margin-bottom:18px;display:flex;flex-direction:column;}
 .range-btn{padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:var(--bg3);color:var(--text2);font-family:'Plus Jakarta Sans',sans-serif;transition:all .15s;}
 .range-btn:hover{border-color:var(--accent);color:var(--accent);}
 .range-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);}
@@ -207,6 +207,7 @@ main{max-width:1440px;margin:0 auto;padding:24px;}
 ::-webkit-scrollbar-track{background:var(--bg3);}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 </head>
 <body>
 
@@ -351,8 +352,8 @@ main{max-width:1440px;margin:0 auto;padding:24px;}
           <button class="range-btn" onclick="loadChart(currentTicker,'MAX',this)">מקסימום</button>
           <div id="chartLoading" style="margin-right:auto;font-size:12px;color:var(--text3);align-self:center;"></div>
         </div>
-        <div style="padding:8px 12px 12px;background:#fff;height:calc(100% - 48px);">
-          <canvas id="priceChart"></canvas>
+        <div style="padding:8px 12px 12px;background:#fff;flex:1;min-height:0;">
+          <canvas id="priceChart" style="width:100%;height:100%;"></canvas>
         </div>
       </div>
       <div class="modal-stats">
@@ -1035,6 +1036,5 @@ setInterval(()=>{
 // INIT
 loadPrices();
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 </body>
 </html>
