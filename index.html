@@ -362,7 +362,20 @@ main{max-width:1440px;margin:0 auto;padding:24px;}
         <div class="mstat"><div class="mstat-lbl">טווח שנתי</div><div class="mstat-val" id="mRange" style="font-size:12px;">—</div></div>
         <div class="mstat"><div class="mstat-lbl">נפח</div><div class="mstat-val" id="mVol">—</div></div>
       </div>
-      <div class="warn-box"><div class="warn-icon">⚠️</div><div class="warn-text">קרנות ממונפות מיועדות למסחר קצר טווח בלבד. Volatility Decay גורם לשחיקה בשווקים תנודתיים. המידע אינו ייעוץ השקעות.</div></div>
+
+      <!-- AI DESCRIPTION -->
+      <div id="aiDescBox" style="background:var(--bg3);border:1px solid var(--border);border-radius:13px;padding:20px 22px;margin-top:16px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+          <span style="font-size:18px;">🤖</span>
+          <span style="font-size:14px;font-weight:800;color:var(--text);">הסבר מפורט על הקרן</span>
+          <span id="aiDescLoading" style="font-size:11px;color:var(--text3);margin-right:auto;"></span>
+        </div>
+        <div id="aiDescContent" style="font-size:13.5px;color:var(--text2);line-height:1.9;white-space:pre-wrap;">
+          <div style="color:var(--text3);font-size:13px;">⏳ טוען הסבר מפורט...</div>
+        </div>
+      </div>
+
+      <div class="warn-box" style="margin-top:14px;"><div class="warn-icon">⚠️</div><div class="warn-text">קרנות ממונפות מיועדות למסחר קצר טווח בלבד. Volatility Decay גורם לשחיקה בשווקים תנודתיים. המידע אינו ייעוץ השקעות.</div></div>
     </div>
   </div>
 </div>
@@ -981,6 +994,75 @@ async function loadChart(ticker, range, btn){
 }
 
 // ══ CHART MODAL ══
+// ══ AI DESCRIPTION CACHE ══
+const descCache = {};
+
+async function loadAIDescription(ticker, name, lev, sectorName, price, change) {
+  const content = document.getElementById('aiDescContent');
+  const loading = document.getElementById('aiDescLoading');
+
+  // בדוק cache
+  if(descCache[ticker]) {
+    content.innerHTML = descCache[ticker];
+    return;
+  }
+
+  loading.innerHTML = 'מייצר הסבר... <span class="spinner"></span>';
+  content.innerHTML = '<div style="color:var(--text3);font-size:13px;">⏳ טוען הסבר מפורט...</div>';
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{
+          role: 'user',
+          content: `כתוב הסבר מפורט ומעמיק בעברית על קרן ה-ETF הממונפת ${ticker} (${name}).
+המינוף שלה: ${lev.toUpperCase()}.
+סקטור: ${sectorName}.
+מחיר נוכחי: $${price || '—'}.
+
+כתוב הסבר שכולל את הנושאים הבאים בסדר הזה, בעברית מלאה, מפורט ומקצועי:
+
+1. **מה הקרן הזו עושה בדיוק** — תאר את המנגנון המדויק של הקרן, כולל על מה היא עוקבת
+
+2. **אחרי מה היא עוקבת** — פרט את המדד/המניה/הנכס הבסיסי, מה הוא מכיל, החברות/נכסים העיקריים בו
+
+3. **איך עובד המינוף ${lev.toUpperCase()}** — הסבר בדוגמאות מספריות קונקרטיות איך המינוף משפיע ביום עלייה וביום ירידה
+
+4. **Volatility Decay — מה זה אומר לגבי הקרן הזו** — הסבר ספציפית לקרן הזו, כמה הDECAY משפיע, מתי הוא מזיק יותר
+
+5. **מי משקיע בה ולמה** — לאיזה סוג משקיעים/טריידרים היא מתאימה, באיזה תרחישים
+
+6. **סיכונים ספציפיים** — סיכונים ייחודיים לקרן הזו, לא סיכונים כלליים
+
+כתוב בצורה ברורה עם כותרות מודגשות. אל תכתוב כתב ויתור בסוף.`
+        }]
+      })
+    });
+
+    const data = await res.json();
+    const text = data.content?.find(b => b.type === 'text')?.text || 'לא ניתן לטעון הסבר.';
+
+    // פרמוט יפה — הפוך **text** לבולד
+    const formatted = text
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\n\n/g, '</p><p>')
+      .replace(/\n/g, '<br>');
+
+    const html = `<div style="line-height:1.9;">${formatted}</div>`;
+    descCache[ticker] = html;
+    content.innerHTML = html;
+    loading.textContent = '';
+  } catch(e) {
+    content.innerHTML = '<div style="color:var(--red);">שגיאה בטעינת הסבר. נסי שוב.</div>';
+    loading.textContent = '';
+    console.error('AI desc error:', e);
+  }
+}
+
 function openChart(ticker){
   const f=funds.find(x=>x.ticker===ticker);if(!f)return;
   const up=(f.change||0)>=0;
@@ -995,11 +1077,14 @@ function openChart(ticker){
   if(chartInstance){chartInstance.destroy();chartInstance=null;}
   document.getElementById('chartOverlay').classList.remove('hidden');
   document.body.style.overflow='hidden';
-  // טען גרף ברירת מחדל 1Y
+  // טען גרף
   setTimeout(()=>{
     const defaultBtn=document.querySelector('.range-btn[onclick*="1Y"]');
     loadChart(ticker,'1Y',defaultBtn);
   },100);
+  // טען הסבר AI
+  const sectorName = SECTORS[f.sector]?.n || f.sector;
+  loadAIDescription(ticker, f.name, f.lev, sectorName, f.price, f.change);
 }
 function closeChart(){
   document.getElementById('chartOverlay').classList.add('hidden');
