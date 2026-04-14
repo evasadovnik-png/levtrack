@@ -860,10 +860,10 @@ async function loadChart(ticker, range, btn){
   const interval=(range==='1M'||range==='3M')?'1d':(range==='5Y'||range==='MAX')?'1wk':'1d';
 
   try{
-    const url=`https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?period1=${from}&period2=${now}&interval=${interval}`;
-    const txt=await fetchWithProxy(url);
-    const data=JSON.parse(txt);
-    const result=data?.chart?.result?.[0];
+    const url=`${RAILWAY_SERVER}/chart?ticker=${ticker}&from=${from}&to=${now}&interval=${interval}`;
+    const r = await fetch(url);
+    const data = await r.json();
+    const result=data?.result?.[0];
     if(!result) throw new Error('no data');
     const timestamps=result.timestamp||[];
     const closes=result.indicators?.quote?.[0]?.close||[];
