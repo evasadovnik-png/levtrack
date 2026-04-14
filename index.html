@@ -879,26 +879,79 @@ async function loadChart(ticker, range, btn){
     const colorBg=isUp?'rgba(0,168,120,0.10)':'rgba(232,51,90,0.10)';
     if(chartInstance) chartInstance.destroy();
     const ctx=document.getElementById('priceChart').getContext('2d');
+
+    // Plugin לקו מקווקו אנכי כמו גוגל
+    const crosshairPlugin = {
+      id:'crosshair',
+      afterDraw(chart){
+        if(chart.tooltip._active&&chart.tooltip._active.length){
+          const x=chart.tooltip._active[0].element.x;
+          const yAxis=chart.scales.y;
+          const ctx=chart.ctx;
+          ctx.save();
+          ctx.beginPath();
+          ctx.setLineDash([4,4]);
+          ctx.strokeStyle='#9aa5b4';
+          ctx.lineWidth=1;
+          ctx.moveTo(x, yAxis.top);
+          ctx.lineTo(x, yAxis.bottom);
+          ctx.stroke();
+          ctx.restore();
+        }
+      }
+    };
+
     chartInstance=new Chart(ctx,{
       type:'line',
-      data:{labels,datasets:[{data:prices,borderColor:color,backgroundColor:colorBg,fill:true,tension:0.3,borderWidth:2,pointRadius:0,pointHoverRadius:5,pointHoverBackgroundColor:color,spanGaps:true}]},
+      plugins:[crosshairPlugin],
+      data:{labels,datasets:[{
+        data:prices,
+        borderColor:color,
+        backgroundColor:colorBg,
+        fill:true,
+        tension:0.3,
+        borderWidth:2.5,
+        pointRadius:0,
+        pointHoverRadius:6,
+        pointHoverBackgroundColor:'#fff',
+        pointHoverBorderColor:color,
+        pointHoverBorderWidth:2.5,
+        spanGaps:true
+      }]},
       options:{
-        responsive:true, maintainAspectRatio:false,
+        responsive:true,
+        maintainAspectRatio:false,
         interaction:{mode:'index',intersect:false},
         plugins:{
           legend:{display:false},
           tooltip:{
-            backgroundColor:'#fff',borderColor:color,borderWidth:1.5,
-            titleColor:'#0f1923',bodyColor:color,
-            titleFont:{family:'Plus Jakarta Sans',size:11},
-            bodyFont:{family:'Plus Jakarta Sans',size:13,weight:'700'},
-            padding:10,
-            callbacks:{label:ctx=>`$${ctx.parsed.y?.toFixed(2)||'—'}`}
+            backgroundColor:'#fff',
+            borderColor:'#e2e6ec',
+            borderWidth:1.5,
+            titleColor:'#9aa5b4',
+            bodyColor:'#0f1923',
+            titleFont:{family:'Plus Jakarta Sans',size:11,weight:'400'},
+            bodyFont:{family:'Plus Jakarta Sans',size:15,weight:'800'},
+            padding:12,
+            displayColors:false,
+            callbacks:{
+              title: ctx => ctx[0].label,
+              label: ctx => `$${ctx.parsed.y?.toFixed(2)||'—'}`
+            }
           }
         },
         scales:{
-          x:{grid:{display:false},ticks:{font:{family:'Plus Jakarta Sans',size:10},color:'#9aa5b4',maxTicksLimit:8,maxRotation:0},border:{display:false}},
-          y:{position:'right',grid:{color:'#f0f2f5'},ticks:{font:{family:'Plus Jakarta Sans',size:10},color:'#9aa5b4',callback:v=>`$${v}`},border:{display:false}}
+          x:{
+            grid:{display:false},
+            ticks:{font:{family:'Plus Jakarta Sans',size:10},color:'#9aa5b4',maxTicksLimit:8,maxRotation:0},
+            border:{display:false}
+          },
+          y:{
+            position:'left',
+            grid:{color:'#f4f6f9',drawBorder:false},
+            ticks:{font:{family:'Plus Jakarta Sans',size:10},color:'#9aa5b4',callback:v=>`$${v}`},
+            border:{display:false}
+          }
         }
       }
     });
