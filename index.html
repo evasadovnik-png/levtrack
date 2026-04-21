@@ -392,8 +392,6 @@ main{max-width:1440px;margin:0 auto;padding:24px;}
       </div>
     </div>
   </div>
-
-  </div>
 </main>
 
 <!-- CHART MODAL -->
@@ -1349,6 +1347,17 @@ async function fetchStockPrices(stockArr) {
 function renderStocks() {
   const q = (document.getElementById('stockSearch')?.value || '').toUpperCase();
   const withPrice = stocks.filter(s => s.price !== null);
+
+  if (!withPrice.length) {
+    document.getElementById('stocksContainer').innerHTML = `
+      <div style="text-align:center;padding:60px;color:var(--text3);">
+        <div style="font-size:40px;margin-bottom:16px;">⏳</div>
+        <div style="font-size:16px;font-weight:700;margin-bottom:8px;">טוען מחירים...</div>
+        <div style="font-size:13px;">או לחצי "טען הכל מ-Yahoo" לטעינה מיידית</div>
+      </div>`;
+    return;
+  }
+
   const filtered = withPrice.filter(s =>
     !q || s.ticker.includes(q) || s.name.toUpperCase().includes(q)
   );
@@ -1357,14 +1366,10 @@ function renderStocks() {
   const under10 = filtered.filter(s => s.price < 10).sort((a, b) => b.price - a.price);
   const under5  = filtered.filter(s => s.price < 5).sort((a, b) => b.price - a.price);
   const under3  = filtered.filter(s => s.price < 3).sort((a, b) => b.price - a.price);
-
-  // Stats
   document.getElementById('stTotal').textContent = withPrice.length;
   document.getElementById('stUnder10').textContent = under10.length;
   document.getElementById('stUnder5').textContent = under5.length;
   document.getElementById('stUnder3').textContent = under3.length;
-
-  if (!withPrice.length) return;
 
   document.getElementById('stocksContainer').innerHTML = `
     ${makeStockCategory('🟡', 'מניות מתחת ל-$10', under10, 'gold', '$10')}
