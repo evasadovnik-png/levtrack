@@ -203,6 +203,27 @@ main{max-width:1440px;margin:0 auto;padding:24px;}
 
 @media(max-width:1100px){.summary-grid{grid-template-columns:repeat(3,1fr);}}
 @media(max-width:768px){.summary-grid{grid-template-columns:repeat(2,1fr);}.modal-stats{grid-template-columns:repeat(2,1fr);}main{padding:14px;}header{padding:0 14px;gap:10px;}}
+.stock-category{margin-bottom:32px;}
+.stock-category-header{display:flex;align-items:center;gap:12px;padding:14px 18px;border-radius:12px;margin-bottom:14px;}
+.stock-category-header.gold{background:#fffbeb;border:1.5px solid #fde68a;}
+.stock-category-header.red{background:#fff8fa;border:1.5px solid #fca5a5;}
+.stock-category-header.dark{background:#f9fafb;border:1.5px solid #d1d5db;}
+.stock-cat-icon{font-size:22px;}
+.stock-cat-title{font-size:15px;font-weight:800;}
+.stock-cat-count{font-size:12px;padding:2px 10px;border-radius:8px;font-weight:600;}
+.stock-cat-count.gold{background:#fef3c7;color:#d97706;}
+.stock-cat-count.red{background:var(--red-bg);color:var(--red);}
+.stock-cat-count.dark{background:#e5e7eb;color:#374151;}
+.stock-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;}
+.stock-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;padding:14px;cursor:pointer;transition:all .2s;box-shadow:var(--shadow);position:relative;animation:fadeUp .3s ease both;}
+.stock-card:hover{border-color:var(--accent);box-shadow:var(--shadow2);transform:translateY(-2px);}
+.stock-card.gold-card{border-color:#fde68a;background:#fffef5;}
+.stock-card.red-card{border-color:#fca5a5;background:#fff8fa;}
+.stock-card.dark-card{border-color:#d1d5db;background:#f9fafb;}
+.stock-badge{position:absolute;top:9px;left:9px;font-size:9px;font-weight:700;padding:2px 7px;border-radius:5px;color:#fff;}
+.stock-badge.gold{background:#d97706;}
+.stock-badge.red{background:var(--red);}
+.stock-badge.dark{background:#374151;}
 ::-webkit-scrollbar{width:5px;height:5px;}
 ::-webkit-scrollbar-track{background:var(--bg3);}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
@@ -214,7 +235,8 @@ main{max-width:1440px;margin:0 auto;padding:24px;}
 <header>
   <a class="logo" href="#"><div class="logo-mark">A</div><div class="logo-name">AZENO <span style="font-size:13px;font-weight:600;color:var(--text3);">Leveraged Funds</span></div></a>
   <div class="nav-tabs">
-    <button class="nav-tab active" onclick="showPage('all',this)">📊 כל הקרנות</button>
+    <button class="nav-tab active" onclick="showPage('all',this)">📊 קרנות ממונפות</button>
+    <button class="nav-tab" onclick="showPage('stocks',this)">📈 מניות</button>
     <button class="nav-tab red-tab" onclick="showPage('alerts',this)">🔔 התראות</button>
   </div>
   <div class="header-mid">
@@ -327,6 +349,50 @@ main{max-width:1440px;margin:0 auto;padding:24px;}
     </div>
     <div class="bar-chart-wrap" style="margin-bottom:14px;"><div class="bar-chart-title">🃏 כרטיסיות — קרנות מתחת לסף</div></div>
     <div class="losers-grid" id="losersGrid"></div>
+  <!-- ══ PAGE: STOCKS ══ -->
+  <div class="page" id="page-stocks">
+
+    <!-- TOP BAR -->
+    <div class="top-bar">
+      <div class="page-title">מניות <span>במחיר נמוך</span> 📈</div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button class="btn btn-green" id="loadAllStocksBtn" onclick="loadAllStocks()">📡 טען הכל מ-Yahoo</button>
+        <div class="search-wrap" style="width:200px;">
+          <span class="search-icon">🔍</span>
+          <input class="search-input" id="stockSearch" placeholder="חיפוש מניה..." oninput="renderStocks()">
+        </div>
+      </div>
+    </div>
+
+    <!-- SUMMARY -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px;" id="stockSummary">
+      <div class="sum-card"><div class="sum-label">סה״כ מניות</div><div class="sum-val teal" id="stTotal">0</div><div class="sum-sub">נטענו</div></div>
+      <div class="sum-card" style="border-color:#fde68a;background:#fffbeb;"><div class="sum-label">מתחת ל-$10</div><div class="sum-val gold" id="stUnder10">0</div><div class="sum-sub">🟡 מניות</div></div>
+      <div class="sum-card" style="border-color:#fca5a5;background:#fff8fa;"><div class="sum-label">מתחת ל-$5</div><div class="sum-val red" id="stUnder5">0</div><div class="sum-sub">🔴 מניות</div></div>
+      <div class="sum-card" style="border-color:#6b7280;background:#f9fafb;"><div class="sum-label">מתחת ל-$3</div><div class="sum-val" style="color:#374151;" id="stUnder3">0</div><div class="sum-sub">⚫ מניות</div></div>
+    </div>
+
+    <!-- LOADING BAR -->
+    <div id="stockLoadWrap" style="display:none;background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:20px 24px;margin-bottom:20px;box-shadow:var(--shadow);">
+      <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
+        <div style="font-size:14px;font-weight:800;" id="stockLoadTitle">טוען מניות...</div>
+        <div style="font-size:13px;font-weight:700;color:var(--teal);" id="stockLoadCount">0 / 0</div>
+      </div>
+      <div style="background:var(--bg3);border-radius:6px;height:10px;overflow:hidden;">
+        <div id="stockLoadFill" style="height:100%;background:linear-gradient(90deg,var(--teal),var(--blue));border-radius:6px;width:0%;transition:width .3s;"></div>
+      </div>
+    </div>
+
+    <!-- 3 CATEGORIES -->
+    <div id="stocksContainer">
+      <div style="text-align:center;padding:60px;color:var(--text3);">
+        <div style="font-size:40px;margin-bottom:16px;">📈</div>
+        <div style="font-size:16px;font-weight:700;margin-bottom:8px;">לחצי "טען הכל מ-Yahoo" לטעינת מניות</div>
+        <div style="font-size:13px;">או המתיני לטעינה אוטומטית...</div>
+      </div>
+    </div>
+  </div>
+
   </div>
 </main>
 
@@ -1011,40 +1077,14 @@ async function loadAIDescription(ticker, name, lev, sectorName, price, change) {
   content.innerHTML = '<div style="color:var(--text3);font-size:13px;">⏳ טוען הסבר מפורט...</div>';
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch(`${RAILWAY_SERVER}/explain`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        messages: [{
-          role: 'user',
-          content: `כתוב הסבר מפורט ומעמיק בעברית על קרן ה-ETF הממונפת ${ticker} (${name}).
-המינוף שלה: ${lev.toUpperCase()}.
-סקטור: ${sectorName}.
-מחיר נוכחי: $${price || '—'}.
-
-כתוב הסבר שכולל את הנושאים הבאים בסדר הזה, בעברית מלאה, מפורט ומקצועי:
-
-1. **מה הקרן הזו עושה בדיוק** — תאר את המנגנון המדויק של הקרן, כולל על מה היא עוקבת
-
-2. **אחרי מה היא עוקבת** — פרט את המדד/המניה/הנכס הבסיסי, מה הוא מכיל, החברות/נכסים העיקריים בו
-
-3. **איך עובד המינוף ${lev.toUpperCase()}** — הסבר בדוגמאות מספריות קונקרטיות איך המינוף משפיע ביום עלייה וביום ירידה
-
-4. **Volatility Decay — מה זה אומר לגבי הקרן הזו** — הסבר ספציפית לקרן הזו, כמה הDECAY משפיע, מתי הוא מזיק יותר
-
-5. **מי משקיע בה ולמה** — לאיזה סוג משקיעים/טריידרים היא מתאימה, באיזה תרחישים
-
-6. **סיכונים ספציפיים** — סיכונים ייחודיים לקרן הזו, לא סיכונים כלליים
-
-כתוב בצורה ברורה עם כותרות מודגשות. אל תכתוב כתב ויתור בסוף.`
-        }]
-      })
+      body: JSON.stringify({ ticker, name, lev, sectorName, price, change })
     });
 
     const data = await res.json();
-    const text = data.content?.find(b => b.type === 'text')?.text || 'לא ניתן לטעון הסבר.';
+    const text = data.text || 'לא ניתן לטעון הסבר.';
 
     // פרמוט יפה — הפוך **text** לבולד
     const formatted = text
@@ -1118,7 +1158,8 @@ function showPage(p,btn){
   document.getElementById('page-'+p).classList.add('active');
   document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  if(p==='alerts')renderAlerts();
+  if(p==='alerts') renderAlerts();
+  if(p==='stocks') renderStocks();
 }
 function setFilter(f,btn){levFilter=f;document.querySelectorAll('#page-all .filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');render();}
 function onSearch(){currentPage==='alerts'?renderAlerts():render();}
@@ -1135,8 +1176,263 @@ setInterval(()=>{
   if(h>=13&&h<20)loadPrices();
 },5*60*1000);
 
+// ══ STOCKS DATA ══
+// ~200 מניות איכותיות מ-NYSE+NASDAQ במחיר נמוך
+const BASE_STOCKS = [
+  // טכנולוגיה
+  ['BBAI','BigBear.ai Holdings','tech'],['GFAI','Guardforce AI','tech'],['AITX','Artificial Intelligence Tech','tech'],
+  ['SOUN','SoundHound AI','tech'],['CLOV','Clover Health','tech'],['MVST','Microvast Holdings','tech'],
+  ['WISA','WiSA Technologies','tech'],['KALI','Calidi Biotherapeutics','tech'],['AEYE','AudioEye','tech'],
+  ['VERB','Verb Technology','tech'],['IDAI','T2 Biosystems','tech'],['INPX','Inpixon','tech'],
+  ['IMTE','Integrated Media Technology','tech'],['GTLB','GitLab','tech'],['AI','C3.ai','tech'],
+  ['AMPL','Amplitude','tech'],['BOX','Box Inc','tech'],
+  // ביוטק/בריאות
+  ['CPRX','Catalyst Pharmaceuticals','biotech'],['HIMS','Hims & Hers Health','biotech'],
+  ['ACMR','ACM Research','biotech'],['OCGN','Ocugen','biotech'],['SIGA','SIGA Technologies','biotech'],
+  ['AKER','Aker BioMarine','biotech'],['ARDX','Ardelyx','biotech'],['ADMA','ADMA Biologics','biotech'],
+  ['CGEN','Compugen','biotech'],['CLOV','Clover Health','biotech'],['MRUS','Merus NV','biotech'],
+  ['NKTR','Nektar Therapeutics','biotech'],['PHAT','Phathom Pharmaceuticals','biotech'],
+  ['RCKT','Rocket Pharmaceuticals','biotech'],['RXRX','Recursion Pharmaceuticals','biotech'],
+  ['TGTX','TG Therapeutics','biotech'],['FOLD','Amicus Therapeutics','biotech'],
+  ['VERA','Vera Therapeutics','biotech'],['XNCR','Xencor','biotech'],
+  // פיננסים
+  ['PSEC','Prospect Capital','finance'],['CURO','CURO Group','finance'],
+  ['RM','Regional Management','finance'],['ATLC','Atlanticus Holdings','finance'],
+  ['CLBK','Columbia Banking','finance'],['SLQT','SelectQuote','finance'],
+  ['OPEN','Opendoor Technologies','finance'],['UWMC','UWM Holdings','finance'],
+  ['PFSI','PennyMac Financial','finance'],['RKT','Rocket Companies','finance'],
+  // אנרגיה
+  ['NOG','Northern Oil and Gas','energy'],['CIVI','Civitas Resources','energy'],
+  ['GPOR','Gulfport Energy','energy'],['MNRL','Brigham Minerals','energy'],
+  ['BATL','Battalion Oil','energy'],['CTRA','Coterra Energy','energy'],
+  ['DK','Delek US Holdings','energy'],['FLNC','Fluence Energy','energy'],
+  ['GEVO','Gevo','energy'],['INDO','Indonesia Energy','energy'],
+  ['NRGV','Energy Vault Holdings','energy'],['PLUG','Plug Power','energy'],
+  ['SPWR','SunPower','energy'],['LTBR','Lightbridge','energy'],
+  // קנאביס
+  ['TLRY','Tilray Brands','cannabis'],['CGC','Canopy Growth','cannabis'],
+  ['ACB','Aurora Cannabis','cannabis'],['CRON','Cronos Group','cannabis'],
+  ['CURLF','Curaleaf Holdings','cannabis'],['GTBIF','Green Thumb Industries','cannabis'],
+  ['IIPR','Innovative Industrial Properties','cannabis'],['MSOS','AdvisorShares Pure US Cannabis','cannabis'],
+  ['SNDL','SNDL Inc','cannabis'],['TCNNF','Trulieve Cannabis','cannabis'],
+  // קריפטו / בלוקצ'יין
+  ['MARA','Marathon Digital Holdings','crypto'],['RIOT','Riot Platforms','crypto'],
+  ['CLSK','CleanSpark','crypto'],['CIFR','Cipher Mining','crypto'],
+  ['BTBT','Bit Digital','crypto'],['BITF','Bitfarms','crypto'],
+  ['HIVE','HIVE Digital Technologies','crypto'],['HUT','Hut 8 Corp','crypto'],
+  ['IREN','Iris Energy','crypto'],['WULF','TeraWulf','crypto'],
+  // מדיה ובידור
+  ['LUMN','Lumen Technologies','media'],['SIRI','Sirius XM','media'],
+  ['AMCX','AMC Networks','media'],['IMAX','IMAX Corp','media'],
+  ['CINE','Cineworld Group','media'],['CNK','Cinemark Holdings','media'],
+  ['FUBO','FuboTV','media'],['NWSA','News Corp A','media'],
+  ['PARA','Paramount Global','media'],['VZIO','VIZIO Holding','media'],
+  // ריטים ונדלן
+  ['OPEN','Opendoor Technologies','realestate'],['AIV','Apartment Investment','realestate'],
+  ['BRT','BRT Realty Trust','realestate'],['CLNC','Colony Credit Real Estate','realestate'],
+  ['MPW','Medical Properties Trust','realestate'],['OFC','Corporate Office Properties','realestate'],
+  ['SAFE','Safehold','realestate'],['SILA','Sila Realty Trust','realestate'],
+  // תחבורה / EV
+  ['RIDE','Lordstown Motors','ev'],['GOEV','Canoo','ev'],
+  ['NKLA','Nikola','ev'],['FSR','Fisker','ev'],
+  ['WKHS','Workhorse Group','ev'],['SOLO','ElectraMeccanica Vehicles','ev'],
+  ['XPEV','XPeng','ev'],['NIO','NIO','ev'],
+  ['LI','Li Auto','ev'],['BLNK','Blink Charging','ev'],
+  ['CHPT','ChargePoint Holdings','ev'],['EVGO','EVgo','ev'],
+  // קמעונאות
+  ['BBBY','Bed Bath & Beyond','retail'],['EXPR','Express','retail'],
+  ['PRTY','Party City Holdco','retail'],['SPWH','Sportsmans Warehouse','retail'],
+  ['TUEM','Tuesday Morning','retail'],['WOOF','Petco Health','retail'],
+  ['VLCN','Volcon','retail'],['BYFC','Broadway Financial','retail'],
+  // ספנות/שינוע
+  ['TOPS','TOP Ships','shipping'],['FREE','Whole Earth Brands','shipping'],
+  ['EDRY','EuroDry','shipping'],['GLBS','Globus Maritime','shipping'],
+  ['GOGL','Golden Ocean Group','shipping'],['HSHP','Huang He Goldfields','shipping'],
+  ['NMCI','Navios Maritime Containers','shipping'],['SHIP','Seanergy Maritime','shipping'],
+  ['SB','Safe Bulkers','shipping'],['SINO','Sino Gas International','shipping'],
+  // כרייה
+  ['EGO','Eldorado Gold','mining'],['HL','Hecla Mining','mining'],
+  ['AG','First Majestic Silver','mining'],['PAAS','Pan American Silver','mining'],
+  ['BTG','B2Gold','mining'],['GORO','Gold Resource','mining'],
+  ['GPL','Great Panther Mining','mining'],['IAUX','i-80 Gold','mining'],
+  ['KORE','Kore Mining','mining'],['MAG','MAG Silver','mining'],
+];
+
+let stocks = BASE_STOCKS.map(([ticker, name, sector]) => ({
+  ticker, name, sector, price: null, change: null, vol: '—', range52: '—', loaded: false
+}));
+let stocksLoaded = false;
+
+// ══ LOAD ALL STOCKS FROM YAHOO SCREENER ══
+async function loadAllStocks() {
+  const btn = document.getElementById('loadAllStocksBtn');
+  btn.disabled = true; btn.textContent = '⏳ טוען...';
+  document.getElementById('stockLoadWrap').style.display = 'block';
+
+  // טעינת מחירים לרשימה הבסיסית
+  await fetchStockPrices(stocks);
+
+  // נסה לשלוף עוד מניות מ-Yahoo Screener
+  try {
+    document.getElementById('stockLoadTitle').textContent = '📡 שולף מניות נוספות מ-Yahoo Finance...';
+    const extraTickers = await fetchStocksFromScreener();
+    const existingTickers = new Set(stocks.map(s => s.ticker));
+    const newStocks = extraTickers
+      .filter(t => !existingTickers.has(t.ticker))
+      .map(t => ({ ...t, loaded: false }));
+
+    if (newStocks.length > 0) {
+      stocks = [...stocks, ...newStocks];
+      await fetchStockPrices(newStocks);
+    }
+  } catch(e) { console.warn('Screener failed:', e); }
+
+  stocksLoaded = true;
+  document.getElementById('stockLoadWrap').style.display = 'none';
+  btn.disabled = false; btn.textContent = '🔄 רענן';
+  renderStocks();
+}
+
+async function fetchStocksFromScreener() {
+  // Yahoo Finance screener למניות מתחת ל-$10
+  const url = `https://query1.finance.yahoo.com/v1/finance/screener/predefined/saved?scrIds=day_gainers&count=100&start=0`;
+  const txt = await fetchWithProxy(url);
+  if (!txt) return [];
+  try {
+    const data = JSON.parse(txt);
+    const quotes = data?.finance?.result?.[0]?.quotes || [];
+    return quotes
+      .filter(q => q.regularMarketPrice && q.regularMarketPrice < 10)
+      .map(q => ({
+        ticker: q.symbol,
+        name: q.shortName || q.symbol,
+        sector: 'other',
+        price: q.regularMarketPrice,
+        change: q.regularMarketChangePercent,
+        vol: formatVol(q.regularMarketVolume),
+        range52: q.fiftyTwoWeekLow ? `$${q.fiftyTwoWeekLow.toFixed(2)}–$${q.fiftyTwoWeekHigh.toFixed(2)}` : '—',
+        loaded: true
+      }));
+  } catch(e) { return []; }
+}
+
+async function fetchStockPrices(stockArr) {
+  const chunks = [];
+  for (let i = 0; i < stockArr.length; i += BATCH) chunks.push(stockArr.slice(i, i + BATCH));
+  let done = 0;
+  for (const chunk of chunks) {
+    const results = await fetchPriceBatch(chunk.map(s => s.ticker));
+    const map = {};
+    results.forEach(q => { map[q.symbol] = q; });
+    chunk.forEach(s => {
+      const q = map[s.ticker];
+      if (q && q.regularMarketPrice) {
+        s.price = q.regularMarketPrice;
+        s.change = q.regularMarketChangePercent;
+        s.vol = formatVol(q.regularMarketVolume);
+        s.range52 = q.fiftyTwoWeekLow ? `$${q.fiftyTwoWeekLow.toFixed(2)}–$${q.fiftyTwoWeekHigh.toFixed(2)}` : '—';
+        s.name = q.shortName || s.name;
+        s.loaded = true;
+      }
+    });
+    done += chunk.length;
+    const pct = Math.round(done / stockArr.length * 100);
+    document.getElementById('stockLoadFill').style.width = pct + '%';
+    document.getElementById('stockLoadCount').textContent = done + ' / ' + stockArr.length;
+    document.getElementById('stockLoadTitle').textContent = `📡 טוען מחירים... ${done}/${stockArr.length}`;
+    renderStocks();
+    await new Promise(r => setTimeout(r, 300));
+  }
+}
+
+// ══ RENDER STOCKS ══
+function renderStocks() {
+  const q = (document.getElementById('stockSearch')?.value || '').toUpperCase();
+  const withPrice = stocks.filter(s => s.price !== null);
+  const filtered = withPrice.filter(s =>
+    !q || s.ticker.includes(q) || s.name.toUpperCase().includes(q)
+  );
+
+  // 3 קטגוריות
+  const under10 = filtered.filter(s => s.price < 10).sort((a, b) => b.price - a.price);
+  const under5  = filtered.filter(s => s.price < 5).sort((a, b) => b.price - a.price);
+  const under3  = filtered.filter(s => s.price < 3).sort((a, b) => b.price - a.price);
+
+  // Stats
+  document.getElementById('stTotal').textContent = withPrice.length;
+  document.getElementById('stUnder10').textContent = under10.length;
+  document.getElementById('stUnder5').textContent = under5.length;
+  document.getElementById('stUnder3').textContent = under3.length;
+
+  if (!withPrice.length) return;
+
+  document.getElementById('stocksContainer').innerHTML = `
+    ${makeStockCategory('🟡', 'מניות מתחת ל-$10', under10, 'gold', '$10')}
+    ${makeStockCategory('🔴', 'מניות מתחת ל-$5', under5, 'red', '$5')}
+    ${makeStockCategory('⚫', 'מניות מתחת ל-$3', under3, 'dark', '$3')}
+  `;
+}
+
+function makeStockCategory(icon, title, arr, type, threshold) {
+  if (!arr.length) return `
+    <div class="stock-category">
+      <div class="stock-category-header ${type}">
+        <span class="stock-cat-icon">${icon}</span>
+        <span class="stock-cat-title">${title}</span>
+        <span class="stock-cat-count ${type}">0 מניות</span>
+      </div>
+      <div style="text-align:center;padding:20px;color:var(--green);font-size:13px;font-weight:700;">✅ אין מניות מתחת ל-${threshold}</div>
+    </div>`;
+
+  return `
+    <div class="stock-category">
+      <div class="stock-category-header ${type}">
+        <span class="stock-cat-icon">${icon}</span>
+        <span class="stock-cat-title">${title}</span>
+        <span class="stock-cat-count ${type}">${arr.length} מניות</span>
+      </div>
+      <div class="stock-grid">
+        ${arr.map((s, i) => makeStockCard(s, i, type)).join('')}
+      </div>
+    </div>`;
+}
+
+function makeStockCard(s, i, type) {
+  const up = (s.change || 0) >= 0;
+  const delay = Math.min(i * 0.01, 0.5);
+  const labelMap = { gold: 'מתחת $10', red: 'מתחת $5', dark: 'מתחת $3' };
+  return `<div class="stock-card ${type}-card" onclick="openChart('${s.ticker}')" style="animation-delay:${delay}s">
+    <div class="stock-badge ${type}">${labelMap[type]}</div>
+    <div class="card-row1" style="margin-top:18px;">
+      <div><div class="ticker">${s.ticker}</div><div class="etf-name">${s.name}</div></div>
+    </div>
+    <div class="card-row2">
+      <div class="price ${type === 'dark' ? '' : 'low'}">$${s.price.toFixed(2)}<span class="live-dot"></span></div>
+      <div class="change-box">
+        <div class="change-pct ${up ? 'up' : 'down'}">${up ? '+' : ''}${(s.change || 0).toFixed(2)}%</div>
+        <div class="change-lbl">היום</div>
+      </div>
+    </div>
+    ${spark(up, s.ticker.charCodeAt(0) * 137 + (s.ticker.charCodeAt(1) || 0) * 31)}
+    <div class="card-footer">
+      <div class="meta"><div class="meta-lbl">52W</div><div class="meta-val" style="font-size:8.5px;">${s.range52}</div></div>
+      <div class="meta"><div class="meta-lbl">נפח</div><div class="meta-val">${s.vol}</div></div>
+      <button class="chart-btn" onclick="event.stopPropagation();openChart('${s.ticker}')">📊</button>
+    </div>
+  </div>`;
+}
+
+// ══ INIT STOCKS ON PAGE LOAD ══
+async function initStocks() {
+  await fetchStockPrices(stocks);
+  stocksLoaded = true;
+  if (currentPage === 'stocks') renderStocks();
+}
+
+// ══ INIT ══
 // INIT
 loadPrices();
+initStocks();
 </script>
 </body>
 </html>
