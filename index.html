@@ -366,6 +366,23 @@ main{max-width:1440px;margin:0 auto;padding:24px;}
       </div>
     </div>
 
+    <!-- SECTOR FILTERS -->
+    <div class="filters" style="margin-bottom:18px;" id="stockSectorFilters">
+      <button class="filter-btn active" onclick="setStockSector('all',this)">🌐 הכל</button>
+      <button class="filter-btn" onclick="setStockSector('tech',this)">💻 טכנולוגיה</button>
+      <button class="filter-btn" onclick="setStockSector('biotech',this)">💊 ביוטק</button>
+      <button class="filter-btn" onclick="setStockSector('energy',this)">⚡ אנרגיה</button>
+      <button class="filter-btn" onclick="setStockSector('finance',this)">💰 פיננסים</button>
+      <button class="filter-btn" onclick="setStockSector('crypto',this)">🪙 קריפטו</button>
+      <button class="filter-btn" onclick="setStockSector('cannabis',this)">🌿 קנאביס</button>
+      <button class="filter-btn" onclick="setStockSector('ev',this)">🚗 EV</button>
+      <button class="filter-btn" onclick="setStockSector('media',this)">🎬 מדיה</button>
+      <button class="filter-btn" onclick="setStockSector('mining',this)">⛏️ כרייה</button>
+      <button class="filter-btn" onclick="setStockSector('shipping',this)">🚢 ספנות</button>
+      <button class="filter-btn" onclick="setStockSector('realestate',this)">🏢 נדלן</button>
+      <button class="filter-btn" onclick="setStockSector('retail',this)">🛍️ קמעונאות</button>
+    </div>
+
     <!-- SUMMARY -->
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px;" id="stockSummary">
       <div class="sum-card"><div class="sum-label">סה״כ מניות</div><div class="sum-val teal" id="stTotal">0</div><div class="sum-sub">נטענו</div></div>
@@ -1262,6 +1279,14 @@ let stocks = BASE_STOCKS.map(([ticker, name, sector]) => ({
   ticker, name, sector, price: null, change: null, vol: '—', range52: '—', loaded: false
 }));
 let stocksLoaded = false;
+let stockSectorFilter = 'all';
+
+function setStockSector(s, btn) {
+  stockSectorFilter = s;
+  document.querySelectorAll('#stockSectorFilters .filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderStocks();
+}
 
 // ══ LOAD ALL STOCKS FROM YAHOO SCREENER ══
 async function loadAllStocks() {
@@ -1360,9 +1385,11 @@ function renderStocks() {
     return;
   }
 
-  const filtered = withPrice.filter(s =>
-    !q || s.ticker.includes(q) || s.name.toUpperCase().includes(q)
-  );
+  const filtered = withPrice.filter(s => {
+    if (q && !s.ticker.includes(q) && !s.name.toUpperCase().includes(q)) return false;
+    if (stockSectorFilter !== 'all' && s.sector !== stockSectorFilter) return false;
+    return true;
+  });
 
   // 3 קטגוריות
   const under10 = filtered.filter(s => s.price < 10).sort((a, b) => b.price - a.price);
