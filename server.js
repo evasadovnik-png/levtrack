@@ -6,6 +6,8 @@ const PORT = process.env.PORT || 3000;
 let cookie = '';
 let crumb = '';
 
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
 function get(hostname, path, headers) {
   return new Promise((resolve, reject) => {
     const req = https.request(
@@ -18,53 +20,58 @@ function get(hostname, path, headers) {
         else if (enc === 'br') stream = res.pipe(zlib.createBrotliDecompress());
         else if (enc === 'deflate') stream = res.pipe(zlib.createInflate());
         stream.on('data', c => chunks.push(c));
-        stream.on('end', () => resolve({
-          body: Buffer.concat(chunks).toString('utf8'),
-          headers: res.headers
-        }));
+        stream.on('end', () => resolve({ body: Buffer.concat(chunks).toString('utf8'), headers: res.headers }));
         stream.on('error', reject);
       }
     );
     req.on('error', reject);
-    req.setTimeout(15000, () => { req.destroy(); reject(new Error('Timeout')); });
+    req.setTimeout(20000, () => { req.destroy(); reject(new Error('Timeout')); });
     req.end();
   });
 }
 
+const AGENTS = [
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15',
+  'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
+];
+let agentIdx = 0;
+const ua = () => AGENTS[agentIdx++ % AGENTS.length];
+
 async function refreshCrumb() {
   try {
-    // Step 1: consent page to get cookie
-    const r1 = await get('consent.yahoo.com', '/v2/collectConsent?sessionId=1', {
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+    const agent = ua();
+    await sleep(500);
+
+    // Get cookie from Yahoo Finance directly
+    const r1 = await get('finance.yahoo.com', '/quote/AAPL', {
+      'User-Agent': agent,
+      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
       'Accept-Language': 'en-US,en;q=0.5',
       'Accept-Encoding': 'gzip, deflate, br',
+      'Connection': 'keep-alive',
+      'Upgrade-Insecure-Requests': '1',
     });
-    const cookies1 = (r1.headers['set-cookie'] || []).map(c => c.split(';')[0]).join('; ');
 
-    // Step 2: finance.yahoo.com home
-    const r2 = await get('finance.yahoo.com', '/', {
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-      'Accept-Language': 'en-US,en;q=0.5',
-      'Accept-Encoding': 'gzip, deflate, br',
-      'Cookie': cookies1,
-    });
-    const cookies2 = [...(r1.headers['set-cookie'] || []), ...(r2.headers['set-cookie'] || [])]
-      .map(c => c.split(';')[0]).join('; ');
-    cookie = cookies2;
+    const setCookies = r1.headers['set-cookie'] || [];
+    cookie = setCookies.map(c => c.split(';')[0]).join('; ');
+    console.log('Got cookies:', setCookies.length, 'Cookie length:', cookie.length);
 
-    // Step 3: get crumb
-    const r3 = await get('query1.finance.yahoo.com', '/v1/test/getcrumb', {
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+    await sleep(1000);
+
+    // Get crumb
+    const r2 = await get('query1.finance.yahoo.com', '/v1/test/getcrumb', {
+      'User-Agent': agent,
       'Accept': '*/*',
       'Accept-Language': 'en-US,en;q=0.9',
       'Accept-Encoding': 'gzip, deflate, br',
       'Referer': 'https://finance.yahoo.com/',
+      'Origin': 'https://finance.yahoo.com',
       'Cookie': cookie,
     });
-    crumb = r3.body.trim();
-    console.log('Crumb refreshed:', crumb, '| Cookie length:', cookie.length);
+
+    crumb = r2.body.trim();
+    console.log('Crumb:', crumb, '| Status ok:', crumb.length > 0 && !crumb.includes('Unauthorized') && !crumb.includes('Too Many'));
     return crumb.length > 0;
   } catch(e) {
     console.error('refreshCrumb error:', e.message);
@@ -73,20 +80,26 @@ async function refreshCrumb() {
 }
 
 async function fetchQuote(symbols) {
-  if (!crumb) await refreshCrumb();
+  if (!crumb || crumb.includes('Too Many') || crumb.includes('Unauthorized')) {
+    await refreshCrumb();
+  }
+  const agent = ua();
   const fields = 'regularMarketPrice,regularMarketChangePercent,regularMarketVolume,fiftyTwoWeekLow,fiftyTwoWeekHigh,shortName,marketState';
   const path = `/v7/finance/quote?symbols=${encodeURIComponent(symbols)}&fields=${fields}&crumb=${encodeURIComponent(crumb)}&formatted=false&lang=en-US&region=US`;
   const r = await get('query1.finance.yahoo.com', path, {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+    'User-Agent': agent,
     'Accept': 'application/json, text/plain, */*',
     'Accept-Language': 'en-US,en;q=0.9',
     'Accept-Encoding': 'gzip, deflate, br',
     'Referer': 'https://finance.yahoo.com/',
+    'Origin': 'https://finance.yahoo.com',
     'Cookie': cookie,
   });
-  const data = JSON.parse(r.body);
-  if (data?.quoteResponse?.error?.code === 'Unauthorized') {
-    console.log('Unauthorized, refreshing crumb...');
+  let data;
+  try { data = JSON.parse(r.body); } catch(e) { console.error('Parse error:', r.body.substring(0,100)); return []; }
+  if (data?.quoteResponse?.error || !data?.quoteResponse?.result?.length) {
+    console.log('Bad response, refreshing crumb. Error:', JSON.stringify(data?.quoteResponse?.error));
+    crumb = ''; cookie = '';
     await refreshCrumb();
     return fetchQuote(symbols);
   }
@@ -95,9 +108,10 @@ async function fetchQuote(symbols) {
 
 async function fetchChart(ticker, from, to, interval) {
   if (!crumb) await refreshCrumb();
+  const agent = ua();
   const path = `/v8/finance/chart/${ticker}?period1=${from}&period2=${to}&interval=${interval}&crumb=${encodeURIComponent(crumb)}`;
   const r = await get('query1.finance.yahoo.com', path, {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+    'User-Agent': agent,
     'Accept': 'application/json, text/plain, */*',
     'Accept-Language': 'en-US,en;q=0.9',
     'Accept-Encoding': 'gzip, deflate, br',
@@ -108,9 +122,9 @@ async function fetchChart(ticker, from, to, interval) {
   return data?.chart?.result || [];
 }
 
-// Refresh crumb every 30 minutes
-setInterval(refreshCrumb, 30 * 60 * 1000);
-refreshCrumb(); // on startup
+// Refresh crumb on startup and every 25 minutes
+refreshCrumb();
+setInterval(refreshCrumb, 25 * 60 * 1000);
 
 const server = http.createServer(async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -123,7 +137,7 @@ const server = http.createServer(async (req, res) => {
 
   if (url.pathname === '/health') {
     res.writeHead(200);
-    res.end(JSON.stringify({ status: 'ok', time: new Date().toISOString(), crumb: crumb || 'none' }));
+    res.end(JSON.stringify({ status: 'ok', time: new Date().toISOString(), crumb: crumb ? crumb.substring(0,10)+'...' : 'none' }));
     return;
   }
 
@@ -132,12 +146,11 @@ const server = http.createServer(async (req, res) => {
     if (!symbols) { res.writeHead(400); res.end(JSON.stringify({ results: [] })); return; }
     try {
       const results = await fetchQuote(symbols);
-      console.log('Quote:', symbols.split(',').length, 'symbols ->', results.length, 'results');
+      console.log('Quote:', symbols.split(',').length, '->', results.length, 'results');
       res.writeHead(200);
       res.end(JSON.stringify({ results }));
     } catch(e) {
       console.error('Quote error:', e.message);
-      crumb = ''; cookie = '';
       res.writeHead(200);
       res.end(JSON.stringify({ results: [], error: e.message }));
     }
@@ -155,7 +168,6 @@ const server = http.createServer(async (req, res) => {
       res.end(JSON.stringify({ result }));
     } catch(e) {
       console.error('Chart error:', e.message);
-      crumb = ''; cookie = '';
       res.writeHead(200);
       res.end(JSON.stringify({ result: [], error: e.message }));
     }
@@ -168,8 +180,7 @@ const server = http.createServer(async (req, res) => {
     req.on('end', async () => {
       try {
         const { ticker, name, lev, sectorName, price } = JSON.parse(body);
-        const prompt = `כתוב הסבר מפורט ומעמיק בעברית על קרן ה-ETF הממונפת ${ticker} (${name}). המינוף: ${lev}. סקטור: ${sectorName}. מחיר: $${price||'—'}.
-כלול: 1) מה הקרן עושה 2) אחרי מה עוקבת 3) איך עובד המינוף עם דוגמאות מספריות 4) Volatility Decay 5) למי מתאים 6) סיכונים ספציפיים. עם כותרות מודגשות בעברית.`;
+        const prompt = `כתוב הסבר מפורט ומעמיק בעברית על קרן ה-ETF הממונפת ${ticker} (${name}). המינוף: ${lev}. סקטור: ${sectorName}. מחיר: $${price||'—'}. כלול: 1) מה הקרן עושה 2) אחרי מה עוקבת 3) איך עובד המינוף עם דוגמאות מספריות 4) Volatility Decay 5) למי מתאים 6) סיכונים ספציפיים. עם כותרות מודגשות בעברית.`;
         const claudeBody = JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1200, messages: [{ role: 'user', content: prompt }] });
         const claudeRes = await new Promise((resolve, reject) => {
           const r = https.request({
