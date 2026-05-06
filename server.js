@@ -68,19 +68,7 @@ async function fetchBatch(tickers) {
   return results;
 }
 
-// Yahoo Finance chart (לגרפים — ה-chart endpoint עובד בלי crumb)
-async function fetchChart(ticker, from, to, interval) {
-  try {
-    const body = await get('query1.finance.yahoo.com',
-      `/v8/finance/chart/${encodeURIComponent(ticker)}?period1=${from}&period2=${to}&interval=${interval}&events=div%2Csplit`
-    );
-    const data = JSON.parse(body);
-    return data?.chart?.result || [];
-  } catch(e) {
-    console.error('Chart error:', e.message);
-    return [];
-  }
-}
+// Chart handled inline in request handler
 
 const server = http.createServer(async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -116,13 +104,38 @@ const server = http.createServer(async (req, res) => {
 
   if (url.pathname === '/chart') {
     const ticker = url.searchParams.get('ticker');
-    const from = url.searchParams.get('from') || '1';
+    const from = url.searchParams.get('from') || String(Math.floor(Date.now()/1000) - 365*86400);
     const to = url.searchParams.get('to') || String(Math.floor(Date.now()/1000));
     const interval = url.searchParams.get('interval') || '1d';
-    console.log('Chart:', ticker, interval);
-    const result = await fetchChart(ticker, from, to, interval);
-    res.writeHead(200);
-    res.end(JSON.stringify({ result }));
+
+    // המר interval לפורמט Finnhub
+    const resMap = { '1d': 'D', '1wk': 'W', '1mo': 'M' };
+    const resolution = resMap[interval] || 'D';
+
+    console.log('Chart:', ticker, resolution, from, '->', to);
+    try {
+      const body = await get('finnhub.io',
+        `/api/v1/stock/candle?symbol=${encodeURIComponent(ticker)}&resolution=${resolution}&from=${from}&to=${to}&token=${FINNHUB_KEY}`
+      );
+      const data = JSON.parse(body);
+      if (data.s !== 'ok' || !data.t) {
+        res.writeHead(200);
+        res.end(JSON.stringify({ result: [] }));
+        return;
+      }
+      // המר לפורמט שהאפליקציה מצפה לו
+      res.writeHead(200);
+      res.end(JSON.stringify({
+        result: [{
+          timestamp: data.t,
+          indicators: { quote: [{ close: data.c, open: data.o, high: data.h, low: data.l, volume: data.v }] }
+        }]
+      }));
+    } catch(e) {
+      console.error('Chart error:', e.message);
+      res.writeHead(200);
+      res.end(JSON.stringify({ result: [], error: e.message }));
+    }
     return;
   }
 
