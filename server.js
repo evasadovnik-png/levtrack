@@ -3,128 +3,101 @@ const http = require('http');
 const zlib = require('zlib');
 
 const PORT = process.env.PORT || 3000;
-let cookie = '';
-let crumb = '';
+const cache = {};
+const CACHE_TTL = 4 * 60 * 1000;
 
-const sleep = ms => new Promise(r => setTimeout(r, ms));
-
-function get(hostname, path, headers) {
+function httpsGet(hostname, path, headers = {}) {
   return new Promise((resolve, reject) => {
-    const req = https.request(
-      { hostname, path, method: 'GET', headers, maxHeaderSize: 81920 },
-      (res) => {
-        const chunks = [];
-        let stream = res;
-        const enc = res.headers['content-encoding'];
-        if (enc === 'gzip') stream = res.pipe(zlib.createGunzip());
-        else if (enc === 'br') stream = res.pipe(zlib.createBrotliDecompress());
-        else if (enc === 'deflate') stream = res.pipe(zlib.createInflate());
-        stream.on('data', c => chunks.push(c));
-        stream.on('end', () => resolve({ body: Buffer.concat(chunks).toString('utf8'), headers: res.headers }));
-        stream.on('error', reject);
-      }
-    );
+    const req = https.request({
+      hostname, path, method: 'GET',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+        'Accept': 'application/json, text/plain, */*',
+        'Accept-Language': 'en-US,en;q=0.9',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Referer': 'https://finance.yahoo.com/',
+        'Origin': 'https://finance.yahoo.com',
+        ...headers
+      },
+      maxHeaderSize: 81920
+    }, (res) => {
+      const chunks = [];
+      let stream = res;
+      const enc = res.headers['content-encoding'];
+      if (enc === 'gzip') stream = res.pipe(zlib.createGunzip());
+      else if (enc === 'br') stream = res.pipe(zlib.createBrotliDecompress());
+      else if (enc === 'deflate') stream = res.pipe(zlib.createInflate());
+      stream.on('data', c => chunks.push(c));
+      stream.on('end', () => resolve({ body: Buffer.concat(chunks).toString('utf8'), status: res.statusCode }));
+      stream.on('error', reject);
+    });
     req.on('error', reject);
-    req.setTimeout(20000, () => { req.destroy(); reject(new Error('Timeout')); });
+    req.setTimeout(15000, () => { req.destroy(); reject(new Error('Timeout')); });
     req.end();
   });
 }
 
-const AGENTS = [
-  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15',
-  'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
-];
-let agentIdx = 0;
-const ua = () => AGENTS[agentIdx++ % AGENTS.length];
-
-async function refreshCrumb() {
+// שלוף מחיר בודד דרך chart endpoint — לא דורש crumb
+async function fetchSingle(ticker) {
+  const now = Date.now();
+  if (cache[ticker] && now - cache[ticker].ts < CACHE_TTL) {
+    return cache[ticker].data;
+  }
   try {
-    const agent = ua();
-    await sleep(500);
+    const r = await httpsGet('query1.finance.yahoo.com',
+      `/v8/finance/chart/${encodeURIComponent(ticker)}?interval=1d&range=2d&includePrePost=false`
+    );
+    const data = JSON.parse(r.body);
+    const meta = data?.chart?.result?.[0]?.meta;
+    if (!meta || !meta.regularMarketPrice) return null;
 
-    // Get cookie from Yahoo Finance directly
-    const r1 = await get('finance.yahoo.com', '/quote/AAPL', {
-      'User-Agent': agent,
-      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
-      'Accept-Language': 'en-US,en;q=0.5',
-      'Accept-Encoding': 'gzip, deflate, br',
-      'Connection': 'keep-alive',
-      'Upgrade-Insecure-Requests': '1',
-    });
-
-    const setCookies = r1.headers['set-cookie'] || [];
-    cookie = setCookies.map(c => c.split(';')[0]).join('; ');
-    console.log('Got cookies:', setCookies.length, 'Cookie length:', cookie.length);
-
-    await sleep(1000);
-
-    // Get crumb
-    const r2 = await get('query1.finance.yahoo.com', '/v1/test/getcrumb', {
-      'User-Agent': agent,
-      'Accept': '*/*',
-      'Accept-Language': 'en-US,en;q=0.9',
-      'Accept-Encoding': 'gzip, deflate, br',
-      'Referer': 'https://finance.yahoo.com/',
-      'Origin': 'https://finance.yahoo.com',
-      'Cookie': cookie,
-    });
-
-    crumb = r2.body.trim();
-    console.log('Crumb:', crumb, '| Status ok:', crumb.length > 0 && !crumb.includes('Unauthorized') && !crumb.includes('Too Many'));
-    return crumb.length > 0;
+    const result = {
+      symbol: ticker,
+      regularMarketPrice: meta.regularMarketPrice,
+      regularMarketChangePercent: meta.regularMarketPrice && meta.chartPreviousClose
+        ? ((meta.regularMarketPrice - meta.chartPreviousClose) / meta.chartPreviousClose * 100)
+        : 0,
+      regularMarketVolume: meta.regularMarketVolume || 0,
+      shortName: meta.longName || meta.shortName || ticker,
+      marketState: meta.marketState || 'CLOSED',
+      fiftyTwoWeekLow: meta.fiftyTwoWeekLow || meta.regularMarketDayLow,
+      fiftyTwoWeekHigh: meta.fiftyTwoWeekHigh || meta.regularMarketDayHigh,
+    };
+    cache[ticker] = { ts: now, data: result };
+    return result;
   } catch(e) {
-    console.error('refreshCrumb error:', e.message);
-    return false;
+    console.warn(`fetchSingle ${ticker}:`, e.message);
+    return null;
   }
 }
 
-async function fetchQuote(symbols) {
-  if (!crumb || crumb.includes('Too Many') || crumb.includes('Unauthorized')) {
-    await refreshCrumb();
-  }
-  const agent = ua();
-  const fields = 'regularMarketPrice,regularMarketChangePercent,regularMarketVolume,fiftyTwoWeekLow,fiftyTwoWeekHigh,shortName,marketState';
-  const path = `/v7/finance/quote?symbols=${encodeURIComponent(symbols)}&fields=${fields}&crumb=${encodeURIComponent(crumb)}&formatted=false&lang=en-US&region=US`;
-  const r = await get('query1.finance.yahoo.com', path, {
-    'User-Agent': agent,
-    'Accept': 'application/json, text/plain, */*',
-    'Accept-Language': 'en-US,en;q=0.9',
-    'Accept-Encoding': 'gzip, deflate, br',
-    'Referer': 'https://finance.yahoo.com/',
-    'Origin': 'https://finance.yahoo.com',
-    'Cookie': cookie,
-  });
-  let data;
-  try { data = JSON.parse(r.body); } catch(e) { console.error('Parse error:', r.body.substring(0,100)); return []; }
-  if (data?.quoteResponse?.error || !data?.quoteResponse?.result?.length) {
-    console.log('Bad response, refreshing crumb. Error:', JSON.stringify(data?.quoteResponse?.error));
-    crumb = ''; cookie = '';
-    await refreshCrumb();
-    return fetchQuote(symbols);
-  }
-  return data?.quoteResponse?.result || [];
-}
+// שלוף batch של טיקרים
+async function fetchBatch(tickers) {
+  // נסה קודם את ה-batch endpoint של Yahoo
+  try {
+    const symbols = tickers.join(',');
+    const r = await httpsGet('query1.finance.yahoo.com',
+      `/v7/finance/quote?symbols=${encodeURIComponent(symbols)}&fields=regularMarketPrice,regularMarketChangePercent,regularMarketVolume,fiftyTwoWeekLow,fiftyTwoWeekHigh,shortName,marketState&formatted=false&lang=en-US&region=US`
+    );
+    const data = JSON.parse(r.body);
+    const results = data?.quoteResponse?.result || [];
+    if (results.length > 0) {
+      results.forEach(q => { cache[q.symbol] = { ts: Date.now(), data: q }; });
+      console.log(`Batch OK: ${results.length}/${tickers.length}`);
+      return results;
+    }
+  } catch(e) { console.warn('Batch failed:', e.message); }
 
-async function fetchChart(ticker, from, to, interval) {
-  if (!crumb) await refreshCrumb();
-  const agent = ua();
-  const path = `/v8/finance/chart/${ticker}?period1=${from}&period2=${to}&interval=${interval}&crumb=${encodeURIComponent(crumb)}`;
-  const r = await get('query1.finance.yahoo.com', path, {
-    'User-Agent': agent,
-    'Accept': 'application/json, text/plain, */*',
-    'Accept-Language': 'en-US,en;q=0.9',
-    'Accept-Encoding': 'gzip, deflate, br',
-    'Referer': 'https://finance.yahoo.com/',
-    'Cookie': cookie,
-  });
-  const data = JSON.parse(r.body);
-  return data?.chart?.result || [];
+  // Fallback: שלוף אחד אחד עם delay קטן
+  console.log('Falling back to single fetch for', tickers.length, 'tickers');
+  const results = [];
+  for (let i = 0; i < tickers.length; i++) {
+    const r = await fetchSingle(tickers[i]);
+    if (r) results.push(r);
+    if (i < tickers.length - 1) await new Promise(r => setTimeout(r, 120));
+  }
+  return results;
 }
-
-// Refresh crumb on startup and every 25 minutes
-refreshCrumb();
-setInterval(refreshCrumb, 25 * 60 * 1000);
 
 const server = http.createServer(async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -137,16 +110,18 @@ const server = http.createServer(async (req, res) => {
 
   if (url.pathname === '/health') {
     res.writeHead(200);
-    res.end(JSON.stringify({ status: 'ok', time: new Date().toISOString(), crumb: crumb ? crumb.substring(0,10)+'...' : 'none' }));
+    res.end(JSON.stringify({ status: 'ok', time: new Date().toISOString(), cached: Object.keys(cache).length }));
     return;
   }
 
   if (url.pathname === '/quote') {
     const symbols = url.searchParams.get('symbols');
     if (!symbols) { res.writeHead(400); res.end(JSON.stringify({ results: [] })); return; }
+    const tickers = symbols.split(',').filter(Boolean).slice(0, 50);
+    console.log('Quote:', tickers.length, 'tickers');
     try {
-      const results = await fetchQuote(symbols);
-      console.log('Quote:', symbols.split(',').length, '->', results.length, 'results');
+      const results = await fetchBatch(tickers);
+      console.log('Results:', results.length);
       res.writeHead(200);
       res.end(JSON.stringify({ results }));
     } catch(e) {
@@ -163,7 +138,11 @@ const server = http.createServer(async (req, res) => {
     const to = url.searchParams.get('to') || String(Math.floor(Date.now()/1000));
     const interval = url.searchParams.get('interval') || '1d';
     try {
-      const result = await fetchChart(ticker, from, to, interval);
+      const r = await httpsGet('query1.finance.yahoo.com',
+        `/v8/finance/chart/${encodeURIComponent(ticker)}?period1=${from}&period2=${to}&interval=${interval}`
+      );
+      const data = JSON.parse(r.body);
+      const result = data?.chart?.result || [];
       res.writeHead(200);
       res.end(JSON.stringify({ result }));
     } catch(e) {
