@@ -427,17 +427,14 @@ main{max-width:1440px;margin:0 auto;padding:24px;}
       <div class="chart-frame" id="chartFrame">
         <!-- כפתורי טווח זמן -->
         <div id="chartRangeBar" style="display:flex;gap:6px;padding:12px 16px 0;background:#fff;border-bottom:1px solid var(--border);">
-          <button class="range-btn" onclick="loadChart(currentTicker,'1M',this)">1M</button>
-          <button class="range-btn" onclick="loadChart(currentTicker,'3M',this)">3M</button>
-          <button class="range-btn" onclick="loadChart(currentTicker,'6M',this)">6M</button>
-          <button class="range-btn active" onclick="loadChart(currentTicker,'1Y',this)">1Y</button>
-          <button class="range-btn" onclick="loadChart(currentTicker,'5Y',this)">5Y</button>
-          <button class="range-btn" onclick="loadChart(currentTicker,'MAX',this)">מקסימום</button>
-          <div id="chartLoading" style="margin-right:auto;font-size:12px;color:var(--text3);align-self:center;"></div>
+          <button class="range-btn" onclick="setTVRange('1M',this)">1M</button>
+          <button class="range-btn" onclick="setTVRange('3M',this)">3M</button>
+          <button class="range-btn" onclick="setTVRange('6M',this)">6M</button>
+          <button class="range-btn active" onclick="setTVRange('12M',this)">1Y</button>
+          <button class="range-btn" onclick="setTVRange('60M',this)">5Y</button>
+          <button class="range-btn" onclick="setTVRange('ALL',this)">מקסימום</button>
         </div>
-        <div style="padding:8px 12px 12px;background:#fff;flex:1;min-height:0;">
-          <canvas id="priceChart" style="width:100%;height:100%;"></canvas>
-        </div>
+        <div id="tvChartWrap" style="flex:1;min-height:0;"></div>
       </div>
       <div class="modal-stats">
         <div class="mstat"><div class="mstat-lbl">מחיר</div><div class="mstat-val" id="mP2">—</div></div>
@@ -937,143 +934,46 @@ document.addEventListener('click',e=>{
 });
 
 // ══ CHART.JS GOOGLE-STYLE ══
-let chartInstance=null, currentTicker=null;
+let currentTicker=null;
+let currentTVRange='12M';
 
-async function loadChart(ticker, range, btn){
-  currentTicker=ticker;
+function setTVRange(range, btn){
+  currentTVRange = range;
   document.querySelectorAll('.range-btn').forEach(b=>b.classList.remove('active'));
   if(btn) btn.classList.add('active');
-  document.getElementById('chartLoading').innerHTML='טוען... <span class="spinner"></span>';
+  if(currentTicker) loadTVChart(currentTicker, range);
+}
 
-  const now=Math.floor(Date.now()/1000);
-  let from;
-  if(range==='1M') from=now-30*86400;
-  else if(range==='3M') from=now-90*86400;
-  else if(range==='6M') from=now-180*86400;
-  else if(range==='1Y') from=now-365*86400;
-  else if(range==='5Y') from=now-5*365*86400;
-  else from=1;
-
-  const interval=(range==='1M'||range==='3M')?'1d':(range==='5Y'||range==='MAX')?'1wk':'1d';
-
-  try{
-    const url=`${RAILWAY_SERVER}/chart?ticker=${ticker}&from=${from}&to=${now}&interval=${interval}`;
-    const r = await fetch(url);
-    const data = await r.json();
-    const result=data?.result?.[0];
-    if(!result) throw new Error('no data');
-    const timestamps=result.timestamp||[];
-    const closes=result.indicators?.quote?.[0]?.close||[];
-    const labels=timestamps.map(t=>{
-      const d=new Date(t*1000);
-      if(range==='1M') return d.toLocaleDateString('he-IL',{day:'2-digit',month:'2-digit'});
-      if(range==='3M'||range==='6M') return [
-        d.toLocaleDateString('he-IL',{month:'short'}),
-        d.getFullYear()
-      ];
-      if(range==='1Y') return [
-        d.toLocaleDateString('he-IL',{month:'short'}),
-        d.getFullYear()
-      ];
-      if(range==='5Y'||range==='MAX') return [
-        d.toLocaleDateString('he-IL',{month:'short'}),
-        d.getFullYear()
-      ];
-      return d.toLocaleDateString('he-IL',{day:'2-digit',month:'2-digit'});
-    });
-    const prices=closes.map(p=>p?Math.round(p*100)/100:null);
-    const isUp=(prices.filter(p=>p)[prices.filter(p=>p).length-1]||0)>=(prices.find(p=>p)||0);
-    const color=isUp?'#00a878':'#e8335a';
-    const colorBg=isUp?'rgba(0,168,120,0.10)':'rgba(232,51,90,0.10)';
-    if(chartInstance) chartInstance.destroy();
-    const ctx=document.getElementById('priceChart').getContext('2d');
-
-    // Plugin לקו מקווקו אנכי כמו גוגל
-    const crosshairPlugin = {
-      id:'crosshair',
-      afterDraw(chart){
-        if(chart.tooltip._active&&chart.tooltip._active.length){
-          const x=chart.tooltip._active[0].element.x;
-          const yAxis=chart.scales.y;
-          const ctx=chart.ctx;
-          ctx.save();
-          ctx.beginPath();
-          ctx.setLineDash([4,4]);
-          ctx.strokeStyle='#9aa5b4';
-          ctx.lineWidth=1;
-          ctx.moveTo(x, yAxis.top);
-          ctx.lineTo(x, yAxis.bottom);
-          ctx.stroke();
-          ctx.restore();
-        }
-      }
-    };
-
-    chartInstance=new Chart(ctx,{
-      type:'line',
-      plugins:[crosshairPlugin],
-      data:{labels,datasets:[{
-        data:prices,
-        borderColor:color,
-        backgroundColor:colorBg,
-        fill:true,
-        tension:0.3,
-        borderWidth:2.5,
-        pointRadius:0,
-        pointHoverRadius:6,
-        pointHoverBackgroundColor:'#fff',
-        pointHoverBorderColor:color,
-        pointHoverBorderWidth:2.5,
-        spanGaps:true
-      }]},
-      options:{
-        responsive:true,
-        maintainAspectRatio:false,
-        interaction:{mode:'index',intersect:false},
-        plugins:{
-          legend:{display:false},
-          tooltip:{
-            backgroundColor:'#fff',
-            borderColor:'#e2e6ec',
-            borderWidth:1.5,
-            titleColor:'#9aa5b4',
-            bodyColor:'#0f1923',
-            titleFont:{family:'Plus Jakarta Sans',size:11,weight:'400'},
-            bodyFont:{family:'Plus Jakarta Sans',size:15,weight:'800'},
-            padding:12,
-            displayColors:false,
-            callbacks:{
-              title: ctx => ctx[0].label,
-              label: ctx => `$${ctx.parsed.y?.toFixed(2)||'—'}`
-            }
-          }
-        },
-        scales:{
-          x:{
-            grid:{display:false},
-            ticks:{
-              font:{family:'Plus Jakarta Sans',size:10},
-              color:'#9aa5b4',
-              maxTicksLimit: range==='MAX'?10:range==='5Y'?10:8,
-              maxRotation:0,
-              autoSkip:true,
-            },
-            border:{display:false}
-          },
-          y:{
-            position:'left',
-            grid:{color:'#f4f6f9',drawBorder:false},
-            ticks:{font:{family:'Plus Jakarta Sans',size:10},color:'#9aa5b4',callback:v=>`$${v}`},
-            border:{display:false}
-          }
-        }
-      }
-    });
-    document.getElementById('chartLoading').textContent='';
-  }catch(e){
-    document.getElementById('chartLoading').textContent='שגיאה בטעינת גרף';
-    console.error('Chart error:',e);
-  }
+function loadTVChart(ticker, range){
+  const wrap = document.getElementById('tvChartWrap');
+  wrap.innerHTML = '';
+  const container = document.createElement('div');
+  container.className = 'tradingview-widget-container';
+  container.style.cssText = 'height:100%;width:100%;';
+  const inner = document.createElement('div');
+  inner.className = 'tradingview-widget-container__widget';
+  inner.style.cssText = 'height:100%;width:100%;';
+  container.appendChild(inner);
+  const s = document.createElement('script');
+  s.src = 'https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js';
+  s.async = true;
+  s.innerHTML = JSON.stringify({
+    autosize: true,
+    symbol: ticker,
+    interval: range === '1M' ? 'D' : range === '3M' ? 'D' : range === '6M' ? 'D' : range === '12M' ? 'W' : range === '60M' ? 'W' : 'M',
+    range: range,
+    timezone: 'America/New_York',
+    theme: 'light',
+    style: '1',
+    locale: 'he',
+    backgroundColor: '#ffffff',
+    gridColor: '#f0f2f5',
+    allow_symbol_change: false,
+    calendar: false,
+    support_host: 'https://www.tradingview.com'
+  });
+  container.appendChild(s);
+  wrap.appendChild(container);
 }
 
 // ══ CHART MODAL ══
@@ -1132,12 +1032,14 @@ function openChart(ticker){
   document.getElementById('mRange').textContent=f.range52;
   document.getElementById('mVol').textContent=f.vol;
   if(chartInstance){chartInstance.destroy();chartInstance=null;}
+  document.getElementById('tvChartWrap').innerHTML='';
   document.getElementById('chartOverlay').classList.remove('hidden');
   document.body.style.overflow='hidden';
-  // טען גרף
+  // טען גרף TradingView
   setTimeout(()=>{
-    const defaultBtn=document.querySelector('.range-btn[onclick*="1Y"]');
-    loadChart(ticker,'1Y',defaultBtn);
+    const defaultBtn=document.querySelector('.range-btn[onclick*="12M"]');
+    if(defaultBtn){ document.querySelectorAll('.range-btn').forEach(b=>b.classList.remove('active')); defaultBtn.classList.add('active'); }
+    loadTVChart(ticker, '12M');
   },100);
   // טען הסבר AI
   const sectorName = SECTORS[f.sector]?.n || f.sector;
@@ -1145,7 +1047,7 @@ function openChart(ticker){
 }
 function closeChart(){
   document.getElementById('chartOverlay').classList.add('hidden');
-  if(chartInstance){chartInstance.destroy();chartInstance=null;}
+  document.getElementById('tvChartWrap').innerHTML='';
   document.body.style.overflow='';
 }
 function showAdd(){document.getElementById('addOverlay').classList.remove('hidden');document.body.style.overflow='hidden';}
