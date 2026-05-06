@@ -3,100 +3,83 @@ const http = require('http');
 const zlib = require('zlib');
 
 const PORT = process.env.PORT || 3000;
+const FINNHUB_KEY = process.env.FINNHUB_KEY || 'd7tda9hr01qugn0a7h10d7tda9hr01qugn0a7h1g';
+
+// Cache מחירים 4 דקות
 const cache = {};
 const CACHE_TTL = 4 * 60 * 1000;
 
-function httpsGet(hostname, path, headers = {}) {
+function get(hostname, path) {
   return new Promise((resolve, reject) => {
-    const req = https.request({
-      hostname, path, method: 'GET',
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-        'Accept': 'application/json, text/plain, */*',
-        'Accept-Language': 'en-US,en;q=0.9',
-        'Accept-Encoding': 'gzip, deflate, br',
-        'Referer': 'https://finance.yahoo.com/',
-        'Origin': 'https://finance.yahoo.com',
-        ...headers
-      },
-      maxHeaderSize: 81920
-    }, (res) => {
+    const req = https.request({ hostname, path, method: 'GET', headers: { 'User-Agent': 'AZENO/1.0' } }, (res) => {
       const chunks = [];
       let stream = res;
       const enc = res.headers['content-encoding'];
       if (enc === 'gzip') stream = res.pipe(zlib.createGunzip());
       else if (enc === 'br') stream = res.pipe(zlib.createBrotliDecompress());
-      else if (enc === 'deflate') stream = res.pipe(zlib.createInflate());
       stream.on('data', c => chunks.push(c));
-      stream.on('end', () => resolve({ body: Buffer.concat(chunks).toString('utf8'), status: res.statusCode }));
+      stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
       stream.on('error', reject);
     });
     req.on('error', reject);
-    req.setTimeout(15000, () => { req.destroy(); reject(new Error('Timeout')); });
+    req.setTimeout(10000, () => { req.destroy(); reject(new Error('Timeout')); });
     req.end();
   });
 }
 
-// שלוף מחיר בודד דרך chart endpoint — לא דורש crumb
-async function fetchSingle(ticker) {
+// Finnhub quote לטיקר בודד
+async function fetchFinnhub(ticker) {
   const now = Date.now();
-  if (cache[ticker] && now - cache[ticker].ts < CACHE_TTL) {
-    return cache[ticker].data;
-  }
+  if (cache[ticker] && now - cache[ticker].ts < CACHE_TTL) return cache[ticker].data;
   try {
-    const r = await httpsGet('query1.finance.yahoo.com',
-      `/v8/finance/chart/${encodeURIComponent(ticker)}?interval=1d&range=2d&includePrePost=false`
-    );
-    const data = JSON.parse(r.body);
-    const meta = data?.chart?.result?.[0]?.meta;
-    if (!meta || !meta.regularMarketPrice) return null;
-
+    const body = await get('finnhub.io', `/api/v1/quote?symbol=${encodeURIComponent(ticker)}&token=${FINNHUB_KEY}`);
+    const q = JSON.parse(body);
+    if (!q.c || q.c === 0) return null;
     const result = {
       symbol: ticker,
-      regularMarketPrice: meta.regularMarketPrice,
-      regularMarketChangePercent: meta.regularMarketPrice && meta.chartPreviousClose
-        ? ((meta.regularMarketPrice - meta.chartPreviousClose) / meta.chartPreviousClose * 100)
-        : 0,
-      regularMarketVolume: meta.regularMarketVolume || 0,
-      shortName: meta.longName || meta.shortName || ticker,
-      marketState: meta.marketState || 'CLOSED',
-      fiftyTwoWeekLow: meta.fiftyTwoWeekLow || meta.regularMarketDayLow,
-      fiftyTwoWeekHigh: meta.fiftyTwoWeekHigh || meta.regularMarketDayHigh,
+      regularMarketPrice: q.c,
+      regularMarketChangePercent: q.dp,
+      regularMarketVolume: 0,
+      shortName: ticker,
+      marketState: 'REGULAR',
+      fiftyTwoWeekLow: q.l,
+      fiftyTwoWeekHigh: q.h,
     };
     cache[ticker] = { ts: now, data: result };
     return result;
-  } catch(e) {
-    console.warn(`fetchSingle ${ticker}:`, e.message);
-    return null;
-  }
+  } catch(e) { console.warn(`Finnhub ${ticker}:`, e.message); return null; }
 }
 
-// שלוף batch של טיקרים
+// Batch — מקבילי עם delay קטן (60 בקשות/דקה = 1 שניה בין בקשות)
 async function fetchBatch(tickers) {
-  // נסה קודם את ה-batch endpoint של Yahoo
-  try {
-    const symbols = tickers.join(',');
-    const r = await httpsGet('query1.finance.yahoo.com',
-      `/v7/finance/quote?symbols=${encodeURIComponent(symbols)}&fields=regularMarketPrice,regularMarketChangePercent,regularMarketVolume,fiftyTwoWeekLow,fiftyTwoWeekHigh,shortName,marketState&formatted=false&lang=en-US&region=US`
-    );
-    const data = JSON.parse(r.body);
-    const results = data?.quoteResponse?.result || [];
-    if (results.length > 0) {
-      results.forEach(q => { cache[q.symbol] = { ts: Date.now(), data: q }; });
-      console.log(`Batch OK: ${results.length}/${tickers.length}`);
-      return results;
-    }
-  } catch(e) { console.warn('Batch failed:', e.message); }
-
-  // Fallback: שלוף אחד אחד עם delay קטן
-  console.log('Falling back to single fetch for', tickers.length, 'tickers');
   const results = [];
   for (let i = 0; i < tickers.length; i++) {
-    const r = await fetchSingle(tickers[i]);
+    // בדוק cache קודם
+    const now = Date.now();
+    if (cache[tickers[i]] && now - cache[tickers[i]].ts < CACHE_TTL) {
+      results.push(cache[tickers[i]].data);
+      continue;
+    }
+    const r = await fetchFinnhub(tickers[i]);
     if (r) results.push(r);
-    if (i < tickers.length - 1) await new Promise(r => setTimeout(r, 120));
+    // delay רק אם לא מה-cache (60 req/min = 1 per sec)
+    if (i < tickers.length - 1) await new Promise(r => setTimeout(r, 1100));
   }
   return results;
+}
+
+// Yahoo Finance chart (לגרפים — ה-chart endpoint עובד בלי crumb)
+async function fetchChart(ticker, from, to, interval) {
+  try {
+    const body = await get('query1.finance.yahoo.com',
+      `/v8/finance/chart/${encodeURIComponent(ticker)}?period1=${from}&period2=${to}&interval=${interval}&events=div%2Csplit`
+    );
+    const data = JSON.parse(body);
+    return data?.chart?.result || [];
+  } catch(e) {
+    console.error('Chart error:', e.message);
+    return [];
+  }
 }
 
 const server = http.createServer(async (req, res) => {
@@ -110,7 +93,7 @@ const server = http.createServer(async (req, res) => {
 
   if (url.pathname === '/health') {
     res.writeHead(200);
-    res.end(JSON.stringify({ status: 'ok', time: new Date().toISOString(), cached: Object.keys(cache).length }));
+    res.end(JSON.stringify({ status: 'ok', time: new Date().toISOString(), cached: Object.keys(cache).length, finnhub: FINNHUB_KEY ? 'set' : 'missing' }));
     return;
   }
 
@@ -118,14 +101,13 @@ const server = http.createServer(async (req, res) => {
     const symbols = url.searchParams.get('symbols');
     if (!symbols) { res.writeHead(400); res.end(JSON.stringify({ results: [] })); return; }
     const tickers = symbols.split(',').filter(Boolean).slice(0, 50);
-    console.log('Quote:', tickers.length, 'tickers');
+    console.log('Quote:', tickers.length, 'tickers, cached:', tickers.filter(t => cache[t] && Date.now()-cache[t].ts < CACHE_TTL).length);
     try {
       const results = await fetchBatch(tickers);
       console.log('Results:', results.length);
       res.writeHead(200);
       res.end(JSON.stringify({ results }));
     } catch(e) {
-      console.error('Quote error:', e.message);
       res.writeHead(200);
       res.end(JSON.stringify({ results: [], error: e.message }));
     }
@@ -137,19 +119,10 @@ const server = http.createServer(async (req, res) => {
     const from = url.searchParams.get('from') || '1';
     const to = url.searchParams.get('to') || String(Math.floor(Date.now()/1000));
     const interval = url.searchParams.get('interval') || '1d';
-    try {
-      const r = await httpsGet('query1.finance.yahoo.com',
-        `/v8/finance/chart/${encodeURIComponent(ticker)}?period1=${from}&period2=${to}&interval=${interval}`
-      );
-      const data = JSON.parse(r.body);
-      const result = data?.chart?.result || [];
-      res.writeHead(200);
-      res.end(JSON.stringify({ result }));
-    } catch(e) {
-      console.error('Chart error:', e.message);
-      res.writeHead(200);
-      res.end(JSON.stringify({ result: [], error: e.message }));
-    }
+    console.log('Chart:', ticker, interval);
+    const result = await fetchChart(ticker, from, to, interval);
+    res.writeHead(200);
+    res.end(JSON.stringify({ result }));
     return;
   }
 
@@ -182,4 +155,4 @@ const server = http.createServer(async (req, res) => {
   res.end(JSON.stringify({ error: 'Not found' }));
 });
 
-server.listen(PORT, () => console.log(`AZENO Server on port ${PORT}`));
+server.listen(PORT, () => console.log(`AZENO Server on port ${PORT} | Finnhub: ${FINNHUB_KEY ? 'SET' : 'MISSING'}`));
