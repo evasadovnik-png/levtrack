@@ -1021,29 +1021,33 @@ async function loadAIDescription(ticker, name, lev, sectorName, price, change) {
 }
 
 function openChart(ticker){
-  const f=funds.find(x=>x.ticker===ticker);if(!f)return;
+  const f = funds.find(x=>x.ticker===ticker) || stocks.find(x=>x.ticker===ticker);
+  if(!f) return;
   const up=(f.change||0)>=0;
   document.getElementById('mTicker').textContent=f.ticker;
-  document.getElementById('mName').textContent=f.name;
+  document.getElementById('mName').textContent=f.name||ticker;
   document.getElementById('mPrice').textContent=f.price?`$${f.price.toFixed(2)}`:'—';
   document.getElementById('mChange').innerHTML=f.change!=null?`<span style="color:${up?'var(--green)':'var(--red)'}">${up?'+':''}${f.change.toFixed(2)}%</span>`:'';
   document.getElementById('mP2').textContent=f.price?`$${f.price.toFixed(2)}`:'—';
   document.getElementById('mC2').innerHTML=f.change!=null?`<span style="color:${up?'var(--green)':'var(--red)'}">${up?'+':''}${f.change.toFixed(2)}%</span>`:'—';
-  document.getElementById('mRange').textContent=f.range52;
-  document.getElementById('mVol').textContent=f.vol;
-  if(chartInstance){chartInstance.destroy();chartInstance=null;}
+  document.getElementById('mRange').textContent=f.range52||'—';
+  document.getElementById('mVol').textContent=f.vol||'—';
   document.getElementById('tvChartWrap').innerHTML='';
   document.getElementById('chartOverlay').classList.remove('hidden');
   document.body.style.overflow='hidden';
-  // טען גרף TradingView
   setTimeout(()=>{
+    document.querySelectorAll('.range-btn').forEach(b=>b.classList.remove('active'));
     const defaultBtn=document.querySelector('.range-btn[onclick*="12M"]');
-    if(defaultBtn){ document.querySelectorAll('.range-btn').forEach(b=>b.classList.remove('active')); defaultBtn.classList.add('active'); }
-    loadTVChart(ticker, '12M');
+    if(defaultBtn) defaultBtn.classList.add('active');
+    loadTVChart(ticker,'12M');
   },100);
-  // טען הסבר AI
-  const sectorName = SECTORS[f.sector]?.n || f.sector;
-  loadAIDescription(ticker, f.name, f.lev, sectorName, f.price, f.change);
+  // הסבר AI רק לקרנות ממונפות
+  if(f.lev){
+    const sectorName=SECTORS[f.sector]?.n||f.sector;
+    loadAIDescription(ticker,f.name,f.lev,sectorName,f.price,f.change);
+  } else {
+    document.getElementById('aiDescContent').innerHTML='<div style="color:var(--text3);">הסבר זמין רק לקרנות ממונפות.</div>';
+  }
 }
 function closeChart(){
   document.getElementById('chartOverlay').classList.add('hidden');
