@@ -4,412 +4,351 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AZENO — Leveraged Funds</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#f4f6f9;--bg2:#fff;--bg3:#f0f2f5;--bg4:#e8ebf0;
-  --border:#e2e6ec;--border2:#d0d6e0;
-  --text:#0f1923;--text2:#4a5568;--text3:#9aa5b4;
-  --green:#00a878;--green-bg:#e8f7f3;
-  --red:#e8335a;--red-bg:#fde8ed;
-  --blue:#2563eb;--blue-bg:#eff4ff;
-  --gold:#d97706;--gold-bg:#fef3c7;
-  --purple:#7c3aed;--purple-bg:#f3e8ff;
-  --teal:#0891b2;--teal-bg:#ecfeff;
-  --orange:#ea580c;
-  --accent:#2563eb;
-  --shadow:0 1px 3px rgba(15,25,35,.08),0 4px 16px rgba(15,25,35,.04);
-  --shadow2:0 2px 8px rgba(15,25,35,.10),0 8px 32px rgba(15,25,35,.06);
-}
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:var(--bg);color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;min-height:100vh;}
+:root{
+  --bg:#f8f9fa;--white:#fff;--border:#e0e0e0;
+  --text:#202124;--text2:#5f6368;--text3:#80868b;
+  --green:#137333;--green-bg:#e6f4ea;--green-light:#34a853;
+  --red:#c5221f;--red-bg:#fce8e6;--red-light:#ea4335;
+  --blue:#1a73e8;--blue-bg:#e8f0fe;
+  --gold:#e37400;--gold-bg:#fef7e0;
+  --purple:#7c4dff;
+}
+body{background:var(--bg);color:var(--text);font-family:'Google Sans','Roboto',sans-serif;min-height:100vh;}
 
-header{background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;height:62px;display:flex;align-items:center;padding:0 28px;gap:16px;}
-.logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
-.logo-mark{width:34px;height:34px;background:var(--accent);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff;font-weight:800;}
-.logo-name{font-size:17px;font-weight:800;color:var(--text);letter-spacing:-.5px;}
-.logo-name span{color:var(--accent);}
-.nav-tabs{display:flex;gap:4px;}
-.nav-tab{padding:7px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid transparent;background:transparent;color:var(--text2);transition:all .18s;}
-.nav-tab:hover{background:var(--bg3);}
-.nav-tab.active{background:var(--blue-bg);border-color:var(--accent);color:var(--accent);}
-.nav-tab.red-tab.active{background:var(--red-bg);border-color:var(--red);color:var(--red);}
-.header-mid{flex:1;display:flex;align-items:center;gap:10px;}
-.search-wrap{position:relative;width:240px;}
-.search-icon{position:absolute;right:11px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:14px;pointer-events:none;}
-.search-input{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:9px;padding:8px 36px 8px 14px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;color:var(--text);transition:all .18s;}
-.search-input:focus{outline:none;border-color:var(--accent);background:#fff;box-shadow:0 0 0 3px rgba(37,99,235,.10);}
-.search-input::placeholder{color:var(--text3);}
-.pill{display:flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:5px 12px;font-size:12px;color:var(--text2);white-space:nowrap;}
-.pill .dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:blink 2.4s infinite;}
-.pill .dot.grey{background:var(--text3);animation:none;}
-.pill .dot.orange{background:var(--orange);animation:none;}
-@keyframes blink{0%,100%{opacity:1}55%{opacity:.25}}
-.header-right{display:flex;gap:8px;margin-right:auto;}
-.btn{padding:8px 16px;border-radius:9px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid transparent;transition:all .18s;}
-.btn-blue{background:var(--accent);color:#fff;}
-.btn-blue:hover{background:#1d4ed8;}
-.btn-green{background:var(--green);color:#fff;}
-.btn-green:hover{background:#00916a;}
-.btn-outline{background:transparent;border-color:var(--border2);color:var(--text2);}
-.btn-outline:hover{background:var(--bg3);}
-.btn:disabled{background:#94a3b8;cursor:not-allowed;}
+/* HEADER */
+header{background:var(--white);border-bottom:1px solid var(--border);height:64px;display:flex;align-items:center;padding:0 24px;gap:24px;position:sticky;top:0;z-index:200;box-shadow:0 1px 2px rgba(60,64,67,.1);}
+.logo{display:flex;align-items:center;gap:8px;text-decoration:none;flex-shrink:0;}
+.logo-icon{width:32px;height:32px;background:var(--blue);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:16px;}
+.logo-text{font-size:18px;font-weight:700;color:var(--text);letter-spacing:-.3px;}
+.logo-text span{color:var(--blue);}
 
-main{max-width:1440px;margin:0 auto;padding:24px;}
-.page{display:none;}.page.active{display:block;}
+/* SEARCH */
+.search-bar{flex:1;max-width:600px;position:relative;}
+.search-bar input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:24px;padding:10px 48px 10px 16px;font-family:'Google Sans',sans-serif;font-size:14px;color:var(--text);outline:none;transition:all .2s;}
+.search-bar input:focus{background:var(--white);border-color:var(--blue);box-shadow:0 0 0 2px rgba(26,115,232,.15);}
+.search-bar input::placeholder{color:var(--text3);}
+.search-icon{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:16px;}
+.search-results{position:absolute;top:calc(100% + 4px);right:0;left:0;background:var(--white);border:1px solid var(--border);border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.15);z-index:300;display:none;max-height:320px;overflow-y:auto;}
+.search-results.show{display:block;}
+.search-item{display:flex;align-items:center;gap:12px;padding:10px 16px;cursor:pointer;transition:background .15s;}
+.search-item:hover{background:var(--bg);}
+.si-ticker{font-size:13px;font-weight:700;color:var(--blue);min-width:60px;}
+.si-name{font-size:13px;color:var(--text2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.si-price{font-size:13px;font-weight:500;color:var(--text);}
+.si-chg{font-size:12px;font-weight:500;padding:1px 6px;border-radius:4px;}
 
-/* LOADING */
-.load-wrap{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:22px 26px;margin-bottom:22px;box-shadow:var(--shadow);}
-.load-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
-.load-title{font-size:15px;font-weight:800;}
-.load-count{font-size:13px;font-weight:700;font-family:'DM Mono',monospace;color:var(--teal);}
-.load-bar-track{background:var(--bg3);border-radius:6px;height:10px;overflow:hidden;margin-bottom:12px;}
-.load-bar-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--blue));border-radius:6px;transition:width .4s ease;}
-.load-steps{display:flex;gap:20px;flex-wrap:wrap;}
-.lstep{display:flex;align-items:center;gap:6px;font-size:12px;}
-.lstep-dot{width:8px;height:8px;border-radius:50%;}
-.lstep-dot.done{background:var(--green);}
-.lstep-dot.active{background:var(--teal);animation:blink .8s infinite;}
-.lstep-dot.wait{background:var(--bg4);}
-.lstep-txt{color:var(--text2);}
-.lstep-txt.done{color:var(--green);}
-.lstep-txt.active{color:var(--teal);font-weight:700;}
+/* NAV TABS */
+.nav-tabs{display:flex;gap:2px;margin-right:auto;}
+.nav-tab{padding:8px 16px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--text2);transition:all .15s;font-family:'Google Sans',sans-serif;}
+.nav-tab:hover{background:var(--bg);}
+.nav-tab.active{background:var(--blue-bg);color:var(--blue);font-weight:700;}
 
-.live-bar{border-radius:13px;padding:13px 20px;margin-bottom:20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
-.live-bar.ok{background:var(--green-bg);border:1.5px solid #86efac;}
-.live-bar.load{background:#fffbeb;border:1.5px solid #fde047;}
-.live-bar.err{background:var(--red-bg);border:1.5px solid #fca5a5;}
-.live-icon{font-size:20px;flex-shrink:0;}
-.live-content{flex:1;}
-.live-title{font-size:14px;font-weight:800;margin-bottom:2px;}
-.live-sub{font-size:12px;color:var(--text2);}
-.spinner{display:inline-block;width:11px;height:11px;border:2px solid #e2e8f0;border-top-color:var(--teal);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-left:4px;}
-@keyframes spin{to{transform:rotate(360deg)}}
+/* MARKET STATUS */
+.market-pill{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--white);color:var(--text2);white-space:nowrap;transition:all .15s;}
+.market-pill:hover{background:var(--bg);}
+.mdot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.mdot.open{background:var(--green-light);animation:pulse 2s infinite;}
+.mdot.closed{background:var(--text3);}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 
-.top-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:12px;}
-.page-title{font-size:22px;font-weight:800;letter-spacing:-.5px;}
-.page-title span{color:var(--accent);}
-.page-title.red span{color:var(--red);}
-.filters{display:flex;gap:6px;flex-wrap:wrap;}
-.filter-btn{padding:6px 13px;border-radius:8px;font-size:12px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:var(--bg2);color:var(--text2);transition:all .18s;}
-.filter-btn:hover{border-color:var(--accent);color:var(--accent);}
-.filter-btn.active{background:var(--blue-bg);border-color:var(--accent);color:var(--accent);}
+/* MAIN LAYOUT */
+main{max-width:1280px;margin:0 auto;padding:20px 24px;display:grid;grid-template-columns:280px 1fr;gap:20px;}
 
-.alert-banner{background:var(--red-bg);border:1.5px solid #f9b8c8;border-radius:12px;padding:11px 18px;margin-bottom:16px;display:flex;align-items:center;gap:12px;font-size:13px;color:var(--red);}
-.alert-badge{background:var(--red);color:#fff;border-radius:6px;padding:2px 9px;font-size:11px;font-weight:700;white-space:nowrap;}
+/* LEFT SIDEBAR */
+.sidebar{display:flex;flex-direction:column;gap:16px;}
+.sidebar-section{background:var(--white);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.ss-header{padding:14px 16px;font-size:13px;font-weight:700;color:var(--text);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.ss-count{font-size:11px;color:var(--text3);font-weight:400;background:var(--bg);border-radius:12px;padding:2px 8px;}
+.sector-list{padding:8px 0;}
+.sector-item{display:flex;align-items:center;gap:10px;padding:8px 16px;cursor:pointer;transition:background .15s;}
+.sector-item:hover{background:var(--bg);}
+.sector-item.active{background:var(--blue-bg);}
+.sector-item.active .si-label{color:var(--blue);font-weight:700;}
+.si-icon{font-size:16px;flex-shrink:0;}
+.si-label{font-size:13px;color:var(--text2);flex:1;}
+.si-badge{font-size:11px;color:var(--text3);background:var(--bg);border-radius:10px;padding:1px 7px;font-weight:500;}
 
-.summary-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:11px;margin-bottom:22px;}
-.sum-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:13px 16px;box-shadow:var(--shadow);}
-.sum-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);margin-bottom:4px;}
-.sum-val{font-size:25px;font-weight:800;letter-spacing:-1px;}
+/* MAIN CONTENT */
+.content{display:flex;flex-direction:column;gap:16px;}
+
+/* SUMMARY STRIP */
+.summary-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;}
+.sum-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:16px;}
+.sum-label{font-size:11px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+.sum-val{font-size:24px;font-weight:700;color:var(--text);letter-spacing:-.5px;}
 .sum-val.green{color:var(--green);}
 .sum-val.red{color:var(--red);}
-.sum-val.gold{color:var(--gold);}
-.sum-val.teal{color:var(--teal);}
-.sum-val.blue{color:var(--blue);}
-.sum-sub{font-size:10px;color:var(--text3);margin-top:2px;}
+.sum-sub{font-size:11px;color:var(--text3);margin-top:3px;}
 
-.sector-section{margin-bottom:28px;}
-.sector-header{display:flex;align-items:center;gap:10px;margin-bottom:11px;padding-bottom:9px;border-bottom:1.5px solid var(--border);}
-.sector-emoji{font-size:16px;}
-.sector-title{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:1px;}
-.sector-count{font-size:11px;color:var(--text3);background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:2px 8px;font-weight:600;}
-.sector-avg{margin-right:auto;font-size:12px;font-weight:700;font-family:'DM Mono',monospace;}
+/* FILTER BAR */
+.filter-bar{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.filter-label{font-size:12px;font-weight:500;color:var(--text3);margin-left:4px;}
+.fchip{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--white);color:var(--text2);transition:all .15s;font-family:'Google Sans',sans-serif;}
+.fchip:hover{border-color:var(--blue);color:var(--blue);}
+.fchip.active{background:var(--blue);color:#fff;border-color:var(--blue);}
 
-.etf-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;}
-.etf-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;padding:14px;cursor:pointer;transition:all .2s;box-shadow:var(--shadow);position:relative;overflow:hidden;animation:fadeUp .3s ease both;}
-.etf-card:hover{border-color:var(--accent);box-shadow:var(--shadow2);transform:translateY(-2px);}
-.etf-card.alerted{border-color:#fca5a5;background:#fff8fa;}
-@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.card-tag{position:absolute;top:9px;left:9px;color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:5px;}
-
-.card-row1{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;}
-.ticker{font-size:18px;font-weight:800;letter-spacing:-.5px;}
-.etf-name{font-size:8.5px;color:var(--text3);margin-top:2px;max-width:145px;line-height:1.3;}
-.lev-badge{padding:2px 8px;border-radius:6px;font-size:10px;font-weight:700;flex-shrink:0;}
-.lev-3x{background:var(--purple-bg);color:var(--purple);border:1.5px solid #e0c6ff;}
-.lev-2x{background:var(--blue-bg);color:var(--blue);border:1.5px solid #bfdbfe;}
-.lev-4x{background:#fdf2f8;color:#be185d;border:1.5px solid #fbcfe8;}
-
-.card-row2{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:7px;}
-.price{font-size:21px;font-weight:800;letter-spacing:-1px;font-family:'DM Mono',monospace;}
-.price.low{color:var(--red);}
-.change-box{display:flex;flex-direction:column;align-items:flex-end;gap:2px;}
-.change-pct{font-size:12px;font-weight:700;padding:2px 7px;border-radius:6px;font-family:'DM Mono',monospace;}
-.up{color:var(--green);background:var(--green-bg);}
-.down{color:var(--red);background:var(--red-bg);}
-.flat{color:var(--text3);background:var(--bg3);}
-.change-lbl{font-size:9px;color:var(--text3);}
-.sparkline{width:100%;height:32px;margin-bottom:7px;}
-.card-footer{display:flex;justify-content:space-between;align-items:center;padding-top:7px;border-top:1px solid var(--border);}
-.meta{display:flex;flex-direction:column;gap:1px;}
-.meta-lbl{font-size:8px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;font-weight:600;}
-.meta-val{font-size:10px;color:var(--text2);font-weight:600;}
-.chart-btn{padding:4px 9px;background:var(--blue-bg);border:1.5px solid #bfdbfe;border-radius:6px;color:var(--accent);font-size:10px;font-weight:700;cursor:pointer;}
-.live-dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--green);animation:blink 1.5s infinite;vertical-align:middle;margin-left:3px;}
-
-/* ALERTS */
-.bar-chart-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:13px;padding:18px 20px;margin-bottom:18px;box-shadow:var(--shadow);}
-.bar-chart-title{font-size:14px;font-weight:800;margin-bottom:13px;}
-.bar-row{display:flex;align-items:center;gap:9px;margin-bottom:8px;cursor:pointer;border-radius:8px;padding:3px 5px;transition:background .15s;}
-.bar-row:hover{background:var(--bg3);}
-.bar-ticker{font-size:12px;font-weight:800;font-family:'DM Mono',monospace;min-width:58px;text-align:right;}
-.bar-track{flex:1;height:22px;background:var(--bg3);border-radius:5px;overflow:hidden;}
-.bar-fill{height:100%;border-radius:5px;display:flex;align-items:center;padding-right:7px;justify-content:flex-end;transition:width .7s ease;}
-.bar-label{font-size:10px;font-weight:700;color:#fff;white-space:nowrap;}
-.bar-extra{font-size:11px;color:var(--text3);min-width:52px;text-align:left;font-family:'DM Mono',monospace;}
-
-.th-box{display:flex;align-items:center;gap:10px;background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;padding:10px 16px;box-shadow:var(--shadow);}
-.th-input{width:80px;background:var(--bg3);border:1.5px solid var(--border2);border-radius:8px;padding:6px 10px;font-family:'DM Mono',monospace;font-size:14px;font-weight:700;text-align:center;}
-.th-input:focus{outline:none;border-color:var(--red);}
-.th-apply{padding:7px 14px;background:var(--red);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;}
-.losers-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;}
+/* ETF TABLE */
+.etf-table-wrap{background:var(--white);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.table-header{display:grid;grid-template-columns:1fr 90px 90px 90px 90px 80px;gap:0;padding:10px 20px;border-bottom:1px solid var(--border);background:var(--bg);}
+.th{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;}
+.th.right{text-align:left;}
+.etf-row{display:grid;grid-template-columns:1fr 90px 90px 90px 90px 80px;gap:0;padding:12px 20px;border-bottom:1px solid #f1f3f4;cursor:pointer;transition:background .15s;align-items:center;}
+.etf-row:hover{background:#f8f9fa;}
+.etf-row:last-child{border-bottom:none;}
+.er-main{display:flex;align-items:center;gap:12px;}
+.er-lev{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.lev-3x{background:#fce8e6;color:#c5221f;}
+.lev-2x{background:#e8f0fe;color:#1a73e8;}
+.lev-4x{background:#f3e8fd;color:#7c4dff;}
+.er-info{display:flex;flex-direction:column;gap:2px;}
+.er-ticker{font-size:14px;font-weight:700;color:var(--text);}
+.er-name{font-size:11px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px;}
+.er-price{font-size:14px;font-weight:500;color:var(--text);text-align:left;}
+.er-chg{font-size:13px;font-weight:500;text-align:left;}
+.up{color:var(--green);}
+.down{color:var(--red);}
+.er-vol{font-size:12px;color:var(--text3);text-align:left;}
+.er-range{font-size:11px;color:var(--text3);text-align:left;}
+.er-spark{text-align:left;}
+.er-alert{display:inline-flex;align-items:center;gap:3px;font-size:10px;padding:2px 7px;border-radius:10px;font-weight:600;}
+.alert-under10{background:var(--gold-bg);color:var(--gold);}
+.alert-under5{background:var(--red-bg);color:var(--red);}
+.mini-spark{width:70px;height:28px;}
 
 /* MODAL */
-.overlay{position:fixed;inset:0;z-index:900;background:rgba(15,25,35,.45);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:20px;animation:fadein .2s ease;}
+.overlay{position:fixed;inset:0;z-index:500;background:rgba(32,33,36,.5);display:flex;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;animation:fadein .2s;}
 @keyframes fadein{from{opacity:0}to{opacity:1}}
 .overlay.hidden{display:none;}
-.modal{background:var(--bg2);border:1px solid var(--border);border-radius:18px;width:100%;max-width:920px;max-height:92vh;overflow-y:auto;box-shadow:0 24px 80px rgba(15,25,35,.18);animation:popIn .25s ease;}
-@keyframes popIn{from{transform:scale(.96) translateY(14px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
-.modal-head{padding:18px 24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:var(--bg2);z-index:5;border-radius:18px 18px 0 0;}
-.mh-left{display:flex;flex-direction:column;gap:2px;}
-.mh-ticker{font-size:24px;font-weight:800;letter-spacing:-1px;}
-.mh-name{font-size:12px;color:var(--text2);}
-.mh-right{display:flex;align-items:center;gap:16px;}
-.mh-price{font-size:26px;font-weight:800;font-family:'DM Mono',monospace;letter-spacing:-1px;}
-.close-btn{width:32px;height:32px;border-radius:8px;border:1.5px solid var(--border2);background:var(--bg3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--text2);}
-.close-btn:hover{background:var(--bg4);}
-.modal-body{padding:20px 24px;}
-.chart-frame{width:100%;height:450px;border-radius:12px;overflow:hidden;border:1px solid var(--border);margin-bottom:18px;display:flex;flex-direction:column;}
-.range-btn{padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:var(--bg3);color:var(--text2);font-family:'Plus Jakarta Sans',sans-serif;transition:all .15s;}
-.range-btn:hover{border-color:var(--accent);color:var(--accent);}
-.range-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);}
-.modal-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin-bottom:14px;}
-.mstat{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:13px;}
-.mstat-lbl{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;font-weight:600;margin-bottom:6px;font-family:'Plus Jakarta Sans',sans-serif;}
-.mstat-val{font-size:15px;font-weight:700;letter-spacing:-.3px;font-family:'Plus Jakarta Sans',sans-serif;color:var(--text);}
-.warn-box{background:#fffbeb;border:1.5px solid #fde68a;border-radius:10px;padding:12px 15px;display:flex;gap:10px;}
-.warn-icon{font-size:15px;flex-shrink:0;margin-top:1px;}
-.warn-text{font-size:12px;color:#92400e;line-height:1.6;}
+.modal{background:var(--white);border-radius:12px;width:100%;max-width:980px;box-shadow:0 8px 40px rgba(32,33,36,.2);animation:slideUp .2s ease;margin:auto;}
+@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-head{padding:20px 24px 0;display:flex;justify-content:space-between;align-items:flex-start;}
+.mh-info{display:flex;flex-direction:column;gap:4px;}
+.m-ticker{font-size:28px;font-weight:700;color:var(--text);}
+.m-name{font-size:13px;color:var(--text3);}
+.m-price-row{display:flex;align-items:baseline;gap:12px;margin-top:8px;}
+.m-price{font-size:36px;font-weight:300;color:var(--text);letter-spacing:-1px;}
+.m-chg{font-size:16px;font-weight:500;}
+.close-btn{width:36px;height:36px;border-radius:50%;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--text2);transition:background .15s;}
+.close-btn:hover{background:var(--bg);}
 
-.add-modal{max-width:420px;}
-.form-group{margin-bottom:13px;}
-.form-label{display:block;font-size:11px;font-weight:700;color:var(--text2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.7px;}
-.form-input{width:100%;background:var(--bg3);border:1.5px solid var(--border2);border-radius:9px;padding:9px 13px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;color:var(--text);}
-.form-input:focus{outline:none;border-color:var(--accent);background:#fff;}
-.form-input::placeholder{color:var(--text3);}
-.form-row{display:flex;gap:10px;}
-.form-row .form-group{flex:1;}
+/* RANGE TABS */
+.range-tabs{display:flex;gap:2px;padding:16px 24px 0;border-bottom:1px solid var(--border);}
+.rtab{padding:8px 14px;border-radius:4px 4px 0 0;font-size:13px;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--text2);font-family:'Google Sans',sans-serif;transition:all .15s;border-bottom:2px solid transparent;margin-bottom:-1px;}
+.rtab:hover{background:var(--bg);}
+.rtab.active{color:var(--blue);border-bottom-color:var(--blue);}
 
-@media(max-width:1100px){.summary-grid{grid-template-columns:repeat(3,1fr);}}
-@media(max-width:768px){.summary-grid{grid-template-columns:repeat(2,1fr);}.modal-stats{grid-template-columns:repeat(2,1fr);}main{padding:14px;}header{padding:0 14px;gap:10px;}}
-.stock-category{margin-bottom:32px;}
-.stock-category-header{display:flex;align-items:center;gap:12px;padding:14px 18px;border-radius:12px;margin-bottom:14px;}
-.stock-category-header.gold{background:#fffbeb;border:1.5px solid #fde68a;}
-.stock-category-header.red{background:#fff8fa;border:1.5px solid #fca5a5;}
-.stock-category-header.dark{background:#f9fafb;border:1.5px solid #d1d5db;}
-.stock-cat-icon{font-size:22px;}
-.stock-cat-title{font-size:15px;font-weight:800;}
-.stock-cat-count{font-size:12px;padding:2px 10px;border-radius:8px;font-weight:600;}
-.stock-cat-count.gold{background:#fef3c7;color:#d97706;}
-.stock-cat-count.red{background:var(--red-bg);color:var(--red);}
-.stock-cat-count.dark{background:#e5e7eb;color:#374151;}
-.stock-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;}
-.stock-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;padding:14px;cursor:pointer;transition:all .2s;box-shadow:var(--shadow);position:relative;animation:fadeUp .3s ease both;}
-.stock-card:hover{border-color:var(--accent);box-shadow:var(--shadow2);transform:translateY(-2px);}
-.stock-card.gold-card{border-color:#fde68a;background:#fffef5;}
-.stock-card.red-card{border-color:#fca5a5;background:#fff8fa;}
-.stock-card.dark-card{border-color:#d1d5db;background:#f9fafb;}
-.stock-badge{position:absolute;top:9px;left:9px;font-size:9px;font-weight:700;padding:2px 7px;border-radius:5px;color:#fff;}
-.stock-badge.gold{background:#d97706;}
-.stock-badge.red{background:var(--red);}
-.stock-badge.dark{background:#374151;}
-::-webkit-scrollbar{width:5px;height:5px;}
-::-webkit-scrollbar-track{background:var(--bg3);}
-::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+/* CHART */
+.chart-area{padding:0 24px;height:320px;position:relative;}
+.tv-wrap{width:100%;height:100%;}
+
+/* STATS */
+.modal-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);margin:0 24px;border-radius:8px;overflow:hidden;}
+.mstat{background:var(--white);padding:14px 16px;}
+.mstat-lbl{font-size:11px;color:var(--text3);font-weight:500;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px;}
+.mstat-val{font-size:15px;font-weight:500;color:var(--text);}
+
+/* AI DESC */
+.ai-section{margin:16px 24px;background:var(--bg);border-radius:8px;padding:16px;}
+.ai-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.ai-content{font-size:13px;color:var(--text2);line-height:1.8;}
+.ai-content strong{color:var(--text);font-weight:600;}
+
+.warn{margin:12px 24px 20px;background:#fef7e0;border-radius:8px;padding:12px 16px;font-size:12px;color:#7a4f00;display:flex;gap:8px;}
+
+/* LOADING */
+.load-overlay{position:fixed;inset:0;background:rgba(255,255,255,.9);z-index:400;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;}
+.load-overlay.hidden{display:none;}
+.spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.load-text{font-size:14px;color:var(--text2);}
+.load-bar{width:240px;height:4px;background:var(--border);border-radius:2px;overflow:hidden;}
+.load-fill{height:100%;background:var(--blue);border-radius:2px;transition:width .3s;}
+
+/* MARKET TOOLTIP */
+.mkt-tooltip{position:fixed;top:72px;left:50%;transform:translateX(-50%);background:var(--white);border:1px solid var(--border);border-radius:12px;padding:16px 20px;width:340px;box-shadow:0 4px 20px rgba(0,0,0,.15);z-index:300;display:none;}
+.mkt-tooltip.show{display:block;}
+.mtt{font-size:13px;color:var(--text2);line-height:1.8;}
+.mtt strong{color:var(--text);font-weight:600;}
+
+@media(max-width:900px){main{grid-template-columns:1fr;}.sidebar{display:none;}.summary-strip{grid-template-columns:repeat(3,1fr);}}
+::-webkit-scrollbar{width:6px;}.   ::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 </head>
 <body>
 
+<!-- LOADING -->
+<div class="load-overlay" id="loadOverlay">
+  <div class="spinner"></div>
+  <div class="load-text" id="loadText">טוען מחירים חיים...</div>
+  <div class="load-bar"><div class="load-fill" id="loadFill" style="width:0%"></div></div>
+</div>
+
+<!-- HEADER -->
 <header>
-  <a class="logo" href="#"><div class="logo-mark">A</div><div class="logo-name">AZENO <span style="font-size:13px;font-weight:600;color:var(--text3);">Leveraged Funds</span></div></a>
+  <a class="logo" href="#">
+    <div class="logo-icon">A</div>
+    <div class="logo-text">AZENO <span>Funds</span></div>
+  </a>
+
+  <div class="search-bar">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="searchInput" placeholder="חיפוש קרן ממונפת... (TQQQ, SOXL, FAS)" oninput="onSearch()" autocomplete="off">
+    <div class="search-results" id="searchResults"></div>
+  </div>
+
   <div class="nav-tabs">
-    <button class="nav-tab active" onclick="showPage('all',this)">📊 קרנות ממונפות</button>
+    <button class="nav-tab active" onclick="showPage('funds',this)">📊 קרנות</button>
     <button class="nav-tab" onclick="showPage('stocks',this)">📈 מניות</button>
-    <button class="nav-tab red-tab" onclick="showPage('alerts',this)">🔔 התראות</button>
+    <button class="nav-tab" onclick="showPage('alerts',this)">🔔 התראות</button>
   </div>
-  <div class="header-mid">
-    <div class="search-wrap">
-      <span class="search-icon">🔍</span>
-      <input class="search-input" type="text" id="searchInput" placeholder="חיפוש קרן..." oninput="onSearch()">
-    </div>
-    <div class="pill" style="cursor:pointer;position:relative;" onclick="toggleMarketInfo()">
-      <div class="dot grey" id="mktDot"></div>
-      <span id="mktTxt">טוען...</span>
-      <span style="font-size:10px;color:var(--text3);margin-right:2px;">ℹ️</span>
-    </div>
-    <!-- Market Info Tooltip -->
-    <div id="mktInfo" style="display:none;position:fixed;top:70px;right:20px;z-index:999;background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:18px 20px;max-width:320px;box-shadow:0 8px 32px rgba(15,25,35,.15);">
-      <div style="font-size:14px;font-weight:800;margin-bottom:10px;">🕐 שעות המסחר בישראל</div>
-      <div style="font-size:13px;color:var(--text2);line-height:1.7;">
-        <strong>שוק פתוח</strong> = הבורסה האמריקאית פועלת עכשיו.<br>
-        בישראל זה: <strong>16:30–23:00</strong> (שעון קיץ) או <strong>15:30–22:00</strong> (שעון חורף).<br><br>
-        <strong>שוק סגור</strong> = הבורסה סגורה. המחירים שאת רואה הם מהסגירה האחרונה.<br><br>
-        💡 <em>קרנות ממונפות נסחרות רק בשעות המסחר — מחוץ לשעות אין אפשרות לקנות/למכור.</em>
-      </div>
-      <button onclick="toggleMarketInfo()" style="margin-top:12px;padding:6px 16px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;">סגור</button>
-    </div>
-    <div class="pill">📊 <span id="hTotal">0</span> קרנות</div>
-    <div class="pill" id="updPill" style="display:none;">🕐 <span id="updTime"></span></div>
+
+  <div class="market-pill" id="mktPill" onclick="toggleMktTip()">
+    <div class="mdot closed" id="mktDot"></div>
+    <span id="mktTxt">טוען...</span>
+    <span style="font-size:11px;">▾</span>
   </div>
-  <div class="header-right">
-    <button class="btn btn-green" id="refreshBtn" onclick="loadPrices()">🔄 רענן מחירים</button>
-    <button class="btn btn-blue" onclick="showAdd()">+ הוסף קרן</button>
+
+  <div class="mkt-tooltip" id="mktTooltip">
+    <div class="mtt">
+      <strong>🕐 שעות מסחר בישראל</strong><br><br>
+      <strong>שוק פתוח</strong> = הבורסה האמריקאית פועלת כעת.<br>
+      בישראל: <strong>16:30–23:00</strong> (קיץ) | <strong>15:30–22:00</strong> (חורף)<br><br>
+      <strong>שוק סגור</strong> = המחירים מהסגירה האחרונה.<br><br>
+      💡 קרנות ממונפות נסחרות רק בשעות המסחר האמריקאיות.
+    </div>
   </div>
 </header>
 
 <main>
-  <!-- ALL PAGE -->
-  <div class="page active" id="page-all">
-
-    <div class="load-wrap" id="loadWrap">
-      <div class="load-header">
-        <div class="load-title" id="loadTitle">📡 טוען מחירים חיים מ-Yahoo Finance...</div>
-        <div class="load-count" id="loadCount">0 / 0</div>
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-section">
+      <div class="ss-header">
+        סקטורים
+        <span class="ss-count" id="totalCount">0</span>
       </div>
-      <div class="load-bar-track"><div class="load-bar-fill" id="loadFill" style="width:0%"></div></div>
-      <div class="load-steps">
-        <div class="lstep"><div class="lstep-dot active" id="d1"></div><div class="lstep-txt active" id="t1">שולף מחירים</div></div>
-        <div class="lstep"><div class="lstep-dot wait" id="d2"></div><div class="lstep-txt" id="t2">מעבד נתונים</div></div>
-        <div class="lstep"><div class="lstep-dot wait" id="d3"></div><div class="lstep-txt" id="t3">מציג קרנות</div></div>
-      </div>
+      <div class="sector-list" id="sectorList"></div>
     </div>
 
-    <div class="live-bar load" id="liveBar" style="display:none;">
-      <div class="live-icon" id="liveIcon">✅</div>
-      <div class="live-content">
-        <div class="live-title" id="liveTitle">—</div>
-        <div class="live-sub" id="liveSub">—</div>
-      </div>
-      <button class="btn btn-green" onclick="loadPrices()">🔄 רענן</button>
-    </div>
-
-    <div class="top-bar" id="mainBar" style="display:none;">
-      <div class="page-title">קרנות <span>ממונפות</span></div>
-      <div class="filters">
-        <button class="filter-btn active" onclick="setFilter('all',this)">הכל</button>
-        <button class="filter-btn" onclick="setFilter('3x',this)">3X</button>
-        <button class="filter-btn" onclick="setFilter('2x',this)">2X</button>
-        <button class="filter-btn" onclick="setFilter('up',this)">📈 עולות</button>
-        <button class="filter-btn" onclick="setFilter('down',this)">📉 יורדות</button>
-        <button class="filter-btn" onclick="setFilter('alert',this)">🔔 מתחת לסף</button>
-      </div>
-    </div>
-
-    <div class="alert-banner" id="alertBanner" style="display:none;">
-      <div class="alert-badge">⚠️ התראה</div>
-      <div id="alertText"></div>
-    </div>
-
-    <div class="summary-grid" id="sumGrid" style="display:none;">
-      <div class="sum-card"><div class="sum-label">סה״כ קרנות</div><div class="sum-val teal" id="sTotal">0</div><div class="sum-sub">ממונפות</div></div>
-      <div class="sum-card"><div class="sum-label">עולות</div><div class="sum-val green" id="sUp">0</div><div class="sum-sub">היום 📈</div></div>
-      <div class="sum-card"><div class="sum-label">יורדות</div><div class="sum-val red" id="sDown">0</div><div class="sum-sub">היום 📉</div></div>
-      <div class="sum-card"><div class="sum-label">מתחת לסף</div><div class="sum-val gold" id="sAlert">0</div><div class="sum-sub">🔔</div></div>
-      <div class="sum-card"><div class="sum-label">ממוצע שינוי</div><div class="sum-val" id="sAvg" style="font-size:20px;">—</div><div class="sum-sub">היום</div></div>
-      <div class="sum-card"><div class="sum-label">נמחקו</div><div class="sum-val red" id="sDelist">0</div><div class="sum-sub">מהשוק</div></div>
-    </div>
-
-    <div id="container"></div>
-  </div>
-
-  <!-- ALERTS PAGE -->
-  <div class="page" id="page-alerts">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:12px;">
-      <div class="page-title red">התראות <span>מחיר נמוך</span> 🔔</div>
-      <div class="th-box">
-        <span style="font-size:13px;font-weight:700;">🔔 סף: $</span>
-        <input class="th-input" type="number" id="thIn" value="10" step="0.5" min="0">
-        <button class="th-apply" onclick="applyTh()">עדכן</button>
-        <span id="thCount" style="font-size:12px;color:var(--text2);"></span>
-      </div>
-    </div>
-    <div id="alertSum" style="margin-bottom:18px;"></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:20px;">
-      <div class="bar-chart-wrap" style="margin-bottom:0;">
-        <div class="bar-chart-title">🔔 מחיר נוכחי — מתחת לסף</div>
-        <div id="priceBar"></div>
-        <div id="priceBarEmpty" style="display:none;text-align:center;padding:24px;color:var(--green);font-weight:700;">✅ אין קרנות מתחת לסף</div>
-      </div>
-      <div class="bar-chart-wrap" style="margin-bottom:0;">
-        <div class="bar-chart-title">📉 TOP 15 ירידות היום</div>
-        <div id="dropBar"></div>
-      </div>
-    </div>
-    <div class="bar-chart-wrap" style="margin-bottom:14px;"><div class="bar-chart-title">🃏 כרטיסיות — קרנות מתחת לסף</div></div>
-    <div class="losers-grid" id="losersGrid"></div>
-  </div>
-
-  <!-- ══ PAGE: STOCKS ══ -->
-  <div class="page" id="page-stocks">
-
-    <!-- TOP BAR -->
-    <div class="top-bar">
-      <div class="page-title">מניות <span>במחיר נמוך</span> 📈</div>
-      <div style="display:flex;gap:8px;align-items:center;">
-        <button class="btn btn-green" id="loadAllStocksBtn" onclick="loadAllStocks()">📡 טען הכל מ-Yahoo</button>
-        <div class="search-wrap" style="width:200px;">
-          <span class="search-icon">🔍</span>
-          <input class="search-input" id="stockSearch" placeholder="חיפוש מניה..." oninput="renderStocks()">
+    <div class="sidebar-section">
+      <div class="ss-header">סטטיסטיקות שוק</div>
+      <div style="padding:12px 16px;display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;justify-content:space-between;font-size:13px;">
+          <span style="color:var(--text3);">עולות היום</span>
+          <span style="color:var(--green);font-weight:600;" id="statUp">—</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;">
+          <span style="color:var(--text3);">יורדות היום</span>
+          <span style="color:var(--red);font-weight:600;" id="statDown">—</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;">
+          <span style="color:var(--text3);">ממוצע שינוי</span>
+          <span style="font-weight:600;" id="statAvg">—</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;">
+          <span style="color:var(--text3);">מתחת ל-$10</span>
+          <span style="color:var(--gold);font-weight:600;" id="statAlert">—</span>
         </div>
       </div>
     </div>
+  </aside>
 
-    <!-- SECTOR FILTERS -->
-    <div class="filters" style="margin-bottom:18px;" id="stockSectorFilters">
-      <button class="filter-btn active" onclick="setStockSector('all',this)">🌐 הכל</button>
-      <button class="filter-btn" onclick="setStockSector('tech',this)">💻 טכנולוגיה</button>
-      <button class="filter-btn" onclick="setStockSector('biotech',this)">💊 ביוטק</button>
-      <button class="filter-btn" onclick="setStockSector('energy',this)">⚡ אנרגיה</button>
-      <button class="filter-btn" onclick="setStockSector('finance',this)">💰 פיננסים</button>
-      <button class="filter-btn" onclick="setStockSector('crypto',this)">🪙 קריפטו</button>
-      <button class="filter-btn" onclick="setStockSector('cannabis',this)">🌿 קנאביס</button>
-      <button class="filter-btn" onclick="setStockSector('ev',this)">🚗 EV</button>
-      <button class="filter-btn" onclick="setStockSector('media',this)">🎬 מדיה</button>
-      <button class="filter-btn" onclick="setStockSector('mining',this)">⛏️ כרייה</button>
-      <button class="filter-btn" onclick="setStockSector('shipping',this)">🚢 ספנות</button>
-      <button class="filter-btn" onclick="setStockSector('realestate',this)">🏢 נדלן</button>
-      <button class="filter-btn" onclick="setStockSector('retail',this)">🛍️ קמעונאות</button>
-    </div>
+  <!-- MAIN CONTENT -->
+  <div class="content">
 
-    <!-- SUMMARY -->
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px;" id="stockSummary">
-      <div class="sum-card"><div class="sum-label">סה״כ מניות</div><div class="sum-val teal" id="stTotal">0</div><div class="sum-sub">נטענו</div></div>
-      <div class="sum-card" style="border-color:#fde68a;background:#fffbeb;"><div class="sum-label">מתחת ל-$10</div><div class="sum-val gold" id="stUnder10">0</div><div class="sum-sub">🟡 מניות</div></div>
-      <div class="sum-card" style="border-color:#fca5a5;background:#fff8fa;"><div class="sum-label">מתחת ל-$5</div><div class="sum-val red" id="stUnder5">0</div><div class="sum-sub">🔴 מניות</div></div>
-      <div class="sum-card" style="border-color:#6b7280;background:#f9fafb;"><div class="sum-label">מתחת ל-$3</div><div class="sum-val" style="color:#374151;" id="stUnder3">0</div><div class="sum-sub">⚫ מניות</div></div>
-    </div>
-
-    <!-- LOADING BAR -->
-    <div id="stockLoadWrap" style="display:none;background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:20px 24px;margin-bottom:20px;box-shadow:var(--shadow);">
-      <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
-        <div style="font-size:14px;font-weight:800;" id="stockLoadTitle">טוען מניות...</div>
-        <div style="font-size:13px;font-weight:700;color:var(--teal);" id="stockLoadCount">0 / 0</div>
+    <!-- FUNDS PAGE -->
+    <div id="page-funds">
+      <div class="filter-bar">
+        <span class="filter-label">סינון:</span>
+        <button class="fchip active" onclick="setFilter('all',this)">הכל</button>
+        <button class="fchip" onclick="setFilter('3x',this)">3X בלבד</button>
+        <button class="fchip" onclick="setFilter('2x',this)">2X בלבד</button>
+        <button class="fchip" onclick="setFilter('up',this)">📈 עולות</button>
+        <button class="fchip" onclick="setFilter('down',this)">📉 יורדות</button>
+        <button class="fchip" onclick="setFilter('alert',this)">⚠️ מתחת ל-$10</button>
       </div>
-      <div style="background:var(--bg3);border-radius:6px;height:10px;overflow:hidden;">
-        <div id="stockLoadFill" style="height:100%;background:linear-gradient(90deg,var(--teal),var(--blue));border-radius:6px;width:0%;transition:width .3s;"></div>
+
+      <div class="etf-table-wrap">
+        <div class="table-header">
+          <div class="th">קרן</div>
+          <div class="th right">מחיר</div>
+          <div class="th right">שינוי %</div>
+          <div class="th right">52W טווח</div>
+          <div class="th right">נפח</div>
+          <div class="th right">גרף</div>
+        </div>
+        <div id="fundsTable"></div>
       </div>
     </div>
 
-    <!-- 3 CATEGORIES -->
-    <div id="stocksContainer">
-      <div style="text-align:center;padding:60px;color:var(--text3);">
-        <div style="font-size:40px;margin-bottom:16px;">📈</div>
-        <div style="font-size:16px;font-weight:700;margin-bottom:8px;">לחצי "טען הכל מ-Yahoo" לטעינת מניות</div>
-        <div style="font-size:13px;">או המתיני לטעינה אוטומטית...</div>
+    <!-- STOCKS PAGE -->
+    <div id="page-stocks" style="display:none;">
+      <div class="filter-bar" id="stockFilterBar">
+        <span class="filter-label">קטגוריה:</span>
+        <button class="fchip active" onclick="setStockCat('all',this)">הכל</button>
+        <button class="fchip" style="background:var(--gold-bg);border-color:var(--gold);color:var(--gold);" onclick="setStockCat('10',this)">מתחת ל-$10</button>
+        <button class="fchip" style="background:var(--red-bg);border-color:var(--red);color:var(--red);" onclick="setStockCat('5',this)">מתחת ל-$5</button>
+        <button class="fchip" style="background:#f1f3f4;border-color:#80868b;color:#3c4043;" onclick="setStockCat('3',this)">מתחת ל-$3</button>
+        <div style="margin-right:auto;display:flex;gap:8px;flex-wrap:wrap;" id="stockSectorFilters">
+          <button class="fchip active" onclick="setStockSector('all',this)">🌐 הכל</button>
+          <button class="fchip" onclick="setStockSector('tech',this)">💻 טכנולוגיה</button>
+          <button class="fchip" onclick="setStockSector('biotech',this)">💊 ביוטק</button>
+          <button class="fchip" onclick="setStockSector('energy',this)">⚡ אנרגיה</button>
+          <button class="fchip" onclick="setStockSector('crypto',this)">🪙 קריפטו</button>
+          <button class="fchip" onclick="setStockSector('cannabis',this)">🌿 קנאביס</button>
+          <button class="fchip" onclick="setStockSector('ev',this)">🚗 EV</button>
+        </div>
+      </div>
+      <div class="etf-table-wrap">
+        <div class="table-header">
+          <div class="th">מניה</div>
+          <div class="th right">מחיר</div>
+          <div class="th right">שינוי %</div>
+          <div class="th right">קטגוריה</div>
+          <div class="th right">נפח</div>
+          <div class="th right">גרף</div>
+        </div>
+        <div id="stocksTable"></div>
+      </div>
+      <div style="margin-top:12px;text-align:center;">
+        <button onclick="loadAllStocks()" id="loadStocksBtn" style="padding:10px 24px;background:var(--blue);color:#fff;border:none;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Google Sans',sans-serif;">
+          📡 טען הכל מ-Yahoo Finance
+        </button>
       </div>
     </div>
+
+    <!-- ALERTS PAGE -->
+    <div id="page-alerts" style="display:none;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px;">
+        <h2 style="font-size:18px;font-weight:700;">🔔 התראות מחיר</h2>
+        <div style="display:flex;align-items:center;gap:8px;background:var(--white);border:1px solid var(--border);border-radius:24px;padding:8px 16px;">
+          <span style="font-size:13px;color:var(--text2);">סף: $</span>
+          <input type="number" id="thInput" value="10" step="0.5" min="0" style="width:60px;border:none;outline:none;font-size:14px;font-weight:600;font-family:'Google Sans',sans-serif;text-align:center;">
+          <button onclick="applyTh()" style="padding:6px 14px;background:var(--blue);color:#fff;border:none;border-radius:16px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Google Sans',sans-serif;">עדכן</button>
+          <span id="thCount" style="font-size:12px;color:var(--text3);"></span>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+        <div class="etf-table-wrap">
+          <div class="ss-header" style="padding:12px 16px;">🔔 מחיר נוכחי — מתחת לסף</div>
+          <div id="alertPriceBar" style="padding:12px 16px;"></div>
+        </div>
+        <div class="etf-table-wrap">
+          <div class="ss-header" style="padding:12px 16px;">📉 TOP 15 ירידות היום</div>
+          <div id="alertDropBar" style="padding:12px 16px;"></div>
+        </div>
+      </div>
+
+      <div class="etf-table-wrap">
+        <div class="ss-header" style="padding:12px 16px;">קרנות מתחת לסף</div>
+        <div id="alertTable"></div>
+      </div>
+    </div>
+
   </div>
 </main>
 
@@ -417,962 +356,574 @@ main{max-width:1440px;margin:0 auto;padding:24px;}
 <div class="overlay hidden" id="chartOverlay">
   <div class="modal">
     <div class="modal-head">
-      <div class="mh-left"><div class="mh-ticker" id="mTicker">—</div><div class="mh-name" id="mName">—</div></div>
-      <div class="mh-right">
-        <div><div class="mh-price" id="mPrice">—</div><div id="mChange" style="text-align:left;margin-top:2px;font-size:13px;font-weight:700;"></div></div>
-        <button class="close-btn" onclick="closeChart()">✕</button>
-      </div>
-    </div>
-    <div class="modal-body">
-      <div class="chart-frame" id="chartFrame">
-        <!-- כפתורי טווח זמן -->
-        <div id="chartRangeBar" style="display:flex;gap:6px;padding:12px 16px 0;background:#fff;border-bottom:1px solid var(--border);">
-          <button class="range-btn" onclick="setTVRange('1M',this)">1M</button>
-          <button class="range-btn" onclick="setTVRange('3M',this)">3M</button>
-          <button class="range-btn" onclick="setTVRange('6M',this)">6M</button>
-          <button class="range-btn active" onclick="setTVRange('12M',this)">1Y</button>
-          <button class="range-btn" onclick="setTVRange('60M',this)">5Y</button>
-          <button class="range-btn" onclick="setTVRange('ALL',this)">מקסימום</button>
+      <div class="mh-info">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="m-ticker" id="mTicker">—</div>
+          <div id="mLevBadge"></div>
         </div>
-        <div id="tvChartWrap" style="flex:1;min-height:0;"></div>
-      </div>
-      <div class="modal-stats">
-        <div class="mstat"><div class="mstat-lbl">מחיר</div><div class="mstat-val" id="mP2">—</div></div>
-        <div class="mstat"><div class="mstat-lbl">שינוי %</div><div class="mstat-val" id="mC2">—</div></div>
-        <div class="mstat"><div class="mstat-lbl">טווח שנתי</div><div class="mstat-val" id="mRange" style="font-size:12px;">—</div></div>
-        <div class="mstat"><div class="mstat-lbl">נפח</div><div class="mstat-val" id="mVol">—</div></div>
-      </div>
-
-      <!-- AI DESCRIPTION -->
-      <div id="aiDescBox" style="background:var(--bg3);border:1px solid var(--border);border-radius:13px;padding:20px 22px;margin-top:16px;">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
-          <span style="font-size:18px;">🤖</span>
-          <span style="font-size:14px;font-weight:800;color:var(--text);">הסבר מפורט על הקרן</span>
-          <span id="aiDescLoading" style="font-size:11px;color:var(--text3);margin-right:auto;"></span>
-        </div>
-        <div id="aiDescContent" style="font-size:13.5px;color:var(--text2);line-height:1.9;white-space:pre-wrap;">
-          <div style="color:var(--text3);font-size:13px;">⏳ טוען הסבר מפורט...</div>
+        <div class="m-name" id="mName">—</div>
+        <div class="m-price-row">
+          <div class="m-price" id="mPrice">—</div>
+          <div class="m-chg" id="mChg"></div>
         </div>
       </div>
-
-      <div class="warn-box" style="margin-top:14px;"><div class="warn-icon">⚠️</div><div class="warn-text">קרנות ממונפות מיועדות למסחר קצר טווח בלבד. Volatility Decay גורם לשחיקה בשווקים תנודתיים. המידע אינו ייעוץ השקעות.</div></div>
+      <button class="close-btn" onclick="closeChart()">✕</button>
     </div>
-  </div>
-</div>
 
-<!-- ADD MODAL -->
-<div class="overlay hidden" id="addOverlay">
-  <div class="modal add-modal">
-    <div class="modal-head"><div class="mh-ticker" style="font-size:19px;">הוסף קרן</div><button class="close-btn" onclick="closeAdd()">✕</button></div>
-    <div class="modal-body">
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">טיקר</label><input class="form-input" id="nTicker" placeholder="TQQQ" style="text-transform:uppercase"></div>
-        <div class="form-group"><label class="form-label">מינוף</label>
-          <select class="form-input" id="nLev"><option value="2x">2X</option><option value="3x">3X</option></select></div>
-      </div>
-      <div class="form-group"><label class="form-label">שם (אופציונלי)</label><input class="form-input" id="nName" placeholder="ישולף אוטומטית"></div>
-      <div style="display:flex;gap:10px;margin-top:14px;">
-        <button class="btn btn-blue" style="flex:1;padding:10px;" onclick="addManual()">הוסף ✓</button>
-        <button class="btn btn-outline" style="flex:1;padding:10px;" onclick="closeAdd()">ביטול</button>
-      </div>
+    <div class="range-tabs">
+      <button class="rtab" onclick="setTVRange('1M',this)">1M</button>
+      <button class="rtab" onclick="setTVRange('3M',this)">3M</button>
+      <button class="rtab" onclick="setTVRange('6M',this)">6M</button>
+      <button class="rtab active" onclick="setTVRange('12M',this)">1Y</button>
+      <button class="rtab" onclick="setTVRange('60M',this)">5Y</button>
+      <button class="rtab" onclick="setTVRange('ALL',this)">מקסימום</button>
     </div>
+
+    <div class="chart-area" id="chartArea">
+      <div class="tv-wrap" id="tvWrap"></div>
+    </div>
+
+    <div class="modal-stats">
+      <div class="mstat"><div class="mstat-lbl">מחיר</div><div class="mstat-val" id="ms1">—</div></div>
+      <div class="mstat"><div class="mstat-lbl">שינוי היום</div><div class="mstat-val" id="ms2">—</div></div>
+      <div class="mstat"><div class="mstat-lbl">טווח שנתי</div><div class="mstat-val" id="ms3" style="font-size:12px;">—</div></div>
+      <div class="mstat"><div class="mstat-lbl">נפח</div><div class="mstat-val" id="ms4">—</div></div>
+    </div>
+
+    <div class="ai-section">
+      <div class="ai-title">🤖 הסבר על הקרן <span id="aiLoading" style="font-size:11px;color:var(--text3);font-weight:400;"></span></div>
+      <div class="ai-content" id="aiContent"><span style="color:var(--text3);">⏳ טוען...</span></div>
+    </div>
+
+    <div class="warn">⚠️ קרנות ממונפות מיועדות למסחר קצר טווח בלבד. Volatility Decay גורם לשחיקה בשווקים תנודתיים. המידע אינו ייעוץ השקעות.</div>
   </div>
 </div>
 
 <script>
-// ══ רשימת כל הקרנות הממונפות הידועות ══
-const ALL_ETFs = [
-  // מדדים רחבים
-  ['TQQQ','ProShares UltraPro QQQ 3X','3x','indices'],
-  ['UPRO','ProShares UltraPro S&P500 3X','3x','indices'],
+// ══ CONFIG ══
+const SERVER = 'https://azeno-6bju.onrender.com';
+const BATCH = 40;
+const CACHE_TTL = 4 * 60 * 1000;
+const priceCache = {};
+
+// ══ SECTORS ══
+const SECTORS = {
+  indices:{n:'מדדים רחבים',i:'📊'},semis:{n:'שבבים',i:'🔬'},
+  tech:{n:'טכנולוגיה',i:'💻'},finance:{n:'פיננסים',i:'💰'},
+  energy:{n:'אנרגיה',i:'⚡'},biotech:{n:'ביוטק',i:'💊'},
+  crypto:{n:'קריפטו',i:'🪙'},cannabis:{n:'קנאביס',i:'🌿'},
+  single:{n:'מניות בודדות',i:'📱'},bonds:{n:'אגרות חוב',i:'📄'},
+  gold:{n:'זהב',i:'🥇'},international:{n:'בינלאומי',i:'🌍'},
+};
+
+// ══ FUNDS LIST ══
+const ALL_FUNDS = [
+  ['TQQQ','ProShares UltraPro QQQ','3x','indices'],
+  ['UPRO','ProShares UltraPro S&P500','3x','indices'],
   ['SPXL','Direxion Daily S&P 500 Bull 3X','3x','indices'],
-  ['SSO','ProShares Ultra S&P500 2X','2x','indices'],
-  ['QLD','ProShares Ultra QQQ 2X','2x','indices'],
-  ['DDM','ProShares Ultra Dow30 2X','2x','indices'],
-  ['UDOW','ProShares UltraPro Dow30 3X','3x','indices'],
+  ['SSO','ProShares Ultra S&P500','2x','indices'],
+  ['QLD','ProShares Ultra QQQ','2x','indices'],
+  ['DDM','ProShares Ultra Dow30','2x','indices'],
+  ['UDOW','ProShares UltraPro Dow30','3x','indices'],
   ['TNA','Direxion Daily Small Cap Bull 3X','3x','indices'],
-  ['URTY','ProShares UltraPro Russell2000 3X','3x','indices'],
-  ['UWM','ProShares Ultra Russell2000 2X','2x','indices'],
-  ['UMDD','ProShares UltraPro MidCap400 3X','3x','indices'],
-  ['MVV','ProShares Ultra MidCap400 2X','2x','indices'],
-  ['ROM','ProShares Ultra Technology 2X','2x','indices'],
-  ['SPYU','MAX S&P 500 4X Leveraged ETN','4x','indices'],
-  // שבבים
+  ['URTY','ProShares UltraPro Russell2000','3x','indices'],
+  ['UWM','ProShares Ultra Russell2000','2x','indices'],
   ['SOXL','Direxion Daily Semiconductors 3X','3x','semis'],
   ['NVDL','GraniteShares 2X Long NVDA','2x','semis'],
-  ['NVDU','T-Rex 2X Long NVDA Daily ETF','2x','semis'],
+  ['NVDU','T-Rex 2X Long NVDA','2x','semis'],
   ['AMDL','GraniteShares 2X Long AMD','2x','semis'],
-  ['AVGO2','Direxion Daily AVGO Bull 2X','2x','semis'],
-  ['INTL','GraniteShares 2X Long INTC','2x','semis'],
-  ['SMCI2','Direxion Daily SMCI Bull 2X','2x','semis'],
-  // טכנולוגיה
   ['TECL','Direxion Daily Tech Bull 3X','3x','tech'],
-  ['FNGU','MicroSectors FANG+ Index 3X','3x','tech'],
-  ['FNGG','Direxion Daily NYSE FANG+ Bull 2X','2x','tech'],
+  ['FNGU','MicroSectors FANG+ 3X','3x','tech'],
+  ['FNGG','Direxion Daily NYSE FANG+ 2X','2x','tech'],
   ['WEBL','Direxion Daily Internet Bull 3X','3x','tech'],
-  ['TARK','AXS 2X Innovation ETF','2x','tech'],
-  ['WANT','Direxion Daily Cons. Discret 3X','3x','tech'],
-  ['LOUP','GraniteShares 2X Long Tech ETF','2x','tech'],
-  // פיננסים
   ['FAS','Direxion Daily Financial Bull 3X','3x','finance'],
   ['DPST','Direxion Daily Regional Banks 3X','3x','finance'],
   ['DFEN','Direxion Daily Aerospace Bull 3X','3x','finance'],
   ['RETL','Direxion Daily Retail Bull 3X','3x','finance'],
-  ['DUSL','Direxion Daily Industrials Bull 3X','3x','finance'],
-  ['HIBL','Direxion Daily S&P 500 High Beta 3X','3x','finance'],
-  // אנרגיה
   ['ERX','Direxion Daily Energy Bull 2X','2x','energy'],
-  ['GUSH','Direxion Daily Oil&Gas E&P Bull 2X','2x','energy'],
-  ['BOIL','ProShares Ultra Bloomberg Natural Gas','2x','energy'],
+  ['GUSH','Direxion Daily Oil&Gas Bull 2X','2x','energy'],
+  ['BOIL','ProShares Ultra Bloomberg Gas','2x','energy'],
   ['NRGU','MicroSectors US Big Oil 3X','3x','energy'],
-  ['OILU','MicroSectors Oil&Gas Exp Bull 3X','3x','energy'],
-  ['DRIP','Direxion Daily Oil&Gas Bear 2X','2x','energy'],
-  // ביוטק
   ['LABU','Direxion Daily Biotech Bull 3X','3x','biotech'],
-  ['BIB','ProShares Ultra NASDAQ Biotech 2X','2x','biotech'],
+  ['BIB','ProShares Ultra NASDAQ Biotech','2x','biotech'],
   ['CURE','Direxion Daily Healthcare Bull 3X','3x','biotech'],
-  // קריפטו
-  ['MSTU','T-Rex 2X Long MSTR Daily ETF','2x','crypto'],
-  ['MSTX','Defiance 2X Long MSTR Daily ETF','2x','crypto'],
-  ['BITU','ProShares Ultra Bitcoin ETF 2X','2x','crypto'],
+  ['MSTU','T-Rex 2X Long MSTR','2x','crypto'],
+  ['MSTX','Defiance 2X Long MSTR','2x','crypto'],
+  ['BITU','ProShares Ultra Bitcoin 2X','2x','crypto'],
   ['BITX','2x Bitcoin Strategy ETF','2x','crypto'],
-  ['ETHU','ProShares Ultra Ether ETF 2X','2x','crypto'],
+  ['ETHU','ProShares Ultra Ether 2X','2x','crypto'],
   ['CONL','GraniteShares 2X Long COIN','2x','crypto'],
-  ['SOLZ','Volatility Shares 2X Solana ETF','2x','crypto'],
-  ['XRPU','ProShares Ultra XRP ETF 2X','2x','crypto'],
-  // קנאביס
-  ['MSOX','AdvisorShares MSOS Daily Leveraged ETF','2x','cannabis'],
-  // מניות בודדות
+  ['SOLZ','Volatility Shares 2X Solana','2x','crypto'],
+  ['MSOX','AdvisorShares MSOS Leveraged','2x','cannabis'],
   ['TSLL','Direxion Daily TSLA Bull 2X','2x','single'],
-  ['TSLT','T-Rex 2X Long TSLA Daily ETF','2x','single'],
-  ['RKLX','Defiance 2X Long RKLB Daily ETF','2x','single'],
+  ['TSLT','T-Rex 2X Long TSLA','2x','single'],
+  ['RKLX','Defiance 2X Long RKLB','2x','single'],
   ['AAPU','Direxion Daily AAPL Bull 2X','2x','single'],
   ['MSFU','Direxion Daily MSFT Bull 2X','2x','single'],
   ['AMZU','Direxion Daily AMZN Bull 2X','2x','single'],
-  ['METAU','Direxion Daily META Bull 2X','2x','single'],
   ['PLTU','Direxion Daily PLTR Bull 2X','2x','single'],
-  ['CVNX','Defiance 2X Long CVNA Daily ETF','2x','single'],
-  ['MARU','Direxion Daily MARA Bull 2X','2x','single'],
-  ['CRWL','Direxion Daily CRWD Bull 2X','2x','single'],
-  ['ULTY','YieldMax Ultra Option Income ETF','2x','single'],
-  // אגרות חוב
   ['TMF','Direxion Daily 20Y Treasury Bull 3X','3x','bonds'],
   ['TYD','Direxion Daily 10Y Treasury Bull 3X','3x','bonds'],
-  ['UST','ProShares Ultra 7-10Y Treasury 2X','2x','bonds'],
-  ['UBT','ProShares Ultra 20Y Treasury 2X','2x','bonds'],
-  // זהב וסחורות
-  ['UGL','ProShares Ultra Gold 2X','2x','gold'],
-  ['AGQ','ProShares Ultra Silver 2X','2x','gold'],
-  ['UCO','ProShares Ultra Bloomberg Crude Oil 2X','2x','gold'],
-  ['NUGT','Direxion Daily Gold Miners Bull 2X','2x','gold'],
+  ['UST','ProShares Ultra 7-10Y Treasury','2x','bonds'],
+  ['UGL','ProShares Ultra Gold','2x','gold'],
+  ['AGQ','ProShares Ultra Silver','2x','gold'],
+  ['NUGT','Direxion Daily Gold Miners 2X','2x','gold'],
   ['JNUG','Direxion Daily Jr Gold Miners 2X','2x','gold'],
   ['GDXU','MicroSectors Gold Miners 3X','3x','gold'],
-  ['SHNY','GraniteShares 3X Long Gold','3x','gold'],
-  // בינלאומי
   ['YINN','Direxion Daily FTSE China Bull 3X','3x','international'],
   ['INDL','Direxion Daily India Bull 2X','2x','international'],
   ['BRZU','Direxion Daily Brazil Bull 2X','2x','international'],
-  ['UBR','ProShares Ultra MSCI Brazil 2X','2x','international'],
-  ['EET','ProShares Ultra MSCI Emerging Markets 2X','2x','international'],
   ['EDC','Direxion Daily EM Bull 3X','3x','international'],
-  ['KORU','Direxion Daily South Korea Bull 3X','3x','international'],
-  ['EFO','ProShares Ultra MSCI EAFE 2X','2x','international'],
 ];
 
-const SECTORS = {
-  indices:{n:'מדדים רחבים',i:'📊'},
-  semis:{n:'שבבים',i:'🔬'},
-  tech:{n:'טכנולוגיה',i:'💻'},
-  finance:{n:'פיננסים',i:'💰'},
-  energy:{n:'אנרגיה',i:'⚡'},
-  biotech:{n:'ביוטק',i:'💊'},
-  crypto:{n:'קריפטו',i:'🪙'},
-  cannabis:{n:'קנאביס',i:'🌿'},
-  single:{n:'מניות בודדות',i:'📱'},
-  bonds:{n:'אגרות חוב',i:'📄'},
-  gold:{n:'זהב וסחורות',i:'🥇'},
-  international:{n:'בינלאומי',i:'🌍'},
-};
+let funds = ALL_FUNDS.map(([ticker,name,lev,sector])=>({ticker,name,lev,sector,price:null,change:null,vol:'—',range52:'—'}));
 
-// State
-let funds = ALL_ETFs.map(([ticker,name,lev,sector])=>({
-  ticker,name,lev,sector,price:null,change:null,vol:'—',range52:'—',active:true
-}));
+// ══ STOCKS ══
+const BASE_STOCKS = [
+  ['BBAI','BigBear.ai','tech'],['SOUN','SoundHound AI','tech'],['AITX','AI Tech Solutions','tech'],
+  ['MARA','Marathon Digital','crypto'],['RIOT','Riot Platforms','crypto'],['CLSK','CleanSpark','crypto'],
+  ['BITF','Bitfarms','crypto'],['HIVE','HIVE Digital','crypto'],['WULF','TeraWulf','crypto'],
+  ['TLRY','Tilray Brands','cannabis'],['CGC','Canopy Growth','cannabis'],['ACB','Aurora Cannabis','cannabis'],
+  ['SNDL','SNDL Inc','cannabis'],['CRON','Cronos Group','cannabis'],
+  ['NIO','NIO','ev'],['XPEV','XPeng','ev'],['PLUG','Plug Power','ev'],['BLNK','Blink Charging','ev'],
+  ['CHPT','ChargePoint','ev'],['NKLA','Nikola','ev'],['GOEV','Canoo','ev'],
+  ['OCGN','Ocugen','biotech'],['RXRX','Recursion Pharma','biotech'],['FOLD','Amicus Therapeutics','biotech'],
+  ['GEVO','Gevo','energy'],['SPWR','SunPower','energy'],['INDO','Indonesia Energy','energy'],
+  ['SIRI','Sirius XM','media'],['PARA','Paramount Global','media'],['FUBO','FuboTV','media'],
+  ['OPEN','Opendoor Tech','finance'],['RKT','Rocket Companies','finance'],
+  ['HL','Hecla Mining','mining'],['AG','First Majestic Silver','mining'],['BTG','B2Gold','mining'],
+  ['TOPS','TOP Ships','shipping'],['GLBS','Globus Maritime','shipping'],['SB','Safe Bulkers','shipping'],
+];
+let stocks = BASE_STOCKS.map(([ticker,name,sector])=>({ticker,name,sector,price:null,change:null,vol:'—',range52:'—'}));
+
 let threshold = 10;
 let levFilter = 'all';
-let currentPage = 'all';
-let delistedCount = 0;
+let sectorFilter = 'all';
+let stockCatFilter = 'all';
+let stockSectorFilter = 'all';
+let currentPage = 'funds';
+let currentTicker = null;
+const descCache = {};
 
-// ══ FETCH WITH MULTIPLE PROXIES ══
-// ══ השרת שלנו ב-Railway ══
-const RAILWAY_SERVER = 'https://azeno-6bju.onrender.com';
-
-async function fetchWithProxy(url) {
-  // ניסיון 1: השרת שלנו ב-Railway (הכי אמין!)
+// ══ FETCH ══
+async function fetchBatch(tickers) {
+  const now = Date.now();
+  const cached = [], toFetch = [];
+  tickers.forEach(t => {
+    if (priceCache[t] && now - priceCache[t].ts < CACHE_TTL) cached.push(priceCache[t].data);
+    else toFetch.push(t);
+  });
+  if (!toFetch.length) return cached;
   try {
-    const symbols = new URL(url).searchParams.get('symbols');
-    if (symbols) {
-      const r = await fetch(`${RAILWAY_SERVER}/quote?symbols=${encodeURIComponent(symbols)}`);
-      if (r.ok) {
-        const j = await r.json();
-        if (j.results && j.results.length > 0) {
-          // מחזיר פורמט שמתאים ל-Yahoo Finance
-          return JSON.stringify({ quoteResponse: { result: j.results } });
-        }
-      }
-    }
-  } catch(e) { console.warn('Railway server failed:', e); }
-
-  // ניסיון 2: corsproxy.io (גיבוי)
-  try {
-    const r = await fetch('https://corsproxy.io/?' + encodeURIComponent(url));
-    if (r.ok) { const t = await r.text(); if(t&&t.length>10) return t; }
-  } catch(e) {}
-
-  // ניסיון 3: allorigins (גיבוי)
-  try {
-    const r = await fetch('https://api.allorigins.win/get?url=' + encodeURIComponent(url));
-    if (r.ok) { const j = await r.json(); if(j.contents&&j.contents.length>10) return j.contents; }
-  } catch(e) {}
-
-  return null;
+    const r = await fetch(`${SERVER}/quote?symbols=${toFetch.join(',')}`);
+    const data = await r.json();
+    const results = data.results || [];
+    results.forEach(q => { priceCache[q.symbol] = { ts: now, data: q }; });
+    return [...cached, ...results];
+  } catch(e) { return cached; }
 }
 
-const BATCH = 40;
-function formatVol(v){
-  if(!v) return '—';
+function formatVol(v) {
+  if(!v||v===0) return '—';
   if(v>=1e9) return (v/1e9).toFixed(1)+'B';
   if(v>=1e6) return (v/1e6).toFixed(1)+'M';
   if(v>=1e3) return (v/1e3).toFixed(0)+'K';
   return String(v);
 }
 
-async function fetchPriceBatch(tickers){
-  const url = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${tickers.join(',')}&fields=regularMarketPrice,regularMarketChangePercent,regularMarketVolume,fiftyTwoWeekLow,fiftyTwoWeekHigh,shortName,marketState`;
-  const txt = await fetchWithProxy(url);
-  if (!txt) return [];
-  try {
-    const data = JSON.parse(txt);
-    return data?.quoteResponse?.result || [];
-  } catch(e) { return []; }
-}
-
-// ══ LOAD ALL PRICES ══
-async function loadPrices(){
-  const btn = document.getElementById('refreshBtn');
-  btn.disabled = true; btn.textContent = '⏳ טוען...';
-  document.getElementById('loadWrap').style.display = 'block';
-  document.getElementById('liveBar').style.display = 'none';
-  document.getElementById('mainBar').style.display = 'none';
-  document.getElementById('sumGrid').style.display = 'none';
-
-  setStep(1,'active'); setStep(2,'wait'); setStep(3,'wait');
-
-  const allFunds = funds;
+// ══ LOAD PRICES ══
+async function loadPrices() {
+  document.getElementById('loadOverlay').classList.remove('hidden');
   const chunks = [];
-  for(let i=0; i<allFunds.length; i+=BATCH) chunks.push(allFunds.slice(i,i+BATCH));
-
-  let done=0, loaded=0;
-  for(const chunk of chunks){
-    const results = await fetchPriceBatch(chunk.map(f=>f.ticker));
+  for(let i=0;i<funds.length;i+=BATCH) chunks.push(funds.slice(i,i+BATCH));
+  let done = 0;
+  for(const chunk of chunks) {
+    const results = await fetchBatch(chunk.map(f=>f.ticker));
     const map = {};
     results.forEach(q=>{ map[q.symbol]=q; });
     chunk.forEach(f=>{
-      const q = map[f.ticker];
-      if(q && q.regularMarketPrice){
-        f.price   = q.regularMarketPrice;
-        f.change  = q.regularMarketChangePercent;
-        f.vol     = formatVol(q.regularMarketVolume);
-        f.range52 = q.fiftyTwoWeekLow && q.fiftyTwoWeekHigh
-          ? `$${q.fiftyTwoWeekLow.toFixed(2)}–$${q.fiftyTwoWeekHigh.toFixed(2)}`
-          : '—';
-        f.name    = q.shortName || f.name;
-        f.active  = true;
-        f.marketState = q.marketState;
-        loaded++;
-      } else {
-        // לא מסיר — רק מסמן שאין מחיר
-        f.active = true;
-        f.price  = f.price || null;
+      const q=map[f.ticker];
+      if(q&&q.regularMarketPrice){
+        f.price=q.regularMarketPrice;
+        f.change=q.regularMarketChangePercent;
+        f.vol=formatVol(q.regularMarketVolume);
+        f.range52=q.fiftyTwoWeekLow?`$${q.fiftyTwoWeekLow.toFixed(2)}–$${q.fiftyTwoWeekHigh.toFixed(2)}`:'—';
+        f.name=q.shortName||f.name;
+        f.marketState=q.marketState;
       }
     });
-    done += chunk.length;
-    const pct = Math.round(done/allFunds.length*100);
-    document.getElementById('loadFill').style.width = pct+'%';
-    document.getElementById('loadCount').textContent = done+' / '+allFunds.length;
-    document.getElementById('loadTitle').textContent = `📡 טוען מחירים... ${loaded} הצליחו מתוך ${done}`;
-    await new Promise(r=>setTimeout(r,300));
+    done+=chunk.length;
+    const pct=Math.round(done/funds.length*100);
+    document.getElementById('loadFill').style.width=pct+'%';
+    document.getElementById('loadText').textContent=`טוען מחירים... ${done}/${funds.length}`;
+    await new Promise(r=>setTimeout(r,200));
   }
+  document.getElementById('loadOverlay').classList.add('hidden');
 
-  setStep(1,'done'); setStep(2,'active');
-  await new Promise(r=>setTimeout(r,200));
-  setStep(2,'done'); setStep(3,'active');
+  // Market status
+  const live=funds.find(f=>f.marketState==='REGULAR');
+  const dot=document.getElementById('mktDot');
+  dot.className='mdot '+(live?'open':'closed');
+  document.getElementById('mktTxt').textContent=live?'שוק פתוח':'שוק סגור';
 
-  delistedCount = 0; // לא מסמנים כנמחקות — רק חסר מחיר
+  updateStats();
+  renderFunds();
+  renderSidebar();
 
-  const now = new Date().toLocaleTimeString('he-IL');
-  document.getElementById('updTime').textContent = now;
-  document.getElementById('updPill').style.display = 'flex';
+  // Load stocks in background
+  loadStockPrices();
+}
 
-  const isOpen = funds.find(f=>f.marketState==='REGULAR');
-  const dot = document.getElementById('mktDot');
-  dot.className = 'dot '+(isOpen?'':'orange');
-  document.getElementById('mktTxt').textContent = isOpen?'שוק פתוח':'שוק סגור';
-
-  await new Promise(r=>setTimeout(r,300));
-  setStep(3,'done');
-  document.getElementById('loadWrap').style.display = 'none';
-  document.getElementById('liveBar').style.display = 'flex';
-  document.getElementById('mainBar').style.display = 'flex';
-  document.getElementById('sumGrid').style.display = 'grid';
-
-  if(loaded===0){
-    setLiveBar('err','⚠️',
-      'לא הצלחנו לטעון מחירים — כל הקרנות מוצגות ללא מחיר חי',
-      'ייתכן שה-proxy חסום. נסי לחצי "רענן" שוב או פתחי מ-VPN'
-    );
-  } else {
-    setLiveBar('ok','✅',
-      `${loaded} קרנות עם מחיר חי מ-Yahoo Finance!`,
-      `עדכון: ${now} · לחץ "רענן" לעדכון מחדש`
-    );
+async function loadStockPrices() {
+  const chunks=[];
+  for(let i=0;i<stocks.length;i+=BATCH) chunks.push(stocks.slice(i,i+BATCH));
+  for(const chunk of chunks){
+    const results=await fetchBatch(chunk.map(s=>s.ticker));
+    const map={};results.forEach(q=>{map[q.symbol]=q;});
+    chunk.forEach(s=>{
+      const q=map[s.ticker];
+      if(q&&q.regularMarketPrice){s.price=q.regularMarketPrice;s.change=q.regularMarketChangePercent;s.vol=formatVol(q.regularMarketVolume);s.range52=q.fiftyTwoWeekLow?`$${q.fiftyTwoWeekLow.toFixed(2)}–$${q.fiftyTwoWeekHigh.toFixed(2)}`:'—';s.name=q.shortName||s.name;}
+    });
+    await new Promise(r=>setTimeout(r,200));
   }
-
-  btn.disabled = false; btn.textContent = '🔄 רענן מחירים';
-  render();
+  if(currentPage==='stocks') renderStocks();
   if(currentPage==='alerts') renderAlerts();
 }
 
-function setStep(n,s){
-  document.getElementById('d'+n).className='lstep-dot '+s;
-  document.getElementById('t'+n).className='lstep-txt '+s;
+async function loadAllStocks() {
+  document.getElementById('loadStocksBtn').textContent='⏳ טוען...';
+  document.getElementById('loadStocksBtn').disabled=true;
+  await loadStockPrices();
+  renderStocks();
+  document.getElementById('loadStocksBtn').textContent='🔄 רענן';
+  document.getElementById('loadStocksBtn').disabled=false;
 }
-function setLiveBar(type,icon,title,sub){
-  document.getElementById('liveBar').className='live-bar '+type;
-  document.getElementById('liveIcon').textContent=icon;
-  document.getElementById('liveTitle').textContent=title;
-  document.getElementById('liveSub').textContent=sub;
+
+// ══ STATS ══
+function updateStats() {
+  const withP=funds.filter(f=>f.price!=null);
+  const up=withP.filter(f=>(f.change||0)>=0);
+  const down=withP.filter(f=>(f.change||0)<0);
+  const avg=withP.length?(withP.reduce((a,f)=>a+(f.change||0),0)/withP.length).toFixed(2):null;
+  const alert=withP.filter(f=>f.price<threshold);
+  document.getElementById('statUp').textContent=up.length;
+  document.getElementById('statDown').textContent=down.length;
+  document.getElementById('statAlert').textContent=alert.length;
+  const avgEl=document.getElementById('statAvg');
+  if(avg!=null){avgEl.textContent=(Number(avg)>=0?'+':'')+avg+'%';avgEl.style.color=Number(avg)>=0?'var(--green)':'var(--red)';}
+  document.getElementById('totalCount').textContent=withP.length;
+}
+
+// ══ SIDEBAR ══
+function renderSidebar() {
+  const order=['indices','semis','tech','finance','energy','biotech','crypto','cannabis','single','bonds','gold','international'];
+  const html=order.map(sk=>{
+    const s=SECTORS[sk];
+    const count=funds.filter(f=>f.sector===sk&&f.price!=null).length;
+    if(!count) return '';
+    return `<div class="sector-item${sectorFilter===sk?' active':''}" onclick="setSector('${sk}')">
+      <span class="si-icon">${s.i}</span>
+      <span class="si-label">${s.n}</span>
+      <span class="si-badge">${count}</span>
+    </div>`;
+  }).join('');
+  document.getElementById('sectorList').innerHTML=`
+    <div class="sector-item${sectorFilter==='all'?' active':''}" onclick="setSector('all')">
+      <span class="si-icon">🌐</span>
+      <span class="si-label">כל הסקטורים</span>
+      <span class="si-badge">${funds.filter(f=>f.price!=null).length}</span>
+    </div>${html}`;
+}
+
+function setSector(s) {
+  sectorFilter=s;
+  document.querySelectorAll('.sector-item').forEach(el=>{
+    el.classList.toggle('active', el.getAttribute('onclick')===`setSector('${s}')`);
+  });
+  renderFunds();
 }
 
 // ══ SPARK ══
-function spark(isUp,seed){
-  let pts=[],y=22;
-  for(let i=0;i<16;i++){
+function spark(isUp,seed,w=70,h=28){
+  let pts=[],y=h/2;
+  for(let i=0;i<14;i++){
     const r=Math.abs(Math.sin(seed*9301+i*49297)*.5)+.5;
-    y+=(r-(isUp?.4:.62))*7;y=Math.max(4,Math.min(34,y));pts.push(`${i*18},${y}`);
+    y+=(r-(isUp?.4:.62))*6;y=Math.max(3,Math.min(h-3,y));pts.push(`${i*(w/13)},${y}`);
   }
-  const col=isUp?'#00a878':'#e8335a',bg=isUp?'rgba(0,168,120,.08)':'rgba(232,51,90,.08)';
+  const col=isUp?'#137333':'#c5221f';
+  const bg=isUp?'rgba(19,115,51,.08)':'rgba(197,34,31,.08)';
   const fp=pts[0].split(','),lp=pts[pts.length-1].split(',');
-  return `<svg class="sparkline" viewBox="0 0 272 38" preserveAspectRatio="none">
-    <polygon points="${pts.join(' ')} ${lp[0]},38 ${fp[0]},38" fill="${bg}" stroke="none"/>
-    <polyline points="${pts.join(' ')}" fill="none" stroke="${col}" stroke-width="1.8" stroke-linejoin="round"/>
+  return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
+    <polygon points="${pts.join(' ')} ${lp[0]},${h} ${fp[0]},${h}" fill="${bg}"/>
+    <polyline points="${pts.join(' ')}" fill="none" stroke="${col}" stroke-width="1.5" stroke-linejoin="round"/>
   </svg>`;
 }
 
-// ══ CARD ══
-function makeCard(f,i){
-  const hasP=f.price!=null, up=(f.change||0)>=0, low=hasP&&f.price<threshold;
-  const levCls=f.lev==='3x'?'lev-3x':f.lev==='4x'?'lev-4x':'lev-2x';
-  const delay=Math.min(i*.012,.5);
-  return `<div class="etf-card${low?' alerted':''}" onclick="openChart('${f.ticker}')" style="animation-delay:${delay}s">
-    ${low?`<div class="card-tag" style="background:var(--red)">🔔 <$${threshold}</div>`:''}
-    <div class="card-row1">
-      <div><div class="ticker">${f.ticker}</div><div class="etf-name">${f.name}</div></div>
-      <div class="lev-badge ${levCls}">${f.lev.toUpperCase()}</div>
-    </div>
-    <div class="card-row2">
-      <div class="price ${low?'low':''}">${hasP?`$${f.price.toFixed(2)}<span class="live-dot"></span>`:'—'}</div>
-      <div class="change-box">
-        <div class="change-pct ${hasP?(up?'up':'down'):'flat'}">${hasP?(up?'+':'')+f.change.toFixed(2)+'%':'—'}</div>
-        <div class="change-lbl">${hasP?'היום':'ממתין'}</div>
+// ══ RENDER FUNDS TABLE ══
+function renderFunds() {
+  const q=(document.getElementById('searchInput').value||'').toUpperCase();
+  const visible=funds.filter(f=>{
+    if(!f.price) return false;
+    if(q&&!f.ticker.includes(q)&&!f.name.toUpperCase().includes(q)) return false;
+    if(levFilter==='3x'&&f.lev!=='3x') return false;
+    if(levFilter==='2x'&&f.lev!=='2x') return false;
+    if(levFilter==='up'&&(f.change||0)<0) return false;
+    if(levFilter==='down'&&(f.change||0)>=0) return false;
+    if(levFilter==='alert'&&f.price>=threshold) return false;
+    if(sectorFilter!=='all'&&f.sector!==sectorFilter) return false;
+    return true;
+  }).sort((a,b)=>{
+    const sa=SECTORS[a.sector],sb=SECTORS[b.sector];
+    if(a.sector!==b.sector) return a.sector.localeCompare(b.sector);
+    return b.price-a.price;
+  });
+
+  const up=(f)=>(f.change||0)>=0;
+  document.getElementById('fundsTable').innerHTML = visible.length
+    ? visible.map(f=>`
+    <div class="etf-row" onclick="openChart('${f.ticker}')">
+      <div class="er-main">
+        <div class="er-lev lev-${f.lev}">${f.lev.toUpperCase()}</div>
+        <div class="er-info">
+          <div class="er-ticker">${f.ticker}</div>
+          <div class="er-name">${f.name}</div>
+        </div>
+        ${f.price<threshold?`<span class="er-alert alert-under10">⚠️ <$${threshold}</span>`:''}
       </div>
-    </div>
-    ${spark(up, f.ticker.charCodeAt(0)*137+(f.ticker.charCodeAt(1)||0)*31)}
-    <div class="card-footer">
-      <div class="meta"><div class="meta-lbl">52W</div><div class="meta-val" style="font-size:8.5px;">${f.range52}</div></div>
-      <div class="meta"><div class="meta-lbl">נפח</div><div class="meta-val">${f.vol}</div></div>
-      <button class="chart-btn" onclick="event.stopPropagation();openChart('${f.ticker}')">📊</button>
-    </div>
-  </div>`;
+      <div class="er-price">$${f.price.toFixed(2)}</div>
+      <div class="er-chg ${up(f)?'up':'down'}">${up(f)?'+':''}${f.change.toFixed(2)}%</div>
+      <div class="er-range">${f.range52}</div>
+      <div class="er-vol">${f.vol}</div>
+      <div class="er-spark">${spark(up(f),f.ticker.charCodeAt(0)*137)}</div>
+    </div>`).join('')
+    : '<div style="text-align:center;padding:40px;color:var(--text3);">לא נמצאו קרנות</div>';
+
+  updateStats();
 }
 
-// ══ RENDER ══
-function render(){
-  const q=(document.getElementById('searchInput').value||'').toUpperCase();
-  const active=funds.filter(f=>f.active);
-  const visible=active.filter(f=>{
-    if(q&&!f.ticker.includes(q)&&!f.name.toUpperCase().includes(q))return false;
-    if(levFilter==='3x'&&f.lev!=='3x')return false;
-    if(levFilter==='2x'&&f.lev!=='2x')return false;
-    if(levFilter==='up'&&(f.change==null||f.change<0))return false;
-    if(levFilter==='down'&&(f.change==null||f.change>=0))return false;
-    if(levFilter==='alert'&&(f.price==null||f.price>=threshold))return false;
+// ══ RENDER STOCKS ══
+function renderStocks() {
+  const withP=stocks.filter(s=>s.price!=null);
+  const filtered=withP.filter(s=>{
+    if(stockCatFilter==='10'&&s.price>=10) return false;
+    if(stockCatFilter==='5'&&s.price>=5) return false;
+    if(stockCatFilter==='3'&&s.price>=3) return false;
+    if(stockSectorFilter!=='all'&&s.sector!==stockSectorFilter) return false;
     return true;
   });
-
-  const order=['indices','semis','tech','finance','energy','biotech','crypto','cannabis','single','bonds','gold','international'];
-  const map={};
-  visible.forEach(f=>{(map[f.sector]||(map[f.sector]=[])).push(f);});
-  const sorted=Object.entries(map).sort((a,b)=>(order.indexOf(a[0])<0?99:order.indexOf(a[0]))-(order.indexOf(b[0])<0?99:order.indexOf(b[0])));
-
-  let html='',ci=0;
-  for(const[sk,sf] of sorted){
-    if(!sf.length)continue;
-    const s=SECTORS[sk]||{n:sk,i:'📦'};
-    const withP=sf.filter(f=>f.price!=null);
-    const avg=withP.length?(withP.reduce((a,f)=>a+(f.change||0),0)/withP.length).toFixed(2):null;
-    const avgUp=avg===null||Number(avg)>=0;
-    html+=`<div class="sector-section">
-      <div class="sector-header">
-        <span class="sector-emoji">${s.i}</span>
-        <span class="sector-title">${s.n}</span>
-        <span class="sector-count">${sf.length}</span>
-        <span class="sector-avg" style="color:${avg===null?'var(--text3)':avgUp?'var(--green)':'var(--red)'}">
-          ${avg===null?'טוען...':`ממוצע: ${avgUp?'+':''}${avg}%`}
-        </span>
+  const up=s=>(s.change||0)>=0;
+  const catLabel=s=>{
+    if(s.price<3) return '<span class="er-alert" style="background:#f1f3f4;color:#3c4043;">⚫ <$3</span>';
+    if(s.price<5) return '<span class="er-alert" style="background:var(--red-bg);color:var(--red);">🔴 <$5</span>';
+    if(s.price<10) return '<span class="er-alert alert-under10">🟡 <$10</span>';
+    return '';
+  };
+  document.getElementById('stocksTable').innerHTML=filtered.length
+    ?filtered.sort((a,b)=>a.price-b.price).map(s=>`
+    <div class="etf-row" onclick="openChart('${s.ticker}')">
+      <div class="er-main">
+        <div class="er-lev" style="background:var(--bg);color:var(--text3);font-size:9px;">${(s.sector||'').substring(0,3).toUpperCase()}</div>
+        <div class="er-info"><div class="er-ticker">${s.ticker}</div><div class="er-name">${s.name}</div></div>
+        ${catLabel(s)}
       </div>
-      <div class="etf-grid">${sf.map(f=>makeCard(f,ci++)).join('')}</div>
-    </div>`;
-  }
-  document.getElementById('container').innerHTML=html||'<div style="text-align:center;padding:60px;color:var(--text3);">לא נמצאו קרנות</div>';
-
-  const withP=active.filter(f=>f.price!=null);
-  const alerts=withP.filter(f=>f.price<threshold);
-  const avgAll=withP.length?(withP.reduce((a,f)=>a+(f.change||0),0)/withP.length).toFixed(2):null;
-  document.getElementById('hTotal').textContent=active.length;
-  document.getElementById('sTotal').textContent=active.length;
-  document.getElementById('sUp').textContent=withP.filter(f=>(f.change||0)>=0).length;
-  document.getElementById('sDown').textContent=withP.filter(f=>(f.change||0)<0).length;
-  document.getElementById('sAlert').textContent=alerts.length;
-  document.getElementById('sDelist').textContent=delistedCount;
-  const el=document.getElementById('sAvg');
-  if(avgAll!=null){el.textContent=(Number(avgAll)>=0?'+':'')+avgAll+'%';el.style.color=Number(avgAll)>=0?'var(--green)':'var(--red)';}
-
-  const banner=document.getElementById('alertBanner');
-  if(alerts.length){
-    banner.style.display='flex';
-    document.getElementById('alertText').innerHTML=`<strong>${alerts.length} קרנות מתחת ל-$${threshold}:</strong> `
-      +alerts.slice(0,8).map(f=>`<strong>${f.ticker}</strong>`).join(' • ')
-      +(alerts.length>8?` ועוד ${alerts.length-8}...`:'');
-  } else banner.style.display='none';
+      <div class="er-price">$${s.price.toFixed(2)}</div>
+      <div class="er-chg ${up(s)?'up':'down'}">${up(s)?'+':''}${(s.change||0).toFixed(2)}%</div>
+      <div class="er-range">${s.range52}</div>
+      <div class="er-vol">${s.vol}</div>
+      <div class="er-spark">${spark(up(s),s.ticker.charCodeAt(0)*137)}</div>
+    </div>`).join('')
+    :'<div style="text-align:center;padding:40px;color:var(--text3);">לא נמצאו מניות — לחצי "טען הכל"</div>';
 }
 
-// ══ ALERTS ══
-function renderAlerts(){
-  const withP=funds.filter(f=>f.active&&f.price!=null);
+// ══ RENDER ALERTS ══
+function renderAlerts() {
+  const withP=funds.filter(f=>f.price!=null);
   const below=withP.filter(f=>f.price<threshold).sort((a,b)=>a.price-b.price);
   const losers=withP.filter(f=>(f.change||0)<0).sort((a,b)=>a.change-b.change);
+  document.getElementById('thCount').innerHTML=below.length?`<strong style="color:var(--red)">${below.length} קרנות</strong>`:' ✅ אין';
 
-  document.getElementById('thCount').innerHTML=below.length
-    ?`<strong style="color:var(--red)">${below.length}</strong> קרנות מתחת ל-$${threshold}`
-    :`<span style="color:var(--green)">✅ אין קרנות מתחת ל-$${threshold}</span>`;
-
-  document.getElementById('alertSum').innerHTML=`
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:11px;">
-      <div class="sum-card" style="border-color:#fca5a5;background:#fff8fa;">
-        <div class="sum-label">מתחת ל-$${threshold}</div><div class="sum-val red">${below.length}</div><div class="sum-sub">דורשות תשומת לב</div>
-      </div>
-      <div class="sum-card"><div class="sum-label">יורדות היום</div><div class="sum-val red">${losers.length}</div><div class="sum-sub">קרנות</div></div>
-      <div class="sum-card">
-        <div class="sum-label">ירידה גדולה ביותר</div>
-        <div class="sum-val red" style="font-size:18px;">${losers[0]?losers[0].change.toFixed(2)+'%':'—'}</div>
-        <div class="sum-sub">${losers[0]?losers[0].ticker:''}</div>
-      </div>
-      <div class="sum-card">
-        <div class="sum-label">ממוצע ירידות</div>
-        <div class="sum-val red" style="font-size:18px;">${losers.length?(losers.reduce((a,f)=>a+(f.change||0),0)/losers.length).toFixed(2)+'%':'—'}</div>
-        <div class="sum-sub">היום</div>
-      </div>
-    </div>`;
-
-  const pe=document.getElementById('priceBar'),ee=document.getElementById('priceBarEmpty');
-  if(!below.length){pe.innerHTML='';ee.style.display='block';}
-  else{
-    ee.style.display='none';
-    pe.innerHTML=below.slice(0,20).map(f=>{
-      const w=Math.max(3,(f.price/threshold*100)).toFixed(1);
-      const r=Math.round(220-(f.price/threshold)*80);
-      return `<div class="bar-row" onclick="openChart('${f.ticker}')">
-        <div class="bar-ticker" style="color:var(--red)">${f.ticker}</div>
-        <div class="bar-track"><div class="bar-fill" style="width:${w}%;background:rgb(${r},51,90);">
-          <span class="bar-label">$${f.price.toFixed(2)}</span>
-        </div></div>
-        <div class="bar-extra" style="color:var(--red);font-weight:700;">${(f.change||0).toFixed(2)}%</div>
+  // Price bar
+  const maxP=threshold;
+  document.getElementById('alertPriceBar').innerHTML=below.length
+    ?below.slice(0,15).map(f=>{
+      const w=Math.max(5,(f.price/maxP*100)).toFixed(1);
+      return `<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;cursor:pointer;" onclick="openChart('${f.ticker}')">
+        <span style="font-size:12px;font-weight:700;color:var(--blue);min-width:50px;text-align:right;">${f.ticker}</span>
+        <div style="flex:1;height:20px;background:var(--bg);border-radius:4px;overflow:hidden;">
+          <div style="width:${w}%;height:100%;background:var(--red-light);border-radius:4px;display:flex;align-items:center;padding-right:6px;justify-content:flex-end;">
+            <span style="font-size:10px;color:#fff;font-weight:600;">$${f.price.toFixed(2)}</span>
+          </div>
+        </div>
+        <span style="font-size:11px;color:var(--red);font-weight:600;min-width:50px;">${(f.change||0).toFixed(2)}%</span>
       </div>`;
-    }).join('')+`<div style="border-top:2px dashed var(--red);margin-top:10px;padding-top:6px;text-align:center;">
-      <span style="font-size:10px;color:var(--red);font-weight:700;">── סף: $${threshold} ──</span></div>`;
-  }
+    }).join('')+'<div style="border-top:2px dashed var(--red);margin-top:8px;padding-top:6px;text-align:center;font-size:11px;color:var(--red);">── סף $'+threshold+' ──</div>'
+    :'<div style="color:var(--green-light);font-size:13px;text-align:center;padding:20px;">✅ אין קרנות מתחת לסף</div>';
 
-  const top15=losers.slice(0,15),maxD=Math.abs(top15[0]?.change||1);
-  document.getElementById('dropBar').innerHTML=top15.length
+  // Drop bar
+  const top15=losers.slice(0,15);
+  const maxD=Math.abs(top15[0]?.change||1);
+  document.getElementById('alertDropBar').innerHTML=top15.length
     ?top15.map(f=>{
-      const pct=Math.abs(f.change||0),w=(pct/maxD*100).toFixed(1),isBelowTh=f.price<threshold;
-      return `<div class="bar-row" onclick="openChart('${f.ticker}')">
-        <div class="bar-ticker" style="${isBelowTh?'color:var(--red)':''}">${isBelowTh?'🔔 ':''}<span style="font-family:'DM Mono',monospace;">${f.ticker}</span></div>
-        <div class="bar-track"><div class="bar-fill" style="width:${w}%;background:${isBelowTh?'#c81e3d':'#e8335a'};">
-          <span class="bar-label">-${pct.toFixed(2)}%</span>
-        </div></div>
-        <div class="bar-extra">$${f.price?.toFixed(2)||'—'}</div>
+      const pct=Math.abs(f.change||0),w=(pct/maxD*100).toFixed(1);
+      return `<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;cursor:pointer;" onclick="openChart('${f.ticker}')">
+        <span style="font-size:12px;font-weight:700;color:var(--blue);min-width:50px;text-align:right;">${f.ticker}</span>
+        <div style="flex:1;height:20px;background:var(--bg);border-radius:4px;overflow:hidden;">
+          <div style="width:${w}%;height:100%;background:var(--red-light);border-radius:4px;display:flex;align-items:center;padding-right:6px;justify-content:flex-end;">
+            <span style="font-size:10px;color:#fff;font-weight:600;">-${pct.toFixed(2)}%</span>
+          </div>
+        </div>
+        <span style="font-size:11px;color:var(--text3);min-width:45px;">$${f.price.toFixed(2)}</span>
       </div>`;
     }).join('')
-    :'<div style="text-align:center;padding:22px;color:var(--green);font-weight:700;">✅ אין ירידות היום</div>';
+    :'<div style="color:var(--green-light);font-size:13px;text-align:center;padding:20px;">✅ אין ירידות היום</div>';
 
-  document.getElementById('losersGrid').innerHTML=below.length
-    ?below.slice(0,40).map((f,i)=>makeCard(f,i)).join('')
-    :'<div style="text-align:center;padding:36px;color:var(--green);font-size:14px;font-weight:700;grid-column:1/-1;">✅ אין קרנות מתחת ל-$'+threshold+'</div>';
+  // Alert table
+  document.getElementById('alertTable').innerHTML=below.length
+    ?below.map(f=>{
+      const up=(f.change||0)>=0;
+      return `<div class="etf-row" onclick="openChart('${f.ticker}')">
+        <div class="er-main">
+          <div class="er-lev lev-${f.lev}">${f.lev.toUpperCase()}</div>
+          <div class="er-info"><div class="er-ticker">${f.ticker}</div><div class="er-name">${f.name}</div></div>
+        </div>
+        <div class="er-price" style="color:var(--red);">$${f.price.toFixed(2)}</div>
+        <div class="er-chg ${up?'up':'down'}">${up?'+':''}${(f.change||0).toFixed(2)}%</div>
+        <div class="er-range">${f.range52}</div>
+        <div class="er-vol">${f.vol}</div>
+        <div class="er-spark">${spark(up,f.ticker.charCodeAt(0)*137)}</div>
+      </div>`;
+    }).join('')
+    :'<div style="text-align:center;padding:30px;color:var(--green-light);">✅ אין קרנות מתחת ל-$'+threshold+'</div>';
 }
 
-function applyTh(){threshold=parseFloat(document.getElementById('thIn').value)||10;render();renderAlerts();}
-
-function toggleMarketInfo(){
-  const el=document.getElementById('mktInfo');
-  el.style.display=el.style.display==='none'?'block':'none';
+// ══ SEARCH ══
+function onSearch() {
+  const q=(document.getElementById('searchInput').value||'').toUpperCase();
+  const results=document.getElementById('searchResults');
+  if(!q){results.classList.remove('show');return;}
+  const all=[...funds,...stocks].filter(f=>f.price&&(f.ticker.includes(q)||f.name.toUpperCase().includes(q))).slice(0,8);
+  if(!all.length){results.classList.remove('show');return;}
+  const up=f=>(f.change||0)>=0;
+  results.innerHTML=all.map(f=>`
+    <div class="search-item" onclick="openChart('${f.ticker}');document.getElementById('searchInput').value='';document.getElementById('searchResults').classList.remove('show');">
+      <span class="si-ticker">${f.ticker}</span>
+      <span class="si-name">${f.name}</span>
+      <span class="si-price">$${f.price.toFixed(2)}</span>
+      <span class="si-chg ${up(f)?'up':'down'}">${up(f)?'+':''}${(f.change||0).toFixed(2)}%</span>
+    </div>`).join('');
+  results.classList.add('show');
+  if(currentPage==='funds') renderFunds();
+  else if(currentPage==='stocks') renderStocks();
 }
 document.addEventListener('click',e=>{
-  const info=document.getElementById('mktInfo');
-  if(info&&info.style.display!=='none'&&!info.contains(e.target)&&!e.target.closest('[onclick="toggleMarketInfo()"]')) info.style.display='none';
+  if(!e.target.closest('.search-bar')) document.getElementById('searchResults').classList.remove('show');
+  if(!e.target.closest('.market-pill')&&!e.target.closest('.mkt-tooltip')) document.getElementById('mktTooltip').classList.remove('show');
 });
 
-// ══ CHART.JS GOOGLE-STYLE ══
-let currentTicker=null;
-let currentTVRange='12M';
-
-function setTVRange(range, btn){
-  currentTVRange = range;
-  document.querySelectorAll('.range-btn').forEach(b=>b.classList.remove('active'));
-  if(btn) btn.classList.add('active');
-  if(currentTicker) loadTVChart(currentTicker, range);
-}
-
-function loadTVChart(ticker, range){
-  const wrap = document.getElementById('tvChartWrap');
-  wrap.innerHTML = '';
-  const container = document.createElement('div');
-  container.className = 'tradingview-widget-container';
-  container.style.cssText = 'height:100%;width:100%;';
-  const inner = document.createElement('div');
-  inner.className = 'tradingview-widget-container__widget';
-  inner.style.cssText = 'height:100%;width:100%;';
-  container.appendChild(inner);
-  const s = document.createElement('script');
-  s.src = 'https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js';
-  s.async = true;
-  s.innerHTML = JSON.stringify({
-    autosize: true,
-    symbol: ticker,
-    interval: range === '1M' ? 'D' : range === '3M' ? 'D' : range === '6M' ? 'D' : range === '12M' ? 'W' : range === '60M' ? 'W' : 'M',
-    range: range,
-    timezone: 'America/New_York',
-    theme: 'light',
-    style: '1',
-    locale: 'he',
-    backgroundColor: '#ffffff',
-    gridColor: '#f0f2f5',
-    allow_symbol_change: false,
-    calendar: false,
-    support_host: 'https://www.tradingview.com'
-  });
-  container.appendChild(s);
-  wrap.appendChild(container);
-}
-
 // ══ CHART MODAL ══
-// ══ AI DESCRIPTION CACHE ══
-const descCache = {};
-
-async function loadAIDescription(ticker, name, lev, sectorName, price, change) {
-  const content = document.getElementById('aiDescContent');
-  const loading = document.getElementById('aiDescLoading');
-
-  // בדוק cache
-  if(descCache[ticker]) {
-    content.innerHTML = descCache[ticker];
-    return;
-  }
-
-  loading.innerHTML = 'מייצר הסבר... <span class="spinner"></span>';
-  content.innerHTML = '<div style="color:var(--text3);font-size:13px;">⏳ טוען הסבר מפורט...</div>';
-
-  try {
-    const res = await fetch(`${RAILWAY_SERVER}/explain`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ticker, name, lev, sectorName, price, change })
-    });
-
-    const data = await res.json();
-    const text = data.text || 'לא ניתן לטעון הסבר.';
-
-    // פרמוט יפה — הפוך **text** לבולד
-    const formatted = text
-      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\n\n/g, '</p><p>')
-      .replace(/\n/g, '<br>');
-
-    const html = `<div style="line-height:1.9;">${formatted}</div>`;
-    descCache[ticker] = html;
-    content.innerHTML = html;
-    loading.textContent = '';
-  } catch(e) {
-    content.innerHTML = '<div style="color:var(--red);">שגיאה בטעינת הסבר. נסי שוב.</div>';
-    loading.textContent = '';
-    console.error('AI desc error:', e);
-  }
-}
-
-function openChart(ticker){
-  const f = funds.find(x=>x.ticker===ticker) || stocks.find(x=>x.ticker===ticker);
+function openChart(ticker) {
+  const f=[...funds,...stocks].find(x=>x.ticker===ticker);
   if(!f) return;
   const up=(f.change||0)>=0;
+  currentTicker=ticker;
   document.getElementById('mTicker').textContent=f.ticker;
   document.getElementById('mName').textContent=f.name||ticker;
   document.getElementById('mPrice').textContent=f.price?`$${f.price.toFixed(2)}`:'—';
-  document.getElementById('mChange').innerHTML=f.change!=null?`<span style="color:${up?'var(--green)':'var(--red)'}">${up?'+':''}${f.change.toFixed(2)}%</span>`:'';
-  document.getElementById('mP2').textContent=f.price?`$${f.price.toFixed(2)}`:'—';
-  document.getElementById('mC2').innerHTML=f.change!=null?`<span style="color:${up?'var(--green)':'var(--red)'}">${up?'+':''}${f.change.toFixed(2)}%</span>`:'—';
-  document.getElementById('mRange').textContent=f.range52||'—';
-  document.getElementById('mVol').textContent=f.vol||'—';
-  document.getElementById('tvChartWrap').innerHTML='';
+  document.getElementById('mChg').innerHTML=f.change!=null
+    ?`<span style="color:${up?'var(--green)':'var(--red)'}">${up?'+':''}${f.change.toFixed(2)}%</span>`:'';
+  document.getElementById('mLevBadge').innerHTML=f.lev
+    ?`<span class="er-lev lev-${f.lev}" style="width:auto;padding:0 8px;">${f.lev.toUpperCase()}</span>`:'';
+  document.getElementById('ms1').textContent=f.price?`$${f.price.toFixed(2)}`:'—';
+  document.getElementById('ms2').innerHTML=f.change!=null?`<span style="color:${up?'var(--green)':'var(--red)'}">${up?'+':''}${f.change.toFixed(2)}%</span>`:'—';
+  document.getElementById('ms3').textContent=f.range52||'—';
+  document.getElementById('ms4').textContent=f.vol||'—';
+  document.getElementById('tvWrap').innerHTML='';
   document.getElementById('chartOverlay').classList.remove('hidden');
   document.body.style.overflow='hidden';
   setTimeout(()=>{
-    document.querySelectorAll('.range-btn').forEach(b=>b.classList.remove('active'));
-    const defaultBtn=document.querySelector('.range-btn[onclick*="12M"]');
-    if(defaultBtn) defaultBtn.classList.add('active');
+    document.querySelectorAll('.rtab').forEach(b=>b.classList.remove('active'));
+    document.querySelector('.rtab[onclick*="12M"]').classList.add('active');
     loadTVChart(ticker,'12M');
   },100);
-  // הסבר AI רק לקרנות ממונפות
-  if(f.lev){
-    const sectorName=SECTORS[f.sector]?.n||f.sector;
-    loadAIDescription(ticker,f.name,f.lev,sectorName,f.price,f.change);
-  } else {
-    document.getElementById('aiDescContent').innerHTML='<div style="color:var(--text3);">הסבר זמין רק לקרנות ממונפות.</div>';
-  }
+  // AI
+  if(f.lev) loadAI(ticker,f.name,f.lev,SECTORS[f.sector]?.n||f.sector,f.price);
+  else document.getElementById('aiContent').innerHTML='<span style="color:var(--text3);">הסבר זמין לקרנות ממונפות.</span>';
 }
+
 function closeChart(){
   document.getElementById('chartOverlay').classList.add('hidden');
-  document.getElementById('tvChartWrap').innerHTML='';
+  document.getElementById('tvWrap').innerHTML='';
   document.body.style.overflow='';
 }
-function showAdd(){document.getElementById('addOverlay').classList.remove('hidden');document.body.style.overflow='hidden';}
-function closeAdd(){document.getElementById('addOverlay').classList.add('hidden');document.body.style.overflow='';}
 
-async function addManual(){
-  const ticker=(document.getElementById('nTicker').value||'').toUpperCase().trim();
-  if(!ticker){alert('נא למלא טיקר');return;}
-  if(funds.find(f=>f.ticker===ticker)){alert('קרן זו כבר קיימת!');return;}
-  closeAdd();
-  const newF={ticker,name:document.getElementById('nName').value||ticker,lev:document.getElementById('nLev').value,sector:'single',price:null,change:null,vol:'—',range52:'—',active:true};
-  funds.unshift(newF);
-  const results=await fetchPriceBatch([ticker]);
-  if(results[0]&&results[0].regularMarketPrice){
-    newF.price=results[0].regularMarketPrice;newF.change=results[0].regularMarketChangePercent;
-    newF.vol=formatVol(results[0].regularMarketVolume);
-    newF.range52=results[0].fiftyTwoWeekLow?`$${results[0].fiftyTwoWeekLow.toFixed(2)}–$${results[0].fiftyTwoWeekHigh.toFixed(2)}`:'—';
-    newF.name=results[0].shortName||newF.name;
-  }
-  document.getElementById('nTicker').value='';document.getElementById('nName').value='';
-  render();
+function setTVRange(range,btn){
+  document.querySelectorAll('.rtab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if(currentTicker) loadTVChart(currentTicker,range);
 }
 
+function loadTVChart(ticker,range){
+  const wrap=document.getElementById('tvWrap');
+  wrap.innerHTML='';
+  const c=document.createElement('div');c.className='tradingview-widget-container';c.style.height='100%';
+  const inner=document.createElement('div');inner.className='tradingview-widget-container__widget';inner.style.height='100%';
+  c.appendChild(inner);
+  const s=document.createElement('script');
+  s.src='https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js';
+  s.async=true;
+  s.innerHTML=JSON.stringify({
+    autosize:true,symbol:ticker,
+    interval:range==='1M'?'D':range==='3M'?'D':range==='6M'?'D':'W',
+    range:range,timezone:'America/New_York',theme:'light',style:'1',locale:'he',
+    backgroundColor:'#ffffff',gridColor:'#f8f9fa',allow_symbol_change:false,calendar:false,
+    support_host:'https://www.tradingview.com'
+  });
+  c.appendChild(s);wrap.appendChild(c);
+}
+
+// ══ AI DESCRIPTION ══
+async function loadAI(ticker,name,lev,sectorName,price){
+  if(descCache[ticker]){document.getElementById('aiContent').innerHTML=descCache[ticker];return;}
+  document.getElementById('aiLoading').innerHTML='<span style="animation:spin .7s linear infinite;display:inline-block;">⏳</span> טוען...';
+  document.getElementById('aiContent').innerHTML='<span style="color:var(--text3);">מייצר הסבר...</span>';
+  try{
+    const r=await fetch(`${SERVER}/explain`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ticker,name,lev,sectorName,price})});
+    const data=await r.json();
+    const text=data.text||'לא ניתן לטעון הסבר.';
+    const html=text.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>');
+    descCache[ticker]=html;
+    document.getElementById('aiContent').innerHTML=html;
+  }catch(e){
+    document.getElementById('aiContent').innerHTML='<span style="color:var(--text3);">הסבר אינו זמין כרגע.</span>';
+  }
+  document.getElementById('aiLoading').textContent='';
+}
+
+// ══ FILTERS ══
+function setFilter(f,btn){levFilter=f;document.querySelectorAll('.fchip').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderFunds();}
+function setStockCat(c,btn){stockCatFilter=c;document.querySelectorAll('#stockFilterBar .fchip').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderStocks();}
+function setStockSector(s,btn){stockSectorFilter=s;document.querySelectorAll('#stockSectorFilters .fchip').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderStocks();}
+function applyTh(){threshold=parseFloat(document.getElementById('thInput').value)||10;renderAlerts();}
+function toggleMktTip(){document.getElementById('mktTooltip').classList.toggle('show');}
+
+// ══ PAGE NAV ══
 function showPage(p,btn){
   currentPage=p;
-  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
-  document.getElementById('page-'+p).classList.add('active');
+  ['funds','stocks','alerts'].forEach(id=>{document.getElementById('page-'+id).style.display=id===p?'block':'none';});
+  ['sidebar'].forEach(id=>{document.getElementById(id).style.display=p==='funds'?'flex':'none';});
   document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   if(p==='alerts') renderAlerts();
   if(p==='stocks') renderStocks();
 }
-function setFilter(f,btn){levFilter=f;document.querySelectorAll('#page-all .filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');render();}
-function onSearch(){currentPage==='alerts'?renderAlerts():render();}
 
-['chartOverlay','addOverlay'].forEach(id=>{
-  document.getElementById(id).addEventListener('click',e=>{
-    if(e.target.id===id){if(id==='chartOverlay')closeChart();else closeAdd();}
-  });
-});
+document.getElementById('chartOverlay').addEventListener('click',e=>{if(e.target===document.getElementById('chartOverlay'))closeChart();});
 
-// Auto refresh כל 5 דקות בשעות מסחר
-setInterval(()=>{
-  const h=new Date().getUTCHours();
-  if(h>=13&&h<20)loadPrices();
-},5*60*1000);
+// Auto refresh
+setInterval(()=>{const h=new Date().getUTCHours();if(h>=13&&h<20)loadPrices();},5*60*1000);
 
-// ══ STOCKS DATA ══
-// ~200 מניות איכותיות מ-NYSE+NASDAQ במחיר נמוך
-const BASE_STOCKS = [
-  // טכנולוגיה
-  ['BBAI','BigBear.ai Holdings','tech'],['GFAI','Guardforce AI','tech'],['AITX','Artificial Intelligence Tech','tech'],
-  ['SOUN','SoundHound AI','tech'],['CLOV','Clover Health','tech'],['MVST','Microvast Holdings','tech'],
-  ['WISA','WiSA Technologies','tech'],['KALI','Calidi Biotherapeutics','tech'],['AEYE','AudioEye','tech'],
-  ['VERB','Verb Technology','tech'],['IDAI','T2 Biosystems','tech'],['INPX','Inpixon','tech'],
-  ['IMTE','Integrated Media Technology','tech'],['GTLB','GitLab','tech'],['AI','C3.ai','tech'],
-  ['AMPL','Amplitude','tech'],['BOX','Box Inc','tech'],
-  // ביוטק/בריאות
-  ['CPRX','Catalyst Pharmaceuticals','biotech'],['HIMS','Hims & Hers Health','biotech'],
-  ['ACMR','ACM Research','biotech'],['OCGN','Ocugen','biotech'],['SIGA','SIGA Technologies','biotech'],
-  ['AKER','Aker BioMarine','biotech'],['ARDX','Ardelyx','biotech'],['ADMA','ADMA Biologics','biotech'],
-  ['CGEN','Compugen','biotech'],['CLOV','Clover Health','biotech'],['MRUS','Merus NV','biotech'],
-  ['NKTR','Nektar Therapeutics','biotech'],['PHAT','Phathom Pharmaceuticals','biotech'],
-  ['RCKT','Rocket Pharmaceuticals','biotech'],['RXRX','Recursion Pharmaceuticals','biotech'],
-  ['TGTX','TG Therapeutics','biotech'],['FOLD','Amicus Therapeutics','biotech'],
-  ['VERA','Vera Therapeutics','biotech'],['XNCR','Xencor','biotech'],
-  // פיננסים
-  ['PSEC','Prospect Capital','finance'],['CURO','CURO Group','finance'],
-  ['RM','Regional Management','finance'],['ATLC','Atlanticus Holdings','finance'],
-  ['CLBK','Columbia Banking','finance'],['SLQT','SelectQuote','finance'],
-  ['OPEN','Opendoor Technologies','finance'],['UWMC','UWM Holdings','finance'],
-  ['PFSI','PennyMac Financial','finance'],['RKT','Rocket Companies','finance'],
-  // אנרגיה
-  ['NOG','Northern Oil and Gas','energy'],['CIVI','Civitas Resources','energy'],
-  ['GPOR','Gulfport Energy','energy'],['MNRL','Brigham Minerals','energy'],
-  ['BATL','Battalion Oil','energy'],['CTRA','Coterra Energy','energy'],
-  ['DK','Delek US Holdings','energy'],['FLNC','Fluence Energy','energy'],
-  ['GEVO','Gevo','energy'],['INDO','Indonesia Energy','energy'],
-  ['NRGV','Energy Vault Holdings','energy'],['PLUG','Plug Power','energy'],
-  ['SPWR','SunPower','energy'],['LTBR','Lightbridge','energy'],
-  // קנאביס
-  ['TLRY','Tilray Brands','cannabis'],['CGC','Canopy Growth','cannabis'],
-  ['ACB','Aurora Cannabis','cannabis'],['CRON','Cronos Group','cannabis'],
-  ['CURLF','Curaleaf Holdings','cannabis'],['GTBIF','Green Thumb Industries','cannabis'],
-  ['IIPR','Innovative Industrial Properties','cannabis'],['MSOS','AdvisorShares Pure US Cannabis','cannabis'],
-  ['SNDL','SNDL Inc','cannabis'],['TCNNF','Trulieve Cannabis','cannabis'],
-  // קריפטו / בלוקצ'יין
-  ['MARA','Marathon Digital Holdings','crypto'],['RIOT','Riot Platforms','crypto'],
-  ['CLSK','CleanSpark','crypto'],['CIFR','Cipher Mining','crypto'],
-  ['BTBT','Bit Digital','crypto'],['BITF','Bitfarms','crypto'],
-  ['HIVE','HIVE Digital Technologies','crypto'],['HUT','Hut 8 Corp','crypto'],
-  ['IREN','Iris Energy','crypto'],['WULF','TeraWulf','crypto'],
-  // מדיה ובידור
-  ['LUMN','Lumen Technologies','media'],['SIRI','Sirius XM','media'],
-  ['AMCX','AMC Networks','media'],['IMAX','IMAX Corp','media'],
-  ['CINE','Cineworld Group','media'],['CNK','Cinemark Holdings','media'],
-  ['FUBO','FuboTV','media'],['NWSA','News Corp A','media'],
-  ['PARA','Paramount Global','media'],['VZIO','VIZIO Holding','media'],
-  // ריטים ונדלן
-  ['OPEN','Opendoor Technologies','realestate'],['AIV','Apartment Investment','realestate'],
-  ['BRT','BRT Realty Trust','realestate'],['CLNC','Colony Credit Real Estate','realestate'],
-  ['MPW','Medical Properties Trust','realestate'],['OFC','Corporate Office Properties','realestate'],
-  ['SAFE','Safehold','realestate'],['SILA','Sila Realty Trust','realestate'],
-  // תחבורה / EV
-  ['RIDE','Lordstown Motors','ev'],['GOEV','Canoo','ev'],
-  ['NKLA','Nikola','ev'],['FSR','Fisker','ev'],
-  ['WKHS','Workhorse Group','ev'],['SOLO','ElectraMeccanica Vehicles','ev'],
-  ['XPEV','XPeng','ev'],['NIO','NIO','ev'],
-  ['LI','Li Auto','ev'],['BLNK','Blink Charging','ev'],
-  ['CHPT','ChargePoint Holdings','ev'],['EVGO','EVgo','ev'],
-  // קמעונאות
-  ['BBBY','Bed Bath & Beyond','retail'],['EXPR','Express','retail'],
-  ['PRTY','Party City Holdco','retail'],['SPWH','Sportsmans Warehouse','retail'],
-  ['TUEM','Tuesday Morning','retail'],['WOOF','Petco Health','retail'],
-  ['VLCN','Volcon','retail'],['BYFC','Broadway Financial','retail'],
-  // ספנות/שינוע
-  ['TOPS','TOP Ships','shipping'],['FREE','Whole Earth Brands','shipping'],
-  ['EDRY','EuroDry','shipping'],['GLBS','Globus Maritime','shipping'],
-  ['GOGL','Golden Ocean Group','shipping'],['HSHP','Huang He Goldfields','shipping'],
-  ['NMCI','Navios Maritime Containers','shipping'],['SHIP','Seanergy Maritime','shipping'],
-  ['SB','Safe Bulkers','shipping'],['SINO','Sino Gas International','shipping'],
-  // כרייה
-  ['EGO','Eldorado Gold','mining'],['HL','Hecla Mining','mining'],
-  ['AG','First Majestic Silver','mining'],['PAAS','Pan American Silver','mining'],
-  ['BTG','B2Gold','mining'],['GORO','Gold Resource','mining'],
-  ['GPL','Great Panther Mining','mining'],['IAUX','i-80 Gold','mining'],
-  ['KORE','Kore Mining','mining'],['MAG','MAG Silver','mining'],
-];
-
-let stocks = BASE_STOCKS.map(([ticker, name, sector]) => ({
-  ticker, name, sector, price: null, change: null, vol: '—', range52: '—', loaded: false
-}));
-let stocksLoaded = false;
-let stockSectorFilter = 'all';
-
-function setStockSector(s, btn) {
-  stockSectorFilter = s;
-  document.querySelectorAll('#stockSectorFilters .filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderStocks();
-}
-
-// ══ LOAD ALL STOCKS FROM YAHOO SCREENER ══
-async function loadAllStocks() {
-  const btn = document.getElementById('loadAllStocksBtn');
-  btn.disabled = true; btn.textContent = '⏳ טוען...';
-  document.getElementById('stockLoadWrap').style.display = 'block';
-
-  // טעינת מחירים לרשימה הבסיסית
-  await fetchStockPrices(stocks);
-
-  // נסה לשלוף עוד מניות מ-Yahoo Screener
-  try {
-    document.getElementById('stockLoadTitle').textContent = '📡 שולף מניות נוספות מ-Yahoo Finance...';
-    const extraTickers = await fetchStocksFromScreener();
-    const existingTickers = new Set(stocks.map(s => s.ticker));
-    const newStocks = extraTickers
-      .filter(t => !existingTickers.has(t.ticker))
-      .map(t => ({ ...t, loaded: false }));
-
-    if (newStocks.length > 0) {
-      stocks = [...stocks, ...newStocks];
-      await fetchStockPrices(newStocks);
-    }
-  } catch(e) { console.warn('Screener failed:', e); }
-
-  stocksLoaded = true;
-  document.getElementById('stockLoadWrap').style.display = 'none';
-  btn.disabled = false; btn.textContent = '🔄 רענן';
-  renderStocks();
-}
-
-async function fetchStocksFromScreener() {
-  // Yahoo Finance screener למניות מתחת ל-$10
-  const url = `https://query1.finance.yahoo.com/v1/finance/screener/predefined/saved?scrIds=day_gainers&count=100&start=0`;
-  const txt = await fetchWithProxy(url);
-  if (!txt) return [];
-  try {
-    const data = JSON.parse(txt);
-    const quotes = data?.finance?.result?.[0]?.quotes || [];
-    return quotes
-      .filter(q => q.regularMarketPrice && q.regularMarketPrice < 10)
-      .map(q => ({
-        ticker: q.symbol,
-        name: q.shortName || q.symbol,
-        sector: 'other',
-        price: q.regularMarketPrice,
-        change: q.regularMarketChangePercent,
-        vol: formatVol(q.regularMarketVolume),
-        range52: q.fiftyTwoWeekLow ? `$${q.fiftyTwoWeekLow.toFixed(2)}–$${q.fiftyTwoWeekHigh.toFixed(2)}` : '—',
-        loaded: true
-      }));
-  } catch(e) { return []; }
-}
-
-async function fetchStockPrices(stockArr) {
-  const chunks = [];
-  for (let i = 0; i < stockArr.length; i += BATCH) chunks.push(stockArr.slice(i, i + BATCH));
-  let done = 0;
-  for (const chunk of chunks) {
-    const results = await fetchPriceBatch(chunk.map(s => s.ticker));
-    const map = {};
-    results.forEach(q => { map[q.symbol] = q; });
-    chunk.forEach(s => {
-      const q = map[s.ticker];
-      if (q && q.regularMarketPrice) {
-        s.price = q.regularMarketPrice;
-        s.change = q.regularMarketChangePercent;
-        s.vol = formatVol(q.regularMarketVolume);
-        s.range52 = q.fiftyTwoWeekLow ? `$${q.fiftyTwoWeekLow.toFixed(2)}–$${q.fiftyTwoWeekHigh.toFixed(2)}` : '—';
-        s.name = q.shortName || s.name;
-        s.loaded = true;
-      }
-    });
-    done += chunk.length;
-    const pct = Math.round(done / stockArr.length * 100);
-    document.getElementById('stockLoadFill').style.width = pct + '%';
-    document.getElementById('stockLoadCount').textContent = done + ' / ' + stockArr.length;
-    document.getElementById('stockLoadTitle').textContent = `📡 טוען מחירים... ${done}/${stockArr.length}`;
-    renderStocks();
-    await new Promise(r => setTimeout(r, 300));
-  }
-}
-
-// ══ RENDER STOCKS ══
-function renderStocks() {
-  const q = (document.getElementById('stockSearch')?.value || '').toUpperCase();
-  const withPrice = stocks.filter(s => s.price !== null);
-
-  if (!withPrice.length) {
-    document.getElementById('stocksContainer').innerHTML = `
-      <div style="text-align:center;padding:60px;color:var(--text3);">
-        <div style="font-size:40px;margin-bottom:16px;">⏳</div>
-        <div style="font-size:16px;font-weight:700;margin-bottom:8px;">טוען מחירים...</div>
-        <div style="font-size:13px;">או לחצי "טען הכל מ-Yahoo" לטעינה מיידית</div>
-      </div>`;
-    return;
-  }
-
-  const filtered = withPrice.filter(s => {
-    if (q && !s.ticker.includes(q) && !s.name.toUpperCase().includes(q)) return false;
-    if (stockSectorFilter !== 'all' && s.sector !== stockSectorFilter) return false;
-    return true;
-  });
-
-  // 3 קטגוריות
-  const under10 = filtered.filter(s => s.price < 10).sort((a, b) => b.price - a.price);
-  const under5  = filtered.filter(s => s.price < 5).sort((a, b) => b.price - a.price);
-  const under3  = filtered.filter(s => s.price < 3).sort((a, b) => b.price - a.price);
-  document.getElementById('stTotal').textContent = withPrice.length;
-  document.getElementById('stUnder10').textContent = under10.length;
-  document.getElementById('stUnder5').textContent = under5.length;
-  document.getElementById('stUnder3').textContent = under3.length;
-
-  document.getElementById('stocksContainer').innerHTML = `
-    ${makeStockCategory('🟡', 'מניות מתחת ל-$10', under10, 'gold', '$10')}
-    ${makeStockCategory('🔴', 'מניות מתחת ל-$5', under5, 'red', '$5')}
-    ${makeStockCategory('⚫', 'מניות מתחת ל-$3', under3, 'dark', '$3')}
-  `;
-}
-
-function makeStockCategory(icon, title, arr, type, threshold) {
-  if (!arr.length) return `
-    <div class="stock-category">
-      <div class="stock-category-header ${type}">
-        <span class="stock-cat-icon">${icon}</span>
-        <span class="stock-cat-title">${title}</span>
-        <span class="stock-cat-count ${type}">0 מניות</span>
-      </div>
-      <div style="text-align:center;padding:20px;color:var(--green);font-size:13px;font-weight:700;">✅ אין מניות מתחת ל-${threshold}</div>
-    </div>`;
-
-  return `
-    <div class="stock-category">
-      <div class="stock-category-header ${type}">
-        <span class="stock-cat-icon">${icon}</span>
-        <span class="stock-cat-title">${title}</span>
-        <span class="stock-cat-count ${type}">${arr.length} מניות</span>
-      </div>
-      <div class="stock-grid">
-        ${arr.map((s, i) => makeStockCard(s, i, type)).join('')}
-      </div>
-    </div>`;
-}
-
-function makeStockCard(s, i, type) {
-  const up = (s.change || 0) >= 0;
-  const delay = Math.min(i * 0.01, 0.5);
-  const labelMap = { gold: 'מתחת $10', red: 'מתחת $5', dark: 'מתחת $3' };
-  return `<div class="stock-card ${type}-card" onclick="openChart('${s.ticker}')" style="animation-delay:${delay}s">
-    <div class="stock-badge ${type}">${labelMap[type]}</div>
-    <div class="card-row1" style="margin-top:18px;">
-      <div><div class="ticker">${s.ticker}</div><div class="etf-name">${s.name}</div></div>
-    </div>
-    <div class="card-row2">
-      <div class="price ${type === 'dark' ? '' : 'low'}">$${s.price.toFixed(2)}<span class="live-dot"></span></div>
-      <div class="change-box">
-        <div class="change-pct ${up ? 'up' : 'down'}">${up ? '+' : ''}${(s.change || 0).toFixed(2)}%</div>
-        <div class="change-lbl">היום</div>
-      </div>
-    </div>
-    ${spark(up, s.ticker.charCodeAt(0) * 137 + (s.ticker.charCodeAt(1) || 0) * 31)}
-    <div class="card-footer">
-      <div class="meta"><div class="meta-lbl">52W</div><div class="meta-val" style="font-size:8.5px;">${s.range52}</div></div>
-      <div class="meta"><div class="meta-lbl">נפח</div><div class="meta-val">${s.vol}</div></div>
-      <button class="chart-btn" onclick="event.stopPropagation();openChart('${s.ticker}')">📊</button>
-    </div>
-  </div>`;
-}
-
-// ══ INIT STOCKS ON PAGE LOAD ══
-async function initStocks() {
-  await fetchStockPrices(stocks);
-  stocksLoaded = true;
-  if (currentPage === 'stocks') renderStocks();
-}
-
-// ══ INIT ══
 // INIT
 loadPrices();
-initStocks();
 </script>
 </body>
 </html>
