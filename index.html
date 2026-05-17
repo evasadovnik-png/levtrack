@@ -116,7 +116,35 @@ main{max-width:1280px;margin:0 auto;padding:20px 24px;display:grid;grid-template
 .er-alert{display:inline-flex;align-items:center;gap:3px;font-size:10px;padding:2px 7px;border-radius:10px;font-weight:600;}
 .alert-under10{background:var(--gold-bg);color:var(--gold);}
 .alert-under5{background:var(--red-bg);color:var(--red);}
-.mini-spark{width:70px;height:28px;}
+
+/* CARD GRID */
+.etf-card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;}
+.etf-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:16px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;animation:fadeUp .25s ease both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.etf-card:hover{border-color:var(--blue);box-shadow:0 2px 12px rgba(26,115,232,.15);transform:translateY(-2px);}
+.etf-card.alerted{border-color:#fdd663;background:#fffde7;}
+.ec-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;}
+.ec-ticker{font-size:17px;font-weight:700;color:var(--text);}
+.ec-name{font-size:9px;color:var(--text3);margin-top:2px;max-width:150px;line-height:1.4;}
+.ec-badge{padding:2px 8px;border-radius:6px;font-size:10px;font-weight:700;}
+.ec-price-row{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:6px;}
+.ec-price{font-size:22px;font-weight:300;color:var(--text);letter-spacing:-.5px;}
+.ec-price.low{color:var(--red);}
+.ec-chg{font-size:12px;font-weight:600;padding:3px 8px;border-radius:4px;}
+.chg-up{color:var(--green);background:var(--green-bg);}
+.chg-down{color:var(--red);background:var(--red-bg);}
+.chg-flat{color:var(--text3);background:var(--bg);}
+.ec-footer{display:flex;justify-content:space-between;align-items:center;padding-top:8px;border-top:1px solid var(--border);margin-top:4px;}
+.ec-meta-lbl{font-size:8px;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;}
+.ec-meta-val{font-size:10px;color:var(--text2);font-weight:500;}
+.live-dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--green-light);animation:pulse 2s infinite;vertical-align:middle;margin-right:2px;}
+.alert-tag{position:absolute;top:10px;left:10px;font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px;background:var(--gold);color:#fff;}
+.sector-section{margin-bottom:28px;}
+.sector-header-row{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--border);}
+.sh-icon{font-size:16px;}
+.sh-name{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text2);}
+.sh-count{font-size:11px;color:var(--text3);background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:1px 8px;}
+.sh-avg{margin-right:auto;font-size:12px;font-weight:600;}
 
 /* MODAL */
 .overlay{position:fixed;inset:0;z-index:500;background:rgba(32,33,36,.5);display:flex;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;animation:fadein .2s;}
@@ -173,7 +201,35 @@ main{max-width:1280px;margin:0 auto;padding:20px 24px;display:grid;grid-template
 .mtt{font-size:13px;color:var(--text2);line-height:1.8;}
 .mtt strong{color:var(--text);font-weight:600;}
 
-@media(max-width:900px){main{grid-template-columns:1fr;}.sidebar{display:none;}.summary-strip{grid-template-columns:repeat(3,1fr);}}
+/* LEARN PAGE */
+.learn-chapter{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:32px;margin-bottom:20px;}
+.learn-chapter-num{font-size:11px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
+.learn-chapter h2{font-size:20px;font-weight:700;color:var(--text);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.learn-chapter p{font-size:14px;color:var(--text2);line-height:1.9;margin-bottom:14px;}
+.learn-chapter p:last-child{margin-bottom:0;}
+.learn-example{background:var(--blue-bg);border:1px solid #c5d8fc;border-radius:10px;padding:16px 20px;margin:16px 0;font-size:14px;color:var(--text);}
+.learn-example .ex-title{font-size:11px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;}
+.learn-warning{background:#fef7e0;border:1px solid #fdd663;border-radius:10px;padding:16px 20px;margin:16px 0;font-size:14px;color:#5a3e00;}
+.learn-warning .ex-title{font-size:11px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;}
+.learn-tip{background:var(--green-bg);border:1px solid #a8d5b5;border-radius:10px;padding:16px 20px;margin:16px 0;font-size:14px;color:#1e4a28;}
+.learn-tip .ex-title{font-size:11px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;}
+.learn-table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px;}
+.learn-table th{background:var(--bg);padding:10px 14px;text-align:right;font-weight:700;color:var(--text2);border-bottom:2px solid var(--border);}
+.learn-table td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text);}
+.learn-table tr:last-child td{border-bottom:none;}
+.learn-table tr:hover td{background:var(--bg);}
+.learn-nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;padding:16px;background:var(--white);border:1px solid var(--border);border-radius:12px;}
+.lnav-btn{padding:8px 16px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--text2);font-family:'Google Sans',sans-serif;transition:all .15s;}
+.lnav-btn:hover{border-color:var(--blue);color:var(--blue);}
+.lnav-btn.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+.learn-calc{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:20px;margin:16px 0;}
+.calc-row{display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap;}
+.calc-label{font-size:13px;color:var(--text2);min-width:140px;font-weight:500;}
+.calc-input{padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-weight:600;width:100px;text-align:center;outline:none;font-family:'Google Sans',sans-serif;}
+.calc-input:focus{border-color:var(--blue);}
+.calc-result{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:16px;margin-top:12px;}
+.cr-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px;}
+.cr-row:last-child{border-bottom:none;font-weight:700;font-size:14px;}
 ::-webkit-scrollbar{width:6px;}.   ::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
 </style>
 </head>
@@ -203,6 +259,7 @@ main{max-width:1280px;margin:0 auto;padding:20px 24px;display:grid;grid-template
     <button class="nav-tab active" onclick="showPage('funds',this)">📊 קרנות</button>
     <button class="nav-tab" onclick="showPage('stocks',this)">📈 מניות</button>
     <button class="nav-tab" onclick="showPage('alerts',this)">🔔 התראות</button>
+    <button class="nav-tab" onclick="showPage('learn',this)">📚 למד</button>
   </div>
 
   <div class="market-pill" id="mktPill" onclick="toggleMktTip()">
@@ -271,17 +328,7 @@ main{max-width:1280px;margin:0 auto;padding:20px 24px;display:grid;grid-template
         <button class="fchip" onclick="setFilter('alert',this)">⚠️ מתחת ל-$10</button>
       </div>
 
-      <div class="etf-table-wrap">
-        <div class="table-header">
-          <div class="th">קרן</div>
-          <div class="th right">מחיר</div>
-          <div class="th right">שינוי %</div>
-          <div class="th right">52W טווח</div>
-          <div class="th right">נפח</div>
-          <div class="th right">גרף</div>
-        </div>
-        <div id="fundsTable"></div>
-      </div>
+      <div id="fundsContainer"></div>
     </div>
 
     <!-- STOCKS PAGE -->
@@ -302,18 +349,8 @@ main{max-width:1280px;margin:0 auto;padding:20px 24px;display:grid;grid-template
           <button class="fchip" onclick="setStockSector('ev',this)">🚗 EV</button>
         </div>
       </div>
-      <div class="etf-table-wrap">
-        <div class="table-header">
-          <div class="th">מניה</div>
-          <div class="th right">מחיר</div>
-          <div class="th right">שינוי %</div>
-          <div class="th right">קטגוריה</div>
-          <div class="th right">נפח</div>
-          <div class="th right">גרף</div>
-        </div>
-        <div id="stocksTable"></div>
-      </div>
-      <div style="margin-top:12px;text-align:center;">
+      <div id="stocksContainer" style="margin-top:4px;"></div>
+      <div style="margin-top:16px;text-align:center;">
         <button onclick="loadAllStocks()" id="loadStocksBtn" style="padding:10px 24px;background:var(--blue);color:#fff;border:none;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Google Sans',sans-serif;">
           📡 טען הכל מ-Yahoo Finance
         </button>
@@ -346,6 +383,23 @@ main{max-width:1280px;margin:0 auto;padding:20px 24px;display:grid;grid-template
       <div class="etf-table-wrap">
         <div class="ss-header" style="padding:12px 16px;">קרנות מתחת לסף</div>
         <div id="alertTable"></div>
+      </div>
+    </div>
+
+    <!-- LEARN PAGE -->
+    <div id="page-learn" style="display:none;">
+      <div style="max-width:860px;margin:0 auto;">
+
+        <!-- HERO -->
+        <div style="text-align:center;padding:40px 20px 32px;border-bottom:1px solid var(--border);margin-bottom:32px;">
+          <div style="font-size:48px;margin-bottom:12px;">📊</div>
+          <h1 style="font-size:28px;font-weight:700;color:var(--text);margin-bottom:10px;">המדריך המלא לקרנות ממונפות</h1>
+          <p style="font-size:15px;color:var(--text2);line-height:1.7;max-width:600px;margin:0 auto;">כל מה שצריך לדעת — מוסבר בצורה פשוטה וברורה, ללא מילים מסובכות</p>
+        </div>
+
+        <!-- CHAPTERS -->
+        <div id="learnContent"></div>
+
       </div>
     </div>
 
@@ -663,42 +717,108 @@ function spark(isUp,seed,w=70,h=28){
 function renderFunds() {
   const q=(document.getElementById('searchInput').value||'').toUpperCase();
   const visible=funds.filter(f=>{
-    if(!f.price) return false;
     if(q&&!f.ticker.includes(q)&&!f.name.toUpperCase().includes(q)) return false;
     if(levFilter==='3x'&&f.lev!=='3x') return false;
     if(levFilter==='2x'&&f.lev!=='2x') return false;
-    if(levFilter==='up'&&(f.change||0)<0) return false;
-    if(levFilter==='down'&&(f.change||0)>=0) return false;
-    if(levFilter==='alert'&&f.price>=threshold) return false;
+    if(levFilter==='up'&&(f.change==null||(f.change||0)<0)) return false;
+    if(levFilter==='down'&&(f.change==null||(f.change||0)>=0)) return false;
+    if(levFilter==='alert'&&(f.price==null||f.price>=threshold)) return false;
     if(sectorFilter!=='all'&&f.sector!==sectorFilter) return false;
     return true;
-  }).sort((a,b)=>{
-    const sa=SECTORS[a.sector],sb=SECTORS[b.sector];
-    if(a.sector!==b.sector) return a.sector.localeCompare(b.sector);
-    return b.price-a.price;
   });
 
-  const up=(f)=>(f.change||0)>=0;
-  document.getElementById('fundsTable').innerHTML = visible.length
-    ? visible.map(f=>`
-    <div class="etf-row" onclick="openChart('${f.ticker}')">
-      <div class="er-main">
-        <div class="er-lev lev-${f.lev}">${f.lev.toUpperCase()}</div>
-        <div class="er-info">
-          <div class="er-ticker">${f.ticker}</div>
-          <div class="er-name">${f.name}</div>
-        </div>
-        ${f.price<threshold?`<span class="er-alert alert-under10">⚠️ <$${threshold}</span>`:''}
-      </div>
-      <div class="er-price">$${f.price.toFixed(2)}</div>
-      <div class="er-chg ${up(f)?'up':'down'}">${up(f)?'+':''}${f.change.toFixed(2)}%</div>
-      <div class="er-range">${f.range52}</div>
-      <div class="er-vol">${f.vol}</div>
-      <div class="er-spark">${spark(up(f),f.ticker.charCodeAt(0)*137)}</div>
-    </div>`).join('')
-    : '<div style="text-align:center;padding:40px;color:var(--text3);">לא נמצאו קרנות</div>';
+  const order=['indices','semis','tech','finance','energy','biotech','crypto','cannabis','single','bonds','gold','international'];
+  const map={};
+  visible.forEach(f=>{(map[f.sector]||(map[f.sector]=[])).push(f);});
+  const sorted=Object.entries(map).sort((a,b)=>(order.indexOf(a[0])<0?99:order.indexOf(a[0]))-(order.indexOf(b[0])<0?99:order.indexOf(b[0])));
 
+  let html='',ci=0;
+  for(const[sk,sf] of sorted){
+    if(!sf.length) continue;
+    const s=SECTORS[sk]||{n:sk,i:'📦'};
+    const withP=sf.filter(f=>f.price!=null);
+    const avg=withP.length?(withP.reduce((a,f)=>a+(f.change||0),0)/withP.length).toFixed(2):null;
+    const avgUp=avg===null||Number(avg)>=0;
+    html+=`<div class="sector-section">
+      <div class="sector-header-row">
+        <span class="sh-icon">${s.i}</span>
+        <span class="sh-name">${s.n}</span>
+        <span class="sh-count">${sf.length}</span>
+        <span class="sh-avg" style="color:${avg===null?'var(--text3)':avgUp?'var(--green)':'var(--red)'}">
+          ${avg===null?'טוען...':`ממוצע: ${avgUp?'+':''}${avg}%`}
+        </span>
+      </div>
+      <div class="etf-card-grid">
+        ${sf.map((f,i)=>makeCard(f,ci++)).join('')}
+      </div>
+    </div>`;
+  }
+  document.getElementById('fundsContainer').innerHTML=html||'<div style="text-align:center;padding:60px;color:var(--text3);">לא נמצאו קרנות</div>';
   updateStats();
+}
+
+  // קבץ לפי סקטור
+  const order=['indices','semis','tech','finance','energy','biotech','crypto','cannabis','single','bonds','gold','international'];
+  const map={};
+  visible.forEach(f=>{(map[f.sector]||(map[f.sector]=[])).push(f);});
+  const sorted=Object.entries(map).sort((a,b)=>(order.indexOf(a[0])<0?99:order.indexOf(a[0]))-(order.indexOf(b[0])<0?99:order.indexOf(b[0])));
+
+  let html='',ci=0;
+  for(const[sk,sf] of sorted){
+    if(!sf.length) continue;
+    const s=SECTORS[sk]||{n:sk,i:'📦'};
+    const withP=sf.filter(f=>f.price!=null);
+    const avg=withP.length?(withP.reduce((a,f)=>a+(f.change||0),0)/withP.length).toFixed(2):null;
+    const avgUp=avg===null||Number(avg)>=0;
+    html+=`<div class="sector-section">
+      <div class="sector-header-row">
+        <span class="sh-icon">${s.i}</span>
+        <span class="sh-name">${s.n}</span>
+        <span class="sh-count">${sf.length}</span>
+        <span class="sh-avg" style="color:${avg===null?'var(--text3)':avgUp?'var(--green)':'var(--red)'}">
+          ${avg===null?'—':`ממוצע: ${avgUp?'+':''}${avg}%`}
+        </span>
+      </div>
+      <div class="etf-card-grid">
+        ${sf.map((f,i)=>makeCard(f,ci++)).join('')}
+      </div>
+    </div>`;
+  }
+  document.getElementById('fundsContainer').innerHTML=html||'<div style="text-align:center;padding:60px;color:var(--text3);">לא נמצאו קרנות</div>';
+  updateStats();
+}
+
+function makeCard(f,i){
+  const up=(f.change||0)>=0;
+  const hasPrice=f.price!=null;
+  const low=hasPrice&&f.price<threshold;
+  const delay=Math.min(i*.01,.4);
+  const levClass=f.lev==='3x'?'lev-3x':f.lev==='4x'?'lev-4x':'lev-2x';
+  return `<div class="etf-card${low?' alerted':''}" onclick="openChart('${f.ticker}')" style="animation-delay:${delay}s">
+    ${low?`<div class="alert-tag">⚠️ <$${threshold}</div>`:''}
+    <div class="ec-top">
+      <div>
+        <div class="ec-ticker">${f.ticker}</div>
+        <div class="ec-name">${f.name}</div>
+      </div>
+      <div class="ec-badge ${levClass}">${f.lev.toUpperCase()}</div>
+    </div>
+    <div class="ec-price-row">
+      <div class="ec-price${low?' low':''}">${hasPrice?`$${f.price.toFixed(2)}<span class="live-dot"></span>`:'<span style="color:var(--text3);font-size:13px;">טוען...</span>'}</div>
+      ${hasPrice?`<div class="ec-chg ${up?'chg-up':'chg-down'}">${up?'+':''}${(f.change||0).toFixed(2)}%</div>`:`<div class="ec-chg" style="background:var(--bg);color:var(--text3);">—</div>`}
+    </div>
+    ${spark(up,f.ticker.charCodeAt(0)*137+(f.ticker.charCodeAt(1)||0)*31,210,36)}
+    <div class="ec-footer">
+      <div class="ec-meta">
+        <div class="ec-meta-lbl">52W</div>
+        <div class="ec-meta-val" style="font-size:9px;">${f.range52}</div>
+      </div>
+      <div class="ec-meta">
+        <div class="ec-meta-lbl">נפח</div>
+        <div class="ec-meta-val">${f.vol}</div>
+      </div>
+    </div>
+  </div>`;
 }
 
 // ══ RENDER STOCKS ══
@@ -711,28 +831,52 @@ function renderStocks() {
     if(stockSectorFilter!=='all'&&s.sector!==stockSectorFilter) return false;
     return true;
   });
-  const up=s=>(s.change||0)>=0;
-  const catLabel=s=>{
-    if(s.price<3) return '<span class="er-alert" style="background:#f1f3f4;color:#3c4043;">⚫ <$3</span>';
-    if(s.price<5) return '<span class="er-alert" style="background:var(--red-bg);color:var(--red);">🔴 <$5</span>';
-    if(s.price<10) return '<span class="er-alert alert-under10">🟡 <$10</span>';
-    return '';
-  };
-  document.getElementById('stocksTable').innerHTML=filtered.length
-    ?filtered.sort((a,b)=>a.price-b.price).map(s=>`
-    <div class="etf-row" onclick="openChart('${s.ticker}')">
-      <div class="er-main">
-        <div class="er-lev" style="background:var(--bg);color:var(--text3);font-size:9px;">${(s.sector||'').substring(0,3).toUpperCase()}</div>
-        <div class="er-info"><div class="er-ticker">${s.ticker}</div><div class="er-name">${s.name}</div></div>
-        ${catLabel(s)}
+
+  const under10=filtered.filter(s=>s.price<10&&s.price>=5).sort((a,b)=>b.price-a.price);
+  const under5=filtered.filter(s=>s.price<5&&s.price>=3).sort((a,b)=>b.price-a.price);
+  const under3=filtered.filter(s=>s.price<3).sort((a,b)=>b.price-a.price);
+
+  function makeCat(title,color,bg,arr,icon){
+    if(!arr.length) return '';
+    return `<div class="sector-section">
+      <div class="sector-header-row" style="border-color:${color};">
+        <span class="sh-icon">${icon}</span>
+        <span class="sh-name" style="color:${color};">${title}</span>
+        <span class="sh-count">${arr.length} מניות</span>
       </div>
-      <div class="er-price">$${s.price.toFixed(2)}</div>
-      <div class="er-chg ${up(s)?'up':'down'}">${up(s)?'+':''}${(s.change||0).toFixed(2)}%</div>
-      <div class="er-range">${s.range52}</div>
-      <div class="er-vol">${s.vol}</div>
-      <div class="er-spark">${spark(up(s),s.ticker.charCodeAt(0)*137)}</div>
-    </div>`).join('')
-    :'<div style="text-align:center;padding:40px;color:var(--text3);">לא נמצאו מניות — לחצי "טען הכל"</div>';
+      <div class="etf-card-grid">
+        ${arr.map((s,i)=>{
+          const up=(s.change||0)>=0;
+          const delay=Math.min(i*.01,.4);
+          return `<div class="etf-card" onclick="openChart('${s.ticker}')" style="animation-delay:${delay}s;border-color:${color};background:${bg};">
+            <div class="ec-top">
+              <div>
+                <div class="ec-ticker">${s.ticker}</div>
+                <div class="ec-name">${s.name}</div>
+              </div>
+              <div class="ec-badge" style="background:${bg};color:${color};border:1px solid ${color};">${(s.sector||'').toUpperCase().substring(0,4)}</div>
+            </div>
+            <div class="ec-price-row">
+              <div class="ec-price low">$${s.price.toFixed(2)}<span class="live-dot"></span></div>
+              <div class="ec-chg ${up?'chg-up':'chg-down'}">${up?'+':''}${(s.change||0).toFixed(2)}%</div>
+            </div>
+            ${spark(up,s.ticker.charCodeAt(0)*137+(s.ticker.charCodeAt(1)||0)*31,210,36)}
+            <div class="ec-footer">
+              <div class="ec-meta"><div class="ec-meta-lbl">52W</div><div class="ec-meta-val" style="font-size:9px;">${s.range52}</div></div>
+              <div class="ec-meta"><div class="ec-meta-lbl">נפח</div><div class="ec-meta-val">${s.vol}</div></div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+  }
+
+  const html = makeCat('מתחת ל-$10','#e37400','#fef7e0',under10,'🟡')
+    + makeCat('מתחת ל-$5','#c5221f','#fce8e6',under5,'🔴')
+    + makeCat('מתחת ל-$3','#5f6368','#f1f3f4',under3,'⚫');
+
+  document.getElementById('stocksContainer').innerHTML = html ||
+    '<div style="text-align:center;padding:60px;color:var(--text3);">לא נמצאו מניות — לחצי "טען הכל"</div>';
 }
 
 // ══ RENDER ALERTS ══
@@ -909,12 +1053,210 @@ function toggleMktTip(){document.getElementById('mktTooltip').classList.toggle('
 // ══ PAGE NAV ══
 function showPage(p,btn){
   currentPage=p;
-  ['funds','stocks','alerts'].forEach(id=>{document.getElementById('page-'+id).style.display=id===p?'block':'none';});
-  ['sidebar'].forEach(id=>{document.getElementById(id).style.display=p==='funds'?'flex':'none';});
+  ['funds','stocks','alerts','learn'].forEach(id=>{
+    const el=document.getElementById('page-'+id);
+    if(el) el.style.display=id===p?'block':'none';
+  });
+  document.getElementById('sidebar').style.display=p==='funds'?'flex':'none';
   document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   if(p==='alerts') renderAlerts();
   if(p==='stocks') renderStocks();
+  if(p==='learn') renderLearn();
+}
+
+// ══ LEARN PAGE ══
+const CHAPTERS = [
+  {
+    id:'what', icon:'🔍', num:'פרק 1', title:'מה זו קרן ממונפת?',
+    content:`
+      <p>קרן ממונפת היא <strong>קרן סל (ETF) מיוחדת</strong> שנותנת לך חשיפה <strong>כפולה או משולשת</strong> לתנועה של נכס מסוים — כל יום מחדש.</p>
+      <p>בעוד שקרן רגילה עוקבת 1:1 אחרי מדד, קרן ממונפת 2X תעלה פי 2 כשהמדד עולה, ותרד פי 2 כשהמדד יורד.</p>
+      <div class="learn-example">
+        <div class="ex-title">✏️ דוגמה פשוטה</div>
+        ה-NASDAQ עלה היום 1% → TQQQ (3X) עלה 3%<br>
+        ה-NASDAQ ירד היום 2% → TQQQ ירד 6%<br><br>
+        <strong>זה נכון לכל יום בנפרד — לא לטווח ארוך!</strong>
+      </div>
+      <p>הקרנות הממונפות משיגות את המינוף באמצעות <strong>חוזים עתידיים (Futures) ו-Swaps</strong> — מכשירים פיננסיים שמאפשרים להשיג חשיפה גדולה עם השקעה קטנה יחסית.</p>
+    `
+  },
+  {
+    id:'types', icon:'📋', num:'פרק 2', title:'סוגי קרנות ממונפות',
+    content:`
+      <p>יש שני סוגים עיקריים:</p>
+      <table class="learn-table">
+        <tr><th>סוג</th><th>מינוף</th><th>דוגמאות</th><th>מאפיין</th></tr>
+        <tr><td><strong>Bull (שורי)</strong></td><td>+2X, +3X</td><td>TQQQ, UPRO, SOXL</td><td>מרוויח כשהשוק עולה</td></tr>
+        <tr><td><strong>Bear (דובי)</strong></td><td>-2X, -3X</td><td>SQQQ, SPXS, SOXS</td><td>מרוויח כשהשוק יורד</td></tr>
+      </table>
+      <p>בנוסף, יש קרנות על <strong>מדדים רחבים</strong> (S&P 500, NASDAQ), קרנות על <strong>סקטורים</strong> (שבבים, טכנולוגיה, בנקים) וקרנות על <strong>מניות בודדות</strong> (Tesla, NVIDIA).</p>
+      <div class="learn-tip">
+        <div class="ex-title">💡 טיפ</div>
+        קרנות 3X מסוכנות יותר מקרנות 2X — הרווח גדול יותר, אבל גם ההפסד. למתחילים מומלץ להתחיל עם 2X.
+      </div>
+    `
+  },
+  {
+    id:'leverage', icon:'⚡', num:'פרק 3', title:'איך עובד המינוף — עם מספרים',
+    content:`
+      <p>נניח שהשקעת <strong>$1,000</strong> ב-TQQQ (3X NASDAQ):</p>
+      <table class="learn-table">
+        <tr><th>מה קורה ב-NASDAQ</th><th>מה קורה ב-TQQQ</th><th>ערך ההשקעה שלך</th></tr>
+        <tr><td>+1%</td><td>+3%</td><td style="color:var(--green)">$1,030</td></tr>
+        <tr><td>+5%</td><td>+15%</td><td style="color:var(--green)">$1,150</td></tr>
+        <tr><td>-1%</td><td>-3%</td><td style="color:var(--red)">$970</td></tr>
+        <tr><td>-5%</td><td>-15%</td><td style="color:var(--red)">$850</td></tr>
+        <tr><td>-33%</td><td>-99%</td><td style="color:var(--red)">$10 (!)</td></tr>
+      </table>
+      <div class="learn-warning">
+        <div class="ex-title">⚠️ שים לב!</div>
+        ירידה של 33% ביום אחד ב-NASDAQ תמחק כמעט את כל ההשקעה ב-TQQQ. זה לא קרה בהיסטוריה, אבל חשוב לדעת שזה אפשרי.
+      </div>
+      <p>מסיבה זו, <strong>קרנות ממונפות אינן מיועדות להחזקה לטווח ארוך</strong> — הן כלי למסחר יומי וטווח קצר.</p>
+      <div class="learn-calc" id="levCalc">
+        <div style="font-size:13px;font-weight:700;margin-bottom:14px;">🧮 מחשבון מינוף אינטראקטיבי</div>
+        <div class="calc-row">
+          <span class="calc-label">השקעה ראשונית ($)</span>
+          <input class="calc-input" id="calcInvest" value="1000" oninput="calcLev()">
+        </div>
+        <div class="calc-row">
+          <span class="calc-label">שינוי בנכס הבסיס (%)</span>
+          <input class="calc-input" id="calcChange" value="5" oninput="calcLev()">
+        </div>
+        <div class="calc-row">
+          <span class="calc-label">מינוף</span>
+          <select class="calc-input" id="calcLevMul" onchange="calcLev()" style="width:auto;">
+            <option value="2">2X</option>
+            <option value="3" selected>3X</option>
+          </select>
+        </div>
+        <div class="calc-result" id="calcResult"></div>
+      </div>
+    `
+  },
+  {
+    id:'decay', icon:'📉', num:'פרק 4', title:'Volatility Decay — למה קרנות ממונפות נשחקות',
+    content:`
+      <p><strong>Volatility Decay</strong> (שחיקת תנודתיות) הוא התופעה הכי חשובה להבין לגבי קרנות ממונפות.</p>
+      <p>בגלל שהמינוף מתאפס כל יום, בשוק תנודתי שנע עלה-ירד-עלה-ירד, הקרן הממונפת <strong>מפסידה ערך</strong> גם אם הנכס הבסיסי חוזר לנקודת ההתחלה.</p>
+      <div class="learn-example">
+        <div class="ex-title">✏️ דוגמה — Volatility Decay בפעולה</div>
+        יום 1: המדד עולה 10% → 3X קרן עולה 30% → $1,000 הופך ל-$1,300<br>
+        יום 2: המדד יורד 10% → 3X קרן יורדת 30% → $1,300 הופך ל-$910<br><br>
+        המדד חזר ל-99% מהשווי המקורי (10% × -10% = -1%)<br>
+        הקרן הממונפת נשארה ב-<strong style="color:var(--red)">$910 = -9%</strong><br><br>
+        ⚡ ה-Decay גרם לאיבוד 8% נוסף!
+      </div>
+      <p>ככל שהשוק <strong>תנודתי יותר</strong> — ה-Decay גדול יותר. בשווקים שעולים בצורה חלקה ועקבית, ה-Decay קטן.</p>
+      <p>זאת הסיבה ש-TQQQ עשה תוצאות מדהימות בשנים 2019-2021 (שוק עולה חלק), אבל ירד <strong>הרבה יותר</strong> מפי 3 מהירידה של הנאסד"ק ב-2022.</p>
+      <div class="learn-warning">
+        <div class="ex-title">⚠️ כלל הברזל</div>
+        קרנות ממונפות = למסחר קצר טווח בלבד. אל תשאיר אותן "לשכוח" לחודשים ארוכים בלי לעקוב.
+      </div>
+    `
+  },
+  {
+    id:'when', icon:'🎯', num:'פרק 5', title:'מתי כדאי להשתמש בקרנות ממונפות',
+    content:`
+      <p>קרנות ממונפות מתאימות למצבים מסוימים בלבד:</p>
+      <table class="learn-table">
+        <tr><th>מצב</th><th>מתאים?</th><th>הסבר</th></tr>
+        <tr><td>🎯 מסחר יומי</td><td style="color:var(--green)">✅ כן</td><td>כניסה ויציאה באותו יום</td></tr>
+        <tr><td>📅 סווינג (ימים-שבועות)</td><td style="color:var(--gold)">⚠️ זהירות</td><td>רק בשוק עם מגמה ברורה</td></tr>
+        <tr><td>📈 מגמה חזקה</td><td style="color:var(--green)">✅ כן</td><td>כשהשוק עולה בצורה עקבית</td></tr>
+        <tr><td>💼 השקעה לטווח ארוך</td><td style="color:var(--red)">❌ לא</td><td>Decay ימחק את הרווחים</td></tr>
+        <tr><td>🌪️ שוק תנודתי</td><td style="color:var(--red)">❌ לא</td><td>Decay גדול מאוד</td></tr>
+        <tr><td>😴 "להשכיח"</td><td style="color:var(--red)">❌ לא!</td><td>עלול לאבד הרבה ערך</td></tr>
+      </table>
+      <div class="learn-tip">
+        <div class="ex-title">💡 האסטרטגיה הפופולרית ביותר</div>
+        רכישת קרן ממונפת <strong>כשיש שינוי גדול יחיד ביום</strong> (breakout), ומכירה תוך 1-3 ימים. זה מקסם את הרווח ומגביל את ה-Decay.
+      </div>
+    `
+  },
+  {
+    id:'stocks', icon:'📱', num:'פרק 6', title:'מניות במחיר נמוך — הזדמנויות וסיכונים',
+    content:`
+      <p>מניות במחיר נמוך (מתחת ל-$10) נקראות לעיתים <strong>Penny Stocks</strong>. יש בהן הזדמנויות גדולות — אבל גם סיכונים גדולים.</p>
+      <table class="learn-table">
+        <tr><th>קטגוריה</th><th>מחיר</th><th>אופי</th></tr>
+        <tr><td>🟡 מחיר נמוך</td><td>$5–$10</td><td>מניות שנפלו, לעיתים עם פוטנציאל התאוששות</td></tr>
+        <tr><td>🔴 מאוד נמוך</td><td>$2–$5</td><td>ספקולטיבי, סיכון גבוה</td></tr>
+        <tr><td>⚫ מסוכן מאוד</td><td>מתחת ל-$2</td><td>חברות בקשיים, סיכון גבוה מאוד</td></tr>
+      </table>
+      <p><strong>למה מניות נפלות למחיר נמוך?</strong> לרוב בגלל תוצאות עסקיות גרועות, חדלות פירעון, מגמות שוק שליליות, או שחיקה כללית של הסקטור.</p>
+      <div class="learn-warning">
+        <div class="ex-title">⚠️ הזהר מ"מלכודות ערך"</div>
+        מניה זולה לא בהכרח מניה טובה. שאלי תמיד: <strong>למה היא זולה?</strong> האם יש שינוי עסקי אמיתי, או שהיא פשוט בדרך לאפס?
+      </div>
+      <p><strong>המניות שמכסות AZENO:</strong> קריפטו, EV, ביוטק, קנאביס — כולם סקטורים עם תנודתיות גבוהה ופוטנציאל לתנועות גדולות.</p>
+      <div class="learn-tip">
+        <div class="ex-title">💡 אסטרטגיית AZENO</div>
+        עקוב אחרי מניות מתחת ל-$10 עם <strong>נפח מסחר גבוה</strong> — זה מסמן שהשוק מתעניין. נפח גבוה = נזילות = קל לכניסה ויציאה.
+      </div>
+    `
+  },
+  {
+    id:'glossary', icon:'📖', num:'מילון', title:'מילון מונחים',
+    content:`
+      <table class="learn-table">
+        <tr><th>מונח</th><th>הסבר פשוט</th></tr>
+        <tr><td><strong>ETF</strong></td><td>קרן סל — קרן שנסחרת בבורסה כמו מניה, אבל מכילה הרבה נכסים</td></tr>
+        <tr><td><strong>מינוף (Leverage)</strong></td><td>הכפלת החשיפה לנכס — 2X = פי שניים, 3X = פי שלושה</td></tr>
+        <tr><td><strong>Volatility Decay</strong></td><td>שחיקה יומיומית של הקרן בגלל איפוס המינוף</td></tr>
+        <tr><td><strong>NAV</strong></td><td>Net Asset Value — שווי הנכסים הנקי של הקרן</td></tr>
+        <tr><td><strong>Expense Ratio</strong></td><td>דמי ניהול שנתיים — בדרך כלל 0.9%-1.5% בקרנות ממונפות</td></tr>
+        <tr><td><strong>Rebalancing</strong></td><td>האיפוס היומי של המינוף שהקרן עושה בסוף כל יום מסחר</td></tr>
+        <tr><td><strong>Futures</strong></td><td>חוזים עתידיים — המכשיר שבו הקרן משיגה את המינוף</td></tr>
+        <tr><td><strong>Bull/Bear</strong></td><td>שורי (מניח שהשוק יעלה) / דובי (מניח שהשוק יירד)</td></tr>
+        <tr><td><strong>Penny Stock</strong></td><td>מניה במחיר נמוך מאוד, לרוב מתחת ל-$5</td></tr>
+        <tr><td><strong>Breakout</strong></td><td>כשמניה פורצת מעל רמת התנגדות — סימן לתנועה חזקה</td></tr>
+        <tr><td><strong>Volume / נפח</strong></td><td>כמות המניות שנסחרו — נפח גבוה = עניין רב של השוק</td></tr>
+        <tr><td><strong>52W High/Low</strong></td><td>המחיר הגבוה/הנמוך ביותר ב-52 השבועות האחרונים</td></tr>
+      </table>
+    `
+  }
+];
+
+let activeChapter = 'what';
+
+function renderLearn() {
+  const chapter = CHAPTERS.find(c=>c.id===activeChapter) || CHAPTERS[0];
+  const navHTML = `<div class="learn-nav">
+    ${CHAPTERS.map(c=>`<button class="lnav-btn${c.id===activeChapter?' active':''}" onclick="switchChapter('${c.id}')">${c.icon} ${c.num}</button>`).join('')}
+  </div>`;
+  document.getElementById('learnContent').innerHTML = navHTML + `
+    <div class="learn-chapter">
+      <div class="learn-chapter-num">${chapter.num}</div>
+      <h2>${chapter.icon} ${chapter.title}</h2>
+      ${chapter.content}
+    </div>`;
+  if(activeChapter==='leverage') setTimeout(calcLev,100);
+}
+
+function switchChapter(id){
+  activeChapter=id;
+  renderLearn();
+  document.querySelector('.learn-chapter')?.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function calcLev(){
+  const invest=parseFloat(document.getElementById('calcInvest')?.value)||1000;
+  const change=parseFloat(document.getElementById('calcChange')?.value)||5;
+  const mul=parseFloat(document.getElementById('calcLevMul')?.value)||3;
+  const leveragedChange=change*mul;
+  const newVal=invest*(1+leveragedChange/100);
+  const profit=newVal-invest;
+  const up=profit>=0;
+  const el=document.getElementById('calcResult');
+  if(!el) return;
+  el.innerHTML=`
+    <div class="cr-row"><span>השקעה ראשונית</span><span>$${invest.toLocaleString()}</span></div>
+    <div class="cr-row"><span>שינוי בנכס הבסיס</span><span style="color:${up?'var(--green)':'var(--red)'}">${change>0?'+':''}${change}%</span></div>
+    <div class="cr-row"><span>שינוי בקרן ${mul}X</span><span style="color:${up?'var(--green)':'var(--red)'}">${leveragedChange>0?'+':''}${leveragedChange.toFixed(1)}%</span></div>
+    <div class="cr-row"><span>רווח / הפסד</span><span style="color:${up?'var(--green)':'var(--red)'}">${up?'+':''}$${Math.abs(profit).toFixed(2)}</span></div>
+    <div class="cr-row" style="margin-top:4px;"><span>💰 שווי סופי</span><span style="font-size:18px;color:${up?'var(--green)':'var(--red)'};">$${newVal.toFixed(2)}</span></div>`;
 }
 
 document.getElementById('chartOverlay').addEventListener('click',e=>{if(e.target===document.getElementById('chartOverlay'))closeChart();});
@@ -923,6 +1265,7 @@ document.getElementById('chartOverlay').addEventListener('click',e=>{if(e.target
 setInterval(()=>{const h=new Date().getUTCHours();if(h>=13&&h<20)loadPrices();},5*60*1000);
 
 // INIT
+renderFunds();
 loadPrices();
 </script>
 </body>
